@@ -6,6 +6,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
+import Firebase from './firebase/firebase';
 
 class AppContainer extends React.Component {
   state = {
@@ -14,6 +15,7 @@ class AppContainer extends React.Component {
 
   componentWillMount() {
     this._loadAssetsAsync();
+    Firebase.initialize()
   }
 
   async _loadAssetsAsync() {

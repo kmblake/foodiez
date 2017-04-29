@@ -15,6 +15,8 @@ import Expo from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
+import Database from "../firebase/database";
+
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
@@ -22,24 +24,8 @@ export default class HomeScreen extends React.Component {
     },
   };
 
-  async logIn() {
-  const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('214299995728740', {
-      permissions: ['public_profile', 'email', 'user_friends'],
-    });
-  if (type === 'success') {
-    // Get the user's name using Facebook's Graph API
-    const response = await fetch(
-      `https://graph.facebook.com/me?access_token=${token}`);
-    // console.log(response.json())
-    Alert.alert(
-      'Logged in!',
-      `Hi ${(await response.json()).name}!`,
-    );
-  }
-}
-
   componentDidMount() {
-    // this.logIn()
+    Database.testMethod()
   }
 
   render() {
