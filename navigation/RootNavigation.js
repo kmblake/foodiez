@@ -12,10 +12,14 @@ import Alerts from '../constants/Alerts';
 import Colors from '../constants/Colors';
 import registerForPushNotificationsAsync
   from '../api/registerForPushNotificationsAsync';
+import Firebase from "../firebase/firebase";
+
 
 export default class RootNavigation extends React.Component {
+
   componentDidMount() {
     this._notificationSubscription = this._registerForPushNotifications();
+    // this.getUserData();
   }
 
   componentWillUnmount() {
@@ -28,7 +32,7 @@ export default class RootNavigation extends React.Component {
         <TabNavigationItem
           id="home"
           renderIcon={isSelected => this._renderIcon('home', isSelected)}>
-          <StackNavigation initialRoute="home" />
+          <StackNavigation initialRoute="home" user="test" params="test" />
         </TabNavigationItem>
 
         <TabNavigationItem

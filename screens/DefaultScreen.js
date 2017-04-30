@@ -19,9 +19,8 @@ import { MonoText } from '../components/StyledText';
 
 import Database from "../firebase/database";
 import Firebase from "../firebase/firebase";
-import * as firebase from "firebase";
 
-export default class HomeScreen extends React.Component {
+export default class DefaultScreen extends React.Component {
   static route = {
     navigationBar: {
       visible: false,
@@ -30,60 +29,18 @@ export default class HomeScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    const self = this;
-    this.state = {logged_in: false};
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user != null) {
-        console.log("We are authenticated now!");
-        try {
-          AsyncStorage.setItem('user_data', JSON.stringify(user))
-          self.setState({user: user, logged_in: true});
-        } catch (error) {
-          console.log("Could not remove user data")
-        }
-      } else {
-        try {
-          AsyncStorage.removeItem('user_data');
-          self.logIn();
-        } catch (error) {
-          console.log("Could not remove user data")
-        }
-      }
-
-      // Do other things
-    });
+    this.state = {loading: true}
   }
 
-  async logIn() {
-    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('214299995728740', {
-        permissions: ['public_profile', 'email', 'user_friends'],
-      });
-    if (type === 'success') {
-      // Build Firebase credential with the Facebook access token.
-      const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-      // Sign in with credential from the Facebook user.
-      firebase.auth().signInWithCredential(credential).catch((error) => {
-        console.log(error)
-      });
-    }
-   }
+  onLoginSuccessful() {
+    this.getUserData();
+  }
 
   getUserData() {
-    const user = firebase.auth().currentUser;
-    if (user) {
-      this.setState({
-        user: user,
-        logged_in: true
-      });
-    } else {
-      this.logIn();
-    }
-    
     AsyncStorage.getItem('user_data').then((user_data_json) => {
       let user_data = JSON.parse(user_data_json);
       if (user_data === null) {
-        this.logIn()
+        Firebase.logIn(onLoginSuccessful)
       } else  {
         console.log(user_data);
         this.setState({
@@ -165,7 +122,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    if (!this.state.logged_in) {
+    if (this.state.loading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator
