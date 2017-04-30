@@ -10,7 +10,8 @@ import {
   View,
   Alert,
   AsyncStorage,
-  ActivityIndicator
+  ActivityIndicator,
+  Button
 } from 'react-native';
 
 import Expo from 'expo';
@@ -20,6 +21,8 @@ import { MonoText } from '../components/StyledText';
 import Database from "../firebase/database";
 import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
+import Router from '../navigation/Router';
+
 
 export default class HomeScreen extends React.Component {
   static route = {
@@ -37,6 +40,7 @@ export default class HomeScreen extends React.Component {
         console.log("We are authenticated now!");
         try {
           AsyncStorage.setItem('user_data', JSON.stringify(user))
+          this.checkForFirstTime(user);
           self.setState({user: user, logged_in: true});
         } catch (error) {
           console.log("Could not remove user data")
@@ -51,6 +55,27 @@ export default class HomeScreen extends React.Component {
       }
 
       // Do other things
+    });
+  }
+
+  // Setup what to do with the user information.
+  userFirstTimeCallback(user, exists) {
+    if (!exists) {
+      Database.setUserData(user.uid, {
+        name: user.displayName,
+        photoURL: user.photoURL,
+        email: user.email
+      })
+      this.props.navigator.push(Router.getRoute('availability'));
+    }
+  }
+
+  // Tests to see if /users/<userId> exists. 
+  checkForFirstTime(user) {
+    // const usersRef = firebase.database().ref("users");
+    firebase.database().ref('users/' + user.uid).once('value').then((snapshot) => {
+      var exists = (snapshot.val() !== null);
+      this.userFirstTimeCallback(user, exists);
     });
   }
 
@@ -69,17 +94,18 @@ export default class HomeScreen extends React.Component {
     }
    }
 
-  getUserData() {
-    const user = firebase.auth().currentUser;
-    if (user) {
-      this.setState({
-        user: user,
-        logged_in: true
-      });
-    } else {
+   logout() {
+    firebase.auth().signOut().then(function() {
+      console.log('User logged out');
+      this.setState({logged_in: false});
       this.logIn();
-    }
-    
+    }).catch(function(error) {
+      console.log(error);
+    });
+
+   }
+
+  getUserData() {
     AsyncStorage.getItem('user_data').then((user_data_json) => {
       let user_data = JSON.parse(user_data_json);
       if (user_data === null) {
@@ -88,7 +114,7 @@ export default class HomeScreen extends React.Component {
         console.log(user_data);
         this.setState({
           user: user_data,
-          loading: false
+          logged_in: true
         });
       }
     }).catch( (error) => {
@@ -96,8 +122,7 @@ export default class HomeScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
-    console.log('home');
+  componentWillMount() {
     this.getUserData();
   }
 
@@ -148,18 +173,11 @@ export default class HomeScreen extends React.Component {
           </View>
         </ScrollView>
 
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>
-            This is a tab bar. You can edit it in:
-          </Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>
-              navigation/RootNavigation.js
-            </MonoText>
-          </View>
-        </View>
+        <Button
+          onPress={() => (this.logout())}
+          title="Logout"
+          color="#841584"
+        />
       </View>
     );
   }

@@ -9,20 +9,9 @@ class Database {
     });
   }
 
-  /**
-   * Sets a users mobile number
-   * @param userId
-   * @param mobile
-   * @returns {firebase.Promise<any>|!firebase.Promise.<void>}
-   */
-  static setUserMobile(userId, mobile) {
-
-    let userMobilePath = "/user/" + userId + "/details";
-
-    return firebase.database().ref(userMobilePath).set({
-        mobile: mobile
-    })
-
+  static setUserData(userId, data) {
+    let userPath = "/users/" + userId;
+    return firebase.database().ref(userPath).update(data);
   }
 
   /**
@@ -32,7 +21,7 @@ class Database {
    */
   static listenUserMobile(userId, callback) {
 
-    let userMobilePath = "/user/" + userId + "/details";
+    let userMobilePath = "/users/" + userId + "/details";
 
     firebase.database().ref(userMobilePath).on('value', (snapshot) => {
 
