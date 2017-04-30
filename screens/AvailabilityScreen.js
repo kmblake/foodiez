@@ -27,9 +27,10 @@ export default class AvailabilityScreen extends DefaultScreen {
         style={styles.container}
       >
 
-      <Text>
-        TODO: Input availability here
-      </Text>
+      <ListView
+          dataSource={this.state.users}
+          renderRow={(user) => <Text>{user.name} ({user.uid})</Text>}
+      />
       <Button
         onPress={() => (this.onNextTap())}
         title="Next"

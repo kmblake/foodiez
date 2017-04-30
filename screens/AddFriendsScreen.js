@@ -16,11 +16,7 @@ export default class AddFriendsScreen extends DefaultScreen {
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {logged_in: false, users: ds.cloneWithRows([])};
     firebase.database().ref('/users').once('value').then((snapshot) => {
-      // console.log(snapshot.val());
       userData = snapshot.val();
-      // .filter((user) => {
-      //   user. != this.state.user.
-      // });
       this.setState({users: ds.cloneWithRows(this.userDataToArray(userData))});
     });
   }

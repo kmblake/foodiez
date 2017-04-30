@@ -5,6 +5,7 @@ import DefaultScreen from '../screens/DefaultScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import AvailabilityScreen from '../screens/AvailabilityScreen';
 import AddFriendsScreen from '../screens/AddFriendsScreen';
+import PickDateScreen from '../screens/PickDateScreen';
 import RootNavigation from './RootNavigation';
 
 export default createRouter(() => ({
@@ -13,5 +14,6 @@ export default createRouter(() => ({
   settings: () => SettingsScreen,
   availability: () => AvailabilityScreen,
   rootNavigation: () => RootNavigation,
-  addFriends: () => AddFriendsScreen
+  addFriends: () => AddFriendsScreen,
+  pickDate: () => PickDateScreen
 }));

@@ -163,13 +163,10 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <View style={styles.helpContainer}>
-            <TouchableOpacity
-              onPress={this._handleHelpPress}
-              style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>
-                Help, it didn’t automatically reload!
-              </Text>
-            </TouchableOpacity>
+            <Button
+              onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
+              title="New Event"
+            />
           </View>
         </ScrollView>
 
