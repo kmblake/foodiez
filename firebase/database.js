@@ -66,10 +66,11 @@ class Database {
 
   }
 
+  static getUser(uid) {
+
+  }
+
   static getEvents(onEventsLoaded, onError) {
-    // while (firebase.auth().currentUser == null) {
-    //   // TODO: fix busy waiting
-    // }
     const curUid = firebase.auth().currentUser.uid;
     const eventRef = firebase.database().ref('events');
     const invitationRef = firebase.database().ref('invitations');

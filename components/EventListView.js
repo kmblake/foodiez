@@ -57,7 +57,7 @@ export default class EventListView extends React.Component {
     return (
      <ListView
         dataSource={this.state.events}
-        renderRow={(event) => <Text>{event.type} ({event.id})</Text>}
+        renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
       />
     );
   }

@@ -29,13 +29,18 @@ export default class CreateEventScreen extends DefaultScreen {
   onNextTap() {
     const invitedFriends = this.state.invitedFriends
     const dateString = this.state.date.toString();
+    const curUser = {
+        name: this.state.user.displayName,
+        uid: this.state.user.uid,
+        photoURL: this.state.user.photoURL
+    };
     const event = {
       type: this.state.eventType,
       date: this.state.date.getTime(),
       description: this.state.description,
       location: this.state.location,
-      host: this.state.user.uid,
-      attending: [this.state.user.uid]
+      host: curUser,
+      attending: [curUser]
     };
     Database.createEvent(event, JSON.parse(this.props.route.params.invitedFriends));
     this.props.navigator.push(Router.getRoute('home'));
