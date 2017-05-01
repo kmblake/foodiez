@@ -5,44 +5,38 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 
 
-export default class PickDateScreen extends DefaultScreen {
+export default class InviteFriendsScreen extends DefaultScreen {
   static route = {
     navigationBar: {
-      title: 'Pick a Date',
+      title: 'Invite Friends',
     }
   };
 
   constructor(props) {
     super(props);
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {logged_in: false, availability: ds.cloneWithRows([]), chosenDate: new Date()};
-    Database.getBestDays().then((availability) => {
-      console.log(availability);
-      this.setState({availability: ds.cloneWithRows(availability)})
-    }).catch((e) => {
-      console.log('Could not get availability');
-      console.log("Error", e.stack);
-      console.log("Error", e.name);
-      console.log("Error", e.message);
-    });
+    this.state = {
+      logged_in: false, 
+      date: new Date(props.route.params.date),
+      availableFriends: ds.cloneWithRows(JSON.parse(props.route.params.availableFriends)),
+      invitedFriends: []
+    };
   }
 
   onNextTap() {
-    const dayOfWeek = this.state.chosenDate.getDay();
-    const availableFriends = this.state.availability.getRowData(0, dayOfWeek).users;
-    const dateString = this.state.chosenDate.toString();
-    this.props.navigator.push(Router.getRoute('inviteFriends', {date: dateString, availableFriends: JSON.stringify(availableFriends)}));
+    console.log('next tapped');
+    // this.props.navigator.push(Router.getRoute('addFriends'));
   }
 
   onPressRow(rowData, sectionID) {
     console.log('row pressed');
   }
 
-  renderRow(rowData, sectionID, rowID) {
+  renderRow(user, sectionID, rowID) {
     return (
       <TouchableOpacity onPress={this.onPressRow}>
           <View>
-              <Text>{rowData.day}: {rowData.users.length} people available</Text>        
+              <Text>{user.name}</Text>        
           </View>
       </TouchableOpacity>
     );
@@ -56,7 +50,7 @@ export default class PickDateScreen extends DefaultScreen {
       >
 
       <ListView
-          dataSource={this.state.availability}
+          dataSource={this.state.availableFriends}
           renderRow={(rowData, sectionID, rowID) => this.renderRow(rowData, sectionID, rowID)}
       />
       <Button
