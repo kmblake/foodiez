@@ -9,19 +9,28 @@ export default class EventListView extends React.Component {
 
   constructor() {
     super();
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    // this.updateData();
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = {
+      loaded: false,
+      events: this.ds.cloneWithRows([])
+    };
+  }
+
+  componentWillMount() {
+    this.updateData();
+  }
+
+  updateData() {
+    this.setState({loaded: false})
     Database.getEvents().then( (events) => {
       this.setState({
-      events: ds.cloneWithRows(events),
+      events: this.ds.cloneWithRows(events),
       loaded: true
       });
     }).catch( (error) => {
       console.error(error);
     });
-    this.state = {
-      loaded: false,
-      events: ds.cloneWithRows([])
-    };
   }
 
   render() {
@@ -44,7 +53,8 @@ export default class EventListView extends React.Component {
     return (
       <EventListItemView 
         event={event} 
-        rowID={rowID} 
+        rowID={rowID}
+        navigator={this.props.navigator} 
       />
     );
   }
@@ -52,11 +62,18 @@ export default class EventListView extends React.Component {
   renderView() {
     // Add date picker
     return (
-     <ListView
-        dataSource={this.state.events}
-        // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
-        renderRow={this._renderRow.bind(this)}
+    <View>
+       <ListView
+          dataSource={this.state.events}
+          // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
+          renderRow={this._renderRow.bind(this)}
+        />
+      <Button
+        onPress={() => (this.updateData())}
+        title="Sync"
+        color="#841584"
       />
+    </View>
     );
   }
 }

@@ -143,7 +143,7 @@ export default class HomeScreen extends React.Component {
           </View>
           <Text>Hello {this.state.user.displayName}</Text>
           <Text>Upcoming Events</Text>
-          <EventListView />
+          <EventListView navigator={this.props.navigator} />
         </ScrollView>
         <Button
           onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}

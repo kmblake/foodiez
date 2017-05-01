@@ -14,6 +14,36 @@ class Database {
     return firebase.database().ref(userPath).update(data);
   }
 
+  static getUsers(uids) {
+    return new Promise( (resolve, reject) => {
+      try {
+        const userRef = firebase.database().ref('users')
+        var promises = uids.map((uid) => {
+          const query = userRef.orderByKey().equalTo(uid);
+          return query.once('value');
+        });
+        Promise.all(promises).then( (snaps) => {
+          try {
+            var users = [];
+            snaps.forEach((snap, i) => {
+              var user = Object.values(snap.val())[0];
+              users.push({
+                uid: Object.keys(userSnap.val())[0],
+                name: user.name,
+                photoURL: user.photoURL
+              });
+            });
+            resolve(users);
+          } catch(e) {
+            reject(e);
+          }
+        });
+      } catch(e) {
+        reject(e);
+      }
+    });
+  }
+
   static getBestDays() {
     const curUserAuth = firebase.auth().currentUser;
 
@@ -84,10 +114,12 @@ class Database {
           snaps.forEach((snap, i) => {
             var userPromises = [];
             var event = Object.values(snap.val())[0];
+            var attending = []
+            if (!!event.attending) attending = event.attending;
             events.push({
               id: Object.keys(snap.val())[0],
               type: event.type,
-              attending: event.attending,
+              attending: attending,
               date: event.date,
               description: event.description,
               host: event.host,
@@ -107,9 +139,45 @@ class Database {
 
   }
 
-  static respondToInvite(inviteId, accepted) {
-    let invitePath = "/invitations/" + inviteId;
-    return firebase.database().ref(invitePath).update({accepted: accepted});
+  static getAttending(eventId) {
+    const eventRef = firebase.database().ref('/events/' + eventId);
+    return eventRef.once('value').then((snapshot) => {
+      return new Promise( (resolve, reject) => {
+        try {
+          var attending = snapshot.val().attending;
+          if (attending === undefined || attending == null) {
+            attending = [];
+          }
+          resolve(attending);
+        } catch(e) {
+          reject(e);
+        }
+      });
+    });
+  }
+
+  static respondToInvite(event, accepted) {
+    //TODO: Handle failure?
+    const curUser = firebase.auth().currentUser;
+    const eventRef = firebase.database().ref('/events/' + event.id);
+    const invitationRef = firebase.database().ref('/invitations/' + event.invitation.id);
+    invitationRef.update({accepted: accepted});
+    eventRef.once('value').then((snapshot) => {
+      var event = snapshot.val();
+      var attending = event.attending;
+      if (!!accepted) {
+        attending.push({
+          name: curUser.displayName,
+          photoURL: curUser.photoURL,
+          uid: curUser.uid
+        });
+      } else {
+        attending = attending.filter((user) => {
+          return (user.uid != curUser.uid); 
+        });
+      }
+      eventRef.update({attending: attending});
+    });
   }
 
 

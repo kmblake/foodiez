@@ -27,7 +27,7 @@ export default class EventListItemView extends React.Component {
   }
 
   _viewEvent (rowID: number) {
-    console.log(rowID);
+    this.props.navigator.push(Router.getRoute('viewEvent', {event: JSON.stringify(this.props.event)}));
   }
 
   _onInviteResponseChange(event) {
@@ -35,7 +35,7 @@ export default class EventListItemView extends React.Component {
     const selectorIndexToAccepted = [true, false, null];
     console.log("New invite status");
     console.log(selectorIndexToAccepted[newIndex]);
-    Database.respondToInvite(this.props.event.invitation.id, selectorIndexToAccepted[newIndex]);
+    Database.respondToInvite(this.props.event, selectorIndexToAccepted[newIndex]);
 
   }
 
