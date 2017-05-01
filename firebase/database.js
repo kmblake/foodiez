@@ -84,7 +84,7 @@ class Database {
         }
         Promise.all(promises).then( (snaps) => {
           var events = [];
-          snaps.forEach((snap) => {
+          snaps.forEach((snap, i) => {
             var userPromises = [];
             var event = Object.values(snap.val())[0];
             events.push({
@@ -94,9 +94,15 @@ class Database {
               date: event.date,
               description: event.description,
               host: event.host,
-              location: event.location
+              location: event.location,
+              invite: {
+                id: Object.keys(invites)[i],
+                accepted: Object.values(invites)[i].accepted
+              }
             });
           });
+          console.log('invites');
+          console.log(invites);
           resolve(events);
       });
      });
