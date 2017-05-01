@@ -141,7 +141,7 @@ export default class HomeScreen extends React.Component {
               style={styles.welcomeImage}
             />
           </View>
-
+          <Text>Hello {this.state.user.displayName}</Text>
           <Text>Upcoming Events</Text>
           <EventListView />
         </ScrollView>

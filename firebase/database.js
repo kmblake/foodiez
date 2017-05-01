@@ -60,13 +60,9 @@ class Database {
     const eventId = eventRef.key;
     for (i in invitedFriends) {
       const friend = invitedFriends[i];
-      firebase.database().ref('invitations').push({eventId: eventId, uid: friend.uid, accepted: false});
+      firebase.database().ref('invitations').push({eventId: eventId, uid: friend.uid, accepted: null});
     }
     firebase.database().ref('invitations').push({eventId: eventId, uid: curUid, accepted: true});
-
-  }
-
-  static getUser(uid) {
 
   }
 
@@ -96,7 +92,7 @@ class Database {
               description: event.description,
               host: event.host,
               location: event.location,
-              invite: {
+              invitation: {
                 id: Object.keys(invites)[i],
                 accepted: Object.values(invites)[i].accepted
               }
@@ -109,6 +105,11 @@ class Database {
      });
     });
 
+  }
+
+  static respondToInvite(inviteId, accepted) {
+    let invitePath = "/invitations/" + inviteId;
+    return firebase.database().ref(invitePath).update({accepted: accepted});
   }
 
 

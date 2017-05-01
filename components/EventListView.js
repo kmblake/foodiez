@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight } from 'react-native';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
+import EventListItemView from "./EventListItemView";
 
 
 export default class EventListView extends React.Component {
@@ -23,18 +24,6 @@ export default class EventListView extends React.Component {
     };
   }
 
-  // onEventsLoaded(events) {
-  //   var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-  //   console.log(events);
-  //   this.setState({
-  //     events: ds.cloneWithRows(events),
-  //     loaded: true
-  //   });
-  // }
-
-  // onEventLoadError(error) {
-  // }
-
   render() {
     if (!this.state.loaded) {
       return (
@@ -51,13 +40,22 @@ export default class EventListView extends React.Component {
     }
   }
 
+  _renderRow(event, sectionID, rowID) {
+    return (
+      <EventListItemView 
+        event={event} 
+        rowID={rowID} 
+      />
+    );
+  }
 
   renderView() {
     // Add date picker
     return (
      <ListView
         dataSource={this.state.events}
-        renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
+        // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
+        renderRow={this._renderRow.bind(this)}
       />
     );
   }
@@ -68,4 +66,17 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
   },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: '#F6F6F6',
+  },
+  thumb: {
+    width: 64,
+    height: 64,
+  },
+  text: {
+    flex: 1,
+  }
 });
