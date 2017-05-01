@@ -7,6 +7,7 @@ import AvailabilityScreen from '../screens/AvailabilityScreen';
 import AddFriendsScreen from '../screens/AddFriendsScreen';
 import PickDateScreen from '../screens/PickDateScreen';
 import InviteFriendsScreen from '../screens/InviteFriendsScreen';
+import CreateEventScreen from '../screens/CreateEventScreen';
 import RootNavigation from './RootNavigation';
 
 export default createRouter(() => ({
@@ -17,5 +18,6 @@ export default createRouter(() => ({
   rootNavigation: () => RootNavigation,
   addFriends: () => AddFriendsScreen,
   pickDate: () => PickDateScreen,
-  inviteFriends: () => InviteFriendsScreen
+  inviteFriends: () => InviteFriendsScreen,
+  createEvent: () => CreateEventScreen
 }));

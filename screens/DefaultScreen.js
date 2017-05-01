@@ -35,7 +35,7 @@ export default class DefaultScreen extends React.Component {
     });
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.getUserData();
   }
 

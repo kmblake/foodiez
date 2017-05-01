@@ -15,6 +15,8 @@ export default class InviteFriendsScreen extends DefaultScreen {
   constructor(props) {
     super(props);
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    console.log("available friends");
+    console.log(props.route.params.availableFriends);
     this.state = {
       logged_in: false, 
       date: new Date(props.route.params.date),
@@ -24,6 +26,10 @@ export default class InviteFriendsScreen extends DefaultScreen {
   }
 
   onNextTap() {
+    this.state.invitedFriends.push(this.state.availableFriends.getRowData(0,0));
+    this.state.invitedFriends.push(this.state.availableFriends.getRowData(0,1));
+    const dateString = this.state.date.toString();
+    this.props.navigator.push(Router.getRoute('createEvent', {date: dateString, invitedFriends: JSON.stringify(this.state.invitedFriends)}));
     console.log('next tapped');
     // this.props.navigator.push(Router.getRoute('addFriends'));
   }

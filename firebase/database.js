@@ -54,6 +54,104 @@ class Database {
     return firebase.database().ref('/users/' + curUserAuth.uid).once('value').then(getBestDaysGivenCurUserSnapshot);
   }
 
+  static createEvent(event, invitedFriends) {
+    const curUid = firebase.auth().currentUser.uid;
+    const eventRef = firebase.database().ref('events').push(event);
+    const eventId = eventRef.key;
+    for (i in invitedFriends) {
+      const friend = invitedFriends[i];
+      firebase.database().ref('invitations').push({eventId: eventId, uid: friend.uid, accepted: false});
+    }
+    firebase.database().ref('invitations').push({eventId: eventId, uid: curUid, accepted: true});
+
+  }
+
+  static getEvents(onEventsLoaded, onError) {
+    // while (firebase.auth().currentUser == null) {
+    //   // TODO: fix busy waiting
+    // }
+    const curUid = firebase.auth().currentUser.uid;
+    const eventRef = firebase.database().ref('events');
+    const invitationRef = firebase.database().ref('invitations');
+    const userRef = firebase.database().ref('users')
+    return invitationRef.orderByChild('uid').equalTo(curUid).once('value').then((snapshot) => {
+      return new Promise( (resolve, reject) => {
+        const invites = snapshot.val();
+        var promises = [];
+        for (const id in invites) {
+          const query = eventRef.orderByKey().equalTo(invites[id].eventId);
+          promises.push(query.once('value'));
+        }
+        Promise.all(promises).then( (snaps) => {
+          var events = [];
+          snaps.forEach((snap) => {
+            var userPromises = [];
+            var event = Object.values(snap.val())[0];
+            events.push({
+              id: Object.keys(snap.val())[0],
+              type: event.type,
+              attending: event.attending,
+              date: event.date,
+              description: event.description,
+              host: event.host,
+              location: event.location
+            });
+          });
+          resolve(events);
+      });
+     });
+    });
+
+  }
+
+
+  //     const invites = snapshot.val();
+  //     var promises = [];
+  //     for (const id in invites) {
+  //       const query = eventRef.orderByKey().equalTo(invites[id].eventId);
+  //       promises.push(query.once('value'));
+  //     }
+  //     Promise.all(promises).then( (snaps) => {
+  //       try {
+  //         var events = [];
+  //         snaps.forEach((snap) => {
+  //           var userPromises = [];
+  //           var event = Object.values(snap.val())[0];
+  //           events.push(event);
+
+  //           // Object.values(snap.val())[0].attending.forEach( (uid) => {
+  //           //   const query = userRef.orderByKey().equalTo(uid);
+  //           //   userPromises.push(query.once('value'));
+  //           //   Promise.all(userPromises).then( (userSnaps) => {
+  //           //     var users = [];
+  //           //     userSnaps.forEach( (userSnap) => {
+  //           //       const user = Object.values(userSnap.val())[0];
+  //           //       users.push({
+  //           //         uid: Object.keys(userSnap.val())[0],
+  //           //         name: user.name,
+  //           //         photoURL: user.photoURL
+  //           //       });
+  //           //     });
+  //           //     var event = Object.values(snap.val())[0];
+  //           //     event.attending = users;
+  //           //     event.id = Object.keys(snap.val())[0];
+  //           //     events.push(event);
+  //           //     console.log(events);
+  //           //     onEventsLoaded(events);
+  //           //   });
+  //           // });
+  //         });
+  //         onEventsLoaded(events);
+  //       } catch(e) {
+  //         onError(e);
+  //       }
+  //     }).catch((e) => {
+  //       onError(e);
+  //     });
+  //   });
+
+  // }
+
   /**
    * Listen for changes to a users mobile number
    * @param userId

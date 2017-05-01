@@ -22,6 +22,7 @@ import Database from "../firebase/database";
 import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
 import Router from '../navigation/Router';
+import EventListView from '../components/EventListView';
 
 
 export default class HomeScreen extends React.Component {
@@ -43,7 +44,7 @@ export default class HomeScreen extends React.Component {
           this.checkForFirstTime(user);
           self.setState({user: user, logged_in: true});
         } catch (error) {
-          console.log("Could not remove user data")
+          console.error(error);
         }
       } else {
         try {
@@ -128,6 +129,7 @@ export default class HomeScreen extends React.Component {
 
   renderFullView() {
     return (
+
       <View style={styles.container}>
         <ScrollView
           style={styles.container}
@@ -140,36 +142,13 @@ export default class HomeScreen extends React.Component {
             />
           </View>
 
-          <View style={styles.getStartedContainer}>
-            {this._maybeRenderDevelopmentModeWarning()}
-
-            <Text style={styles.getStartedText}>
-              Get started by opening
-            </Text>
-
-            <View
-              style={[
-                styles.codeHighlightContainer,
-                styles.homeScreenFilename,
-              ]}>
-              <MonoText style={styles.codeHighlightText}>
-                screens/HomeScreen.js
-              </MonoText>
-            </View>
-
-            <Text style={styles.getStartedText}>
-              {this.state.user.displayName}
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <Button
-              onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
-              title="New Event"
-            />
-          </View>
+          <Text>Upcoming Events</Text>
+          <EventListView />
         </ScrollView>
-
+        <Button
+          onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
+          title="New Event"
+        />
         <Button
           onPress={() => (this.logout())}
           title="Logout"
