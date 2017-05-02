@@ -61,7 +61,8 @@ export default class HomeScreen extends React.Component {
 
   // Setup what to do with the user information.
   userFirstTimeCallback(user, exists) {
-    if (!exists) {
+    // if (!exists) {
+    if (true) {
       Database.setUserData(user.uid, {
         name: user.displayName,
         photoURL: user.photoURL,

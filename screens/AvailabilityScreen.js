@@ -18,7 +18,7 @@ export default class AvailabilityScreen extends DefaultScreen {
       // Days of week: 0 = Sunday, 6 = Saturday
       availability: [0,1,2,3,4,5,6]
     });
-    this.props.navigator.push(Router.getRoute('addFriends'));
+    this.props.navigator.push(Router.getRoute('home'));
   }
 
   renderView() {
