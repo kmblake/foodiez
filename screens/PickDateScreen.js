@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ListView, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, DatePickerIOS } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-
+import CalendarPicker from 'react-native-calendar-picker';
 
 export default class PickDateScreen extends DefaultScreen {
   static route = {
@@ -37,11 +37,14 @@ export default class PickDateScreen extends DefaultScreen {
   onPressRow(rowData, sectionID) {
     console.log('row pressed');
   }
+  onDateChange = (date) => {
+    this.setState({chosenDate: date});
+  };
 
   renderRow(rowData, sectionID, rowID) {
     return (
       <TouchableOpacity onPress={this.onPressRow}>
-          <View>
+          <View style={styles.row}>
               <Text>{rowData.day}: {rowData.users.length} people available</Text>        
           </View>
       </TouchableOpacity>
@@ -54,7 +57,12 @@ export default class PickDateScreen extends DefaultScreen {
       <View
         style={styles.container}
       >
-
+      <CalendarPicker
+        onDateChange={this.onDateChange}
+      />
+      <View style={styles.listHeader}>
+        <Text > Friends Tentative availability </Text>
+      </View>
       <ListView
           dataSource={this.state.availability}
           renderRow={(rowData, sectionID, rowID) => this.renderRow(rowData, sectionID, rowID)}
@@ -75,4 +83,15 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
   },
+  listHeader: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 10
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    padding: 10,
+    backgroundColor: '#F6F6F6'
+  }
 });

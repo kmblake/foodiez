@@ -11,7 +11,8 @@ import {
   Alert,
   AsyncStorage,
   ActivityIndicator,
-  Button
+  Button,
+  NavigatorIOS
 } from 'react-native';
 
 import Expo from 'expo';
@@ -28,7 +29,8 @@ import EventListView from '../components/EventListView';
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
-      visible: false,
+      visible: true,
+      title: "My Events"
     },
   };
 
@@ -128,21 +130,14 @@ export default class HomeScreen extends React.Component {
   }
 
   renderFullView() {
+
+
     return (
 
       <View style={styles.container}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={require('../assets/images/expo-wordmark.png')}
-              style={styles.welcomeImage}
-            />
-          </View>
-          <Text>Hello {this.state.user.displayName}</Text>
-          <Text>Upcoming Events</Text>
           <EventListView navigator={this.props.navigator} />
         </ScrollView>
         <Button
@@ -222,7 +217,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   contentContainer: {
-    paddingTop: 80,
+    paddingTop: 0,
   },
   welcomeContainer: {
     alignItems: 'center',

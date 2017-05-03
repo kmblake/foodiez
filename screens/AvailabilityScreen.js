@@ -48,6 +48,22 @@ export default class AvailabilityScreen extends DefaultScreen {
     return (
       <View style={styles.container}>
         <View style={styles.datePicker}>
+          <Container>
+                <Content>
+                    <ListItem>
+                        <CheckBox checked={true} />
+                        <Body>
+                            <Text>Daily Stand Up</Text>
+                        </Body>
+                    </ListItem>
+                    <ListItem>
+                        <CheckBox checked={false} />
+                        <Body>
+                            <Text>Discussion with Client</Text>
+                        </Body>
+                    </ListItem>
+                </Content>
+            </Container>
          
           <Button
             onPress={() => (this.toggleAvailability(0))}

@@ -23,7 +23,7 @@ export default class DefaultScreen extends React.Component {
       let user_data = JSON.parse(user_data_json);
       if (user_data === null) {
         // Go home and let that component handle login
-        this.props.navigator.push('home');
+        this.props.navigator.push({component: 'home'});
       } else  {
         this.setState({
           user: user_data,
