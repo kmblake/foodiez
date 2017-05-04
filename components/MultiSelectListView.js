@@ -10,12 +10,13 @@ export default class MultiSelectListView extends React.Component {
   // Pass in renderRowContents function to render contents of row, 
   // onSelectionChanged callback to get filtered data,
   // dataSource as array of items to render
+  // initialCheckboxState = initial state of checkbox
 
   constructor(props) {
     super(props);
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.dataWithChecked = props.dataSource.map((item) => {
-      item.checked = false;
+      item.checked = !!this.props.initialCheckboxState;
       return item;
     });
     this.state = {
