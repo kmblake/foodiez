@@ -20,7 +20,6 @@ export default class EventListItemView extends React.Component {
             this._viewEvent(this.props.event.id);
           }}>
             <View style={theme.cardStyle}>
-              <Text style={theme.cardTitleStyle}>Welcome</Text>
               <Text style={theme.cardContentStyle}>
                 {this.props.event.host.name} is hosting {this.props.event.type} on {this.props.event.date}
               </Text>

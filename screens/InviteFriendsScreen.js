@@ -4,6 +4,7 @@ import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Container, Content, Body, ListItem, Text, CheckBox } from 'native-base';
+import MultiSelectListView from "../components/MultiSelectListView";
 
 export default class InviteFriendsScreen extends DefaultScreen {
   static route = {
@@ -14,53 +15,32 @@ export default class InviteFriendsScreen extends DefaultScreen {
 
   constructor(props) {
     super(props);
-    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => (r1 !== r2) });
     const availableFriends = JSON.parse(props.route.params.availableFriends);   
-    console.log(availableFriends.length);
-    this.availableFriendsWithCheck = availableFriends.map((user) => {
-      user.checked = false;
-      return user;
-    });
-    // var attendingArray = new Array(availableFriends.length).fill(false);
    
     this.state = {
-      logged_in: false, 
+      availableFriends: this.state.availableFriends,
+      logged_in: true, 
       date: new Date(props.route.params.date),
-      availableFriends: this.ds.cloneWithRows(this.availableFriendsWithCheck ),
       invitedFriends: []
     };
- 
 
   }
 
 
   onNextTap() {
-    this.state.invitedFriends.push(this.state.availableFriends.getRowData(0,0));
-    this.state.invitedFriends.push(this.state.availableFriends.getRowData(0,1));
     const dateString = this.state.date.toString();
     this.props.navigator.push(Router.getRoute('createEvent', {date: dateString, invitedFriends: JSON.stringify(this.state.invitedFriends)}));
     console.log('next tapped');
-    // this.props.navigator.push(Router.getRoute('addFriends'));
   }
 
-  onPressRow(rowID) {
-    this.availableFriendsWithCheck[rowID].checked = !this.availableFriendsWithCheck[rowID].checked;
-    this.setState({availableFriends: this.ds.cloneWithRows(this.availableFriendsWithCheck )});
-
-    // this.state.attendingArray[rowID] = !this.state.attendingArray[rowID];
-    // this.setState({attendingArray: this.state.attendingArray});
-    // console.log(this.state.attendingArray);
-  }
-
-  renderRow(user, sectionID, rowID) {
+  renderRowContents(user) {
     return (
-      <ListItem onPress={() => (this.onPressRow(rowID))}>
-          <Body>
-              <Text>{user.name}</Text>
-          </Body>
-          <CheckBox checked={user.checked} />
-      </ListItem>
+      <Text>{user.name}</Text>
     );
+  }
+
+  onSelectionChanged(invitedFriends) {
+    this.state.invitedFriends = invitedFriends;
   }
 
   renderView() {
@@ -69,9 +49,10 @@ export default class InviteFriendsScreen extends DefaultScreen {
       <View
         style={styles.container}
       >
-      <ListView
-          dataSource={this.state.availableFriends}
-          renderRow={(rowData, sectionID, rowID) => this.renderRow(rowData, sectionID, rowID)}
+      <MultiSelectListView
+        dataSource={JSON.parse(this.props.route.params.availableFriends)}
+        renderRowContents={this.renderRowContents.bind(this)}
+        onSelectionChanged={this.onSelectionChanged.bind(this)}
       />
       <Button
         onPress={() => (this.onNextTap())}
