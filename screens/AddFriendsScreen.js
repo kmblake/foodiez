@@ -22,7 +22,8 @@ export default class AddFriendsScreen extends DefaultScreen {
   }
 
   userDataToArray(userData) {
-    users = []
+    console.log(userData);
+    users = [];
     for (const id in userData) {
       if (id != this.state.user.uid) {
         var user = userData[id];

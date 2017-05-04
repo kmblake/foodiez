@@ -31,6 +31,7 @@ export default class PickDateScreen extends DefaultScreen {
     const dayOfWeek = this.state.chosenDate.getDay();
     const availableFriends = this.state.availability.getRowData(0, dayOfWeek).users;
     const dateString = this.state.chosenDate.toString();
+    console.log(dateString);
     this.props.navigator.push(Router.getRoute('inviteFriends', {date: dateString, availableFriends: JSON.stringify(availableFriends)}));
   }
 
@@ -58,8 +59,8 @@ export default class PickDateScreen extends DefaultScreen {
         style={styles.container}
       >
       <CalendarPicker
-        onDateChange={this.onDateChange}
-      />
+          onDateChange={this.onDateChange}
+        />
       <View style={styles.listHeader}>
         <Text > Friends Tentative availability </Text>
       </View>

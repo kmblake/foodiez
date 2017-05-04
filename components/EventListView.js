@@ -51,7 +51,8 @@ export default class EventListView extends React.Component {
 
   _renderRow(event, sectionID, rowID) {
     return (
-      <EventListItemView 
+      <EventListItemView
+        style={styles.row} 
         event={event} 
         rowID={rowID}
         navigator={this.props.navigator} 

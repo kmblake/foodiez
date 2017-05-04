@@ -33,7 +33,7 @@ export default class HomeScreen extends React.Component {
       title: "My Events"
     },
   };
-
+  
   constructor(props) {
     super(props);
     const self = this;
@@ -138,8 +138,9 @@ export default class HomeScreen extends React.Component {
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          <EventListView navigator={this.props.navigator} />
-        </ScrollView>
+          <EventListView 
+            navigator={this.props.navigator}/>
+        </ScrollView>        
         <Button
           onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
           title="New Event"

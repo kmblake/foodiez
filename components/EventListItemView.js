@@ -2,26 +2,36 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight, SegmentedControlIOS } from 'react-native';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
+import {
+  getTheme
+} from 'react-native-material-kit';
 
+const theme = getTheme();
 
 export default class EventListItemView extends React.Component {
 
   render() {
     const inviteResponseSelector = this.renderAttending();
+   
     return (
-      <View>
+
+      <View style={theme.cardStyle}>
         <TouchableHighlight onPress={() => {
             this._viewEvent(this.props.event.id);
           }}>
-          <View>
-            <View style={styles.row}>
-              <Text style={styles.text}>
-                {this.props.event.type} ({this.props.event.id}) Host: {this.props.event.host.name}
+            <View style={theme.cardStyle}>
+              <Text style={theme.cardTitleStyle}>Welcome</Text>
+              <Text style={theme.cardContentStyle}>
+                {this.props.event.host.name} is hosting {this.props.event.type} on {this.props.event.date}
               </Text>
+              <Text style={theme.cardContentStyle}>
+                Will you be attending?
+              </Text>
+              <View style={styles.response}>
+                {inviteResponseSelector}
+              </View>
             </View>
-          </View>
         </TouchableHighlight>
-        {inviteResponseSelector}
       </View>
     );
   }
@@ -69,6 +79,9 @@ const styles = StyleSheet.create({
   thumb: {
     width: 64,
     height: 64,
+  },
+  response: {
+    paddingBottom: 10,
   },
   text: {
     flex: 1,
