@@ -63,14 +63,14 @@ export default class HomeScreen extends React.Component {
 
   // Setup what to do with the user information.
   userFirstTimeCallback(user, exists) {
-    // if (!exists) {
-    if (true) {
+    if (!exists) {
       Database.setUserData(user.uid, {
         name: user.displayName,
         photoURL: user.photoURL,
-        email: user.email
+        email: user.email,
+        availability: [0, 1, 2, 3, 4, 5, 6]
       })
-      this.props.navigator.push(Router.getRoute('availability'));
+    this.props.navigator.push(Router.getRoute('availability'));
     }
   }
 
@@ -115,7 +115,6 @@ export default class HomeScreen extends React.Component {
       if (user_data === null) {
         this.logIn()
       } else  {
-        console.log(user_data);
         this.setState({
           user: user_data,
           logged_in: true

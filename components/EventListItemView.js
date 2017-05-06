@@ -12,6 +12,7 @@ export default class EventListItemView extends React.Component {
 
   render() {
     const inviteResponseSelector = this.renderAttending();
+    const d = new Date(this.props.event.date);
    
     return (
 
@@ -21,7 +22,7 @@ export default class EventListItemView extends React.Component {
           }}>
             <View style={theme.cardStyle}>
               <Text style={theme.cardContentStyle}>
-                {this.props.event.host.name} is hosting {this.props.event.type} on {this.props.event.date}
+                {this.props.event.host.name} is hosting {this.props.event.type} on {d.toString()}
               </Text>
               <Text style={theme.cardContentStyle}>
                 Will you be attending?
@@ -53,8 +54,6 @@ export default class EventListItemView extends React.Component {
     const values = ['Yes!', 'No', 'Not Sure'];
     const value = 'Not selected';
     const selectedIndex = acceptedToSelectorIndex[this.props.event.invitation.accepted];
-    console.log("selected index")
-    console.log(selectedIndex);
     return (
       <SegmentedControlIOS
         values={values}

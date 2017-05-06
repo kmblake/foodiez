@@ -22,6 +22,11 @@ export default class MultiSelectListView extends React.Component {
     this.state = {
       items: this.ds.cloneWithRows(this.dataWithChecked)
     };
+    // Initialize selectedItems in parents
+    const selectedItems = this.dataWithChecked.filter( (item) => {
+      return item.checked;
+    });
+    this.props.onSelectionChanged(selectedItems);
   }
 
   onPressRow(rowID) {
