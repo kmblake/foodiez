@@ -11,7 +11,8 @@ import {
   Alert,
   AsyncStorage,
   ActivityIndicator,
-  Button
+  Button,
+  NavigatorIOS
 } from 'react-native';
 
 import Expo from 'expo';
@@ -28,10 +29,11 @@ import EventListView from '../components/EventListView';
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
-      visible: false,
+      visible: true,
+      title: "My Events"
     },
   };
-
+  
   constructor(props) {
     super(props);
     const self = this;
@@ -65,9 +67,10 @@ export default class HomeScreen extends React.Component {
       Database.setUserData(user.uid, {
         name: user.displayName,
         photoURL: user.photoURL,
-        email: user.email
+        email: user.email,
+        availability: [0, 1, 2, 3, 4, 5, 6]
       })
-      this.props.navigator.push(Router.getRoute('availability'));
+    this.props.navigator.push(Router.getRoute('availability'));
     }
   }
 
@@ -112,7 +115,6 @@ export default class HomeScreen extends React.Component {
       if (user_data === null) {
         this.logIn()
       } else  {
-        console.log(user_data);
         this.setState({
           user: user_data,
           logged_in: true
@@ -128,23 +130,17 @@ export default class HomeScreen extends React.Component {
   }
 
   renderFullView() {
+
+
     return (
 
       <View style={styles.container}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={require('../assets/images/expo-wordmark.png')}
-              style={styles.welcomeImage}
-            />
-          </View>
-          <Text>Hello {this.state.user.displayName}</Text>
-          <Text>Upcoming Events</Text>
-          <EventListView navigator={this.props.navigator} />
-        </ScrollView>
+          <EventListView 
+            navigator={this.props.navigator}/>
+        </ScrollView>        
         <Button
           onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
           title="New Event"
@@ -222,7 +218,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   contentContainer: {
-    paddingTop: 80,
+    paddingTop: 0,
   },
   welcomeContainer: {
     alignItems: 'center',
