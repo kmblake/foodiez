@@ -21,6 +21,12 @@ export default class EventListView extends React.Component {
     this.updateData();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.shouldSync) {
+      updateData();
+    }
+  }
+
   updateData() {
     this.setState({loaded: false})
     Database.getEvents().then( (events) => {

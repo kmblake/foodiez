@@ -3,12 +3,6 @@ import * as firebase from "firebase";
 
 class Database {
 
-  static testMethod() {
-    firebase.database().ref('testData/1').set({
-      posted: true
-    });
-  }
-
   static setUserData(userId, data) {
     let userPath = "/users/" + userId;
     return firebase.database().ref(userPath).update(data);
@@ -93,6 +87,55 @@ class Database {
       firebase.database().ref('invitations').push({eventId: eventId, uid: friend.uid, accepted: null});
     }
     firebase.database().ref('invitations').push({eventId: eventId, uid: curUid, accepted: true});
+    Database.notifyInvitees(event, invitedFriends);
+
+  }
+
+  static notifyInvitees(event, invitedFriends) {
+    const curUser = firebase.auth().currentUser;
+    const PUSH_ENDPOINT = 'https://exp.host/--/api/v2/push/send';
+    const eventTypeToText = {
+      'tapas': 'Tapas Night', 
+      'summer_bbq': 'Summer BBQ', 
+      'taco_night': 'Taco Night', 
+      'pizza': 'Pizza Party', 
+      'custom': 'dinner'};
+    const inviteMessage = curUser.displayName + " invited you to " + eventTypeToText[event.type] + "!";
+    var promises = invitedFriends.map((friend) => {
+      const query = firebase.database().ref('/users/' + friend.uid)
+      return query.once('value');
+    });
+    Promise.all(promises).then( (snaps) => {
+      try {
+        var notifications = [];
+        snaps.forEach((snap, i) => {
+          var user = snap.val();
+          if (!!user.token) {
+            notifications.push({
+              to: user.token,
+              body: inviteMessage,
+              data: {
+                message: inviteMessage
+              }
+            });
+          }
+        });
+        fetch(PUSH_ENDPOINT, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Accept-Encoding': 'gzip, deflate',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(notifications),
+        }).then( (response) => {
+          //console.log(response);
+          //TODO: Handle error with response?
+        });
+      } catch(e) {
+        console.error(e);
+      }
+    });
 
   }
 
@@ -180,74 +223,6 @@ class Database {
     });
   }
 
-
-  //     const invites = snapshot.val();
-  //     var promises = [];
-  //     for (const id in invites) {
-  //       const query = eventRef.orderByKey().equalTo(invites[id].eventId);
-  //       promises.push(query.once('value'));
-  //     }
-  //     Promise.all(promises).then( (snaps) => {
-  //       try {
-  //         var events = [];
-  //         snaps.forEach((snap) => {
-  //           var userPromises = [];
-  //           var event = Object.values(snap.val())[0];
-  //           events.push(event);
-
-  //           // Object.values(snap.val())[0].attending.forEach( (uid) => {
-  //           //   const query = userRef.orderByKey().equalTo(uid);
-  //           //   userPromises.push(query.once('value'));
-  //           //   Promise.all(userPromises).then( (userSnaps) => {
-  //           //     var users = [];
-  //           //     userSnaps.forEach( (userSnap) => {
-  //           //       const user = Object.values(userSnap.val())[0];
-  //           //       users.push({
-  //           //         uid: Object.keys(userSnap.val())[0],
-  //           //         name: user.name,
-  //           //         photoURL: user.photoURL
-  //           //       });
-  //           //     });
-  //           //     var event = Object.values(snap.val())[0];
-  //           //     event.attending = users;
-  //           //     event.id = Object.keys(snap.val())[0];
-  //           //     events.push(event);
-  //           //     console.log(events);
-  //           //     onEventsLoaded(events);
-  //           //   });
-  //           // });
-  //         });
-  //         onEventsLoaded(events);
-  //       } catch(e) {
-  //         onError(e);
-  //       }
-  //     }).catch((e) => {
-  //       onError(e);
-  //     });
-  //   });
-
-  // }
-
-  /**
-   * Listen for changes to a users mobile number
-   * @param userId
-   * @param callback Users mobile number
-   */
-  static listenUserMobile(userId, callback) {
-
-    let userMobilePath = "/users/" + userId + "/details";
-
-    firebase.database().ref(userMobilePath).on('value', (snapshot) => {
-
-      var mobile = "";
-
-      if (snapshot.val()) {
-          mobile = snapshot.val().mobile
-      }
-
-      callback(mobile)
-    });
-  }
 
 }
 

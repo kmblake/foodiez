@@ -1,6 +1,6 @@
 import Expo from 'expo';
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage, Text } from 'react-native';
 import { NavigationProvider, StackNavigation } from '@expo/ex-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 
@@ -26,14 +26,12 @@ class AppContainer extends React.Component {
         } catch (error) {
           console.error(error);
         }
+        console.log(firebase.auth().currentUser);
+        this.setState({userLoaded: true});
       } else {
-        try {
-          AsyncStorage.removeItem('user_data');
-        } catch (error) {
-          console.log("Could not remove user data");
-        }
+        this.logIn();
       }
-      this.setState({userLoaded: true});
+      
     });
   }
 
@@ -57,25 +55,51 @@ class AppContainer extends React.Component {
     }
   }
 
-  render() {
-    if (this.state.appIsReady && this.state.userLoaded) {
-      return (
-        <View style={styles.container}>
-          <NavigationProvider router={Router}>
-            <StackNavigation
-              id="root"
-              initialRoute={Router.getRoute('rootNavigation')}
-            />
-          </NavigationProvider>
+  async logIn() {
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('214299995728740', {
+        permissions: ['public_profile', 'email', 'user_friends'],
+      });
+    if (type === 'success') {
+      // Build Firebase credential with the Facebook access token.
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);
 
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          {Platform.OS === 'android' &&
-            <View style={styles.statusBarUnderlay} />}
+      // Sign in with credential from the Facebook user.
+      firebase.auth().signInWithCredential(credential).catch((error) => {
+        console.log(error)
+      });
+    }
+   }
+
+
+  render() {
+    if (this.state.appIsReady) {
+      if (this.state.userLoaded) {
+        return (
+          <View style={styles.container}>
+            <NavigationProvider router={Router}>
+              <StackNavigation
+                id="root"
+                initialRoute={Router.getRoute('rootNavigation')}
+              />
+            </NavigationProvider>
+
+            {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+            {Platform.OS === 'android' &&
+              <View style={styles.statusBarUnderlay} />}
+          </View>
+        );
+      } else {
+        <View style={styles.container}>
+          <Text>Welcome to Foodiez! Please log in</Text>
         </View>
-      );
+      }
     } else {
       return <Expo.AppLoading />;
     }
+    return (
+      <View style={styles.container}>
+        <Text>Welcome to Foodiez! Please log in</Text>
+      </View>);
   }
 }
 

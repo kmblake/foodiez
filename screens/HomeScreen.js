@@ -37,7 +37,7 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
     const self = this;
-    this.state = {logged_in: false};
+    this.state = {logged_in: false, shouldSync: false};
     
   }
 
@@ -46,6 +46,7 @@ export default class HomeScreen extends React.Component {
   }
 
   getUserData() {
+    var self = this;
     AsyncStorage.getItem('user_data').then((user_data_json) => {
       let user_data = JSON.parse(user_data_json);
       if (user_data === null) {
@@ -100,35 +101,16 @@ export default class HomeScreen extends React.Component {
    logout() {
     firebase.auth().signOut().then(function() {
       console.log('User logged out');
-      this.setState({logged_in: false});
       this.logIn();
+      // this.setState({logged_in: false, shouldSync: true});
     }).catch(function(error) {
       console.log(error);
     });
 
    }
-
-  // getUserData() {
-  //   AsyncStorage.getItem('user_data').then((user_data_json) => {
-  //     let user_data = JSON.parse(user_data_json);
-  //     if (user_data === null) {
-  //       this.logIn()
-  //     } else  {
-  //       this.setState({
-  //         user: user_data,
-  //         logged_in: true
-  //       });
-  //     }
-  //   }).catch( (error) => {
-  //     console.log(error)
-  //   });
-  // }
-
  
 
   renderFullView() {
-
-
     return (
 
       <View style={styles.container}>
@@ -136,6 +118,7 @@ export default class HomeScreen extends React.Component {
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
           <EventListView 
+            shouldSync={this.state.shouldSync}
             navigator={this.props.navigator}/>
         </ScrollView>        
         <Button
