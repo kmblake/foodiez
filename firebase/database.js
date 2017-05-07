@@ -180,21 +180,58 @@ class Database {
 
   }
 
-  static getAttending(eventId) {
+  static async getAttendance(eventId) {
     const eventRef = firebase.database().ref('/events/' + eventId);
-    return eventRef.once('value').then((snapshot) => {
-      return new Promise( (resolve, reject) => {
-        try {
-          var attending = snapshot.val().attending;
-          if (attending === undefined || attending == null) {
-            attending = [];
-          }
-          resolve(attending);
-        } catch(e) {
-          reject(e);
-        }
+
+    let snapshot = await eventRef.once('value');
+    var attending = snapshot.val().attending;
+    if (attending === undefined || attending == null) {
+      attending = [];
+    }
+
+    const invitationRef = firebase.database().ref('invitations');
+    let invitesSnap = await invitationRef.orderByChild('eventId').equalTo(eventId).once('value')
+    let invites = invitesSnap.val();
+
+    var attendance = []
+    for (const id in invites) {
+      let invite = invites[id]
+      let userSnap = await firebase.database().ref('/users/' + invite.uid).once('value');
+      let user = userSnap.val();
+      attendance.push({
+        name: user.name,
+        uid: invite.uid,
+        photoURL: user.photoURL,
+        accepted: invite.accepted
       });
-    });
+    }
+    // var attendance = invites.map( async (invite) => {
+    //   let userSnap = await firebase.database().ref('/users/' + invite.uid).once('value');
+    //   let user = userSnap.val();
+    //   return {
+    //     name: user.name,
+    //     uid: invite.uid,
+    //     photoURL: user.photoURL,
+    //     accepted: invite.accepted
+    //   }
+    // });
+    console.log(attendance);
+    return attendance
+
+
+    // return eventRef.once('value').then((snapshot) => {
+    //   return new Promise( (resolve, reject) => {
+    //     try {
+    //       var attending = snapshot.val().attending;
+    //       if (attending === undefined || attending == null) {
+    //         attending = [];
+    //       }
+    //       resolve(attending);
+    //     } catch(e) {
+    //       reject(e);
+    //     }
+    //   });
+    // });
   }
 
   static respondToInvite(event, accepted) {
