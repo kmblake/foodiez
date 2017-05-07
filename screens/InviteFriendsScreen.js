@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button, ListView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Button, ListView, TouchableOpacity, Image } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -35,7 +35,10 @@ export default class InviteFriendsScreen extends DefaultScreen {
 
   renderRowContents(user) {
     return (
-      <Text>{user.name}</Text>
+      <View style={styles.row}>
+        <Image style={styles.profileImage} source={{uri: user.photoURL}} />
+        <Text style={{paddingLeft: 5}} >{user.name}</Text>
+      </View>
     );
   }
 
@@ -66,8 +69,20 @@ export default class InviteFriendsScreen extends DefaultScreen {
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 40,
+    width: 300,
+    alignItems: 'center'
+  },
+  profileImage: {
+    width: 40, 
+    height: 40,
+    borderRadius: 20
+  },
   container: {
     flex: 1,
     paddingTop: 15,
-  },
+  }
 });

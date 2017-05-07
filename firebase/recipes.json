@@ -1,0 +1,96 @@
+{
+	"recipes": {
+		"tapas": [
+			{
+				"title": "Chorizo Corn Dogs with Grainy Maple Mustard",
+				"url": "http://www.cookingchanneltv.com/recipes/nadia-g/chorizo-corn-dogs-with-grainy-maple-mustard",
+				"photoURL": "http://cook.fnr.sndimg.com/content/dam/images/cook/fullset/2012/11/30/0/CCBKN308_Chorizo-Corn-Dogs-recipe_s4x3.jpg.rend.hgtvcom.616.462.jpeg"
+			},
+			{
+				"title": "Spinach and Ricotta Stuffed Mushrooms",
+				"url": "http://thebusybaker.ca/spinach-and-ricotta-stuffed-mushrooms/",
+				"photoURL": "http://thebusybaker.ca/wp-content/uploads/2016/04/spinach-ricotta-stuffed-mushrooms-title.jpg"
+			},
+			{
+				"title": "Pesto Grilled Shrimp",
+				"url": "http://www.closetcooking.com/2013/06/pesto-grilled-shrimp.html",
+				"photoURL": "http://4.bp.blogspot.com/-NbVDgtsac6E/Ucg5F6m_1vI/AAAAAAAAX3w/7CWOsZm2eF0/s800/Pesto+Grilled+Shrimp+500+4153.jpg"
+			},
+			{
+				"title": "Avocado and Tuna Tapas",
+				"url": "http://allrecipes.com/recipe/139620/avocado-and-tuna-tapas/",
+				"photoURL": "http://images.media-allrecipes.com/userphotos/560x315/1010868.jpg"
+			}
+		],
+
+		"summer_bbq": [
+			{
+				"title": "Carrot Hot Dog",
+				"url": "http://nutritionistmeetschef.com/the-best-carrot-hot-dog/",
+				"photoURL": "http://nutritionistmeetschef.com/wp-content/uploads/2016/11/carrot-hot-dog7.jpg"
+			},
+			{
+				"title": "Carrot-Top Pesto Pasta Salad",
+				"url": "https://munchies.vice.com/en_us/article/carrot-top-pesto-pasta-salad",
+				"photoURL": "https://munchies-images.vice.com/wp_upload/NRDC-carrot-pesto-pasta.jpg"
+			},
+			{
+				"title": "Sweet Chili Grilled Chicken",
+				"url": "https://www.averiecooks.com/2017/05/sweet-chili-grilled-chicken.html#",
+				"photoURL": "https://cdn.averiecooks.com/wp-content/uploads/2017/04/chilichickencollage.jpg"
+			},
+			{
+				"title": "Grilled Dijon Salmon Skewers",
+				"url": "http://www.danicaliforniacooks.com/grilled-dijon-salmon-skewers/",
+				"photoURL": "http://www.danicaliforniacooks.com/wp-content/uploads/2016/08/DCCSalmonSkewers2.jpg"
+			}
+		],
+
+		"taco_night": [
+			{
+				"title": "Chickpea and Avocado Pita Tostadas with Rhubarb-Radish Slaw",
+				"url": "http://www.floatingkitchen.net/chickpea-and-avocado-pita-tostadas-with-rhubarb-radish-slaw/",
+				"photoURL": "http://www.floatingkitchen.net/wp-content/uploads/2017/04/Chickpea-Avocado-Tostadas-Rhubarb-Slaw-4.jpg"
+			},
+			{
+				"title": "Cuban-Style Shredded Beef Tacos with Mojo Salsa",
+				"url": "http://www.chilipeppermadness.com/chili-pepper-recipes/tacos/cuban-style-shredded-beef-tacos-with-mojo-salsa",
+				"photoURL": "http://www.chilipeppermadness.com/media/k2/items/cache/2dee5982cbdc2b7b7b3c545e34831370_L.jpg"
+			},
+			{
+				"title": "Crispy Cauliflower Chimichurri  Tacos",
+				"url": "http://www.thefullhelping.com/crispy-cauliflower-chimichurri-tacos/",
+				"photoURL": "http://www.thefullhelping.com/wp-content/uploads/2017/05/Crispy-Cauliflower-Chimichurri-Tacos-7.jpg"
+			},
+			{
+				"title": "Easy Mexican Shrimp Taco",
+				"url": "http://honeyandspiced.com/easy-mexican-shrimp-tacos-recipe/",
+				"photoURL": "https://i0.wp.com/honeyandspiced.com/wp-content/uploads/2017/05/IMG_4382-1.jpg"
+			}
+		],
+
+		"pizza": [
+			{
+				"title": "Summer Blueberry Pizza with Beet Pesto",
+				"url": "http://leangreennutritionfiend.com/summer-blueberry-pizza-beet-pesto/",
+				"photoURL": "https://i2.wp.com/leangreennutritionfiend.com/wp-content/uploads/2016/07/summer-blueberry-pizza-7.jpg"
+			},
+			{
+				"title": "Classic Pizza Margherita",
+				"url": "http://www.nourish-and-fete.com/2017/03/classic-pizza-margherita/",
+				"photoURL": "https://i0.wp.com/c1.staticflickr.com/3/2844/33414546956_f501c65dea_c.jpg"
+			},
+			{
+				"title": "White Clam Pizza",
+				"url": "http://thecharmingdetroiter.com/white-clam-pizza/",
+				"photoURL": "http://thecharmingdetroiter.com/wp-content/uploads/2016/01/DSC_3874.jpg"
+			},
+			{
+				"title": "Asparagus Pizza with Sopressata and Lemon Zest",
+				"url": "http://www.ddevourr.com/asparagus-pizza/",
+				"photoURL": "https://i1.wp.com/www.ddevourr.com/wordpress/wp-content/uploads/2017/04/asparagus-pizza-vert-feature.jpg"
+			}
+		]
+
+	}
+}

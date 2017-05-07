@@ -27,7 +27,7 @@ export default class ViewEventScreen extends React.Component {
   }
 
   updateData() {
-    Database.getAttending(this.state.event.id).then( (attending) => {
+    Database.getAttendance(this.state.event.id).then( (attending) => {
       this.setState({
       users: this.ds.cloneWithRows(attending)
       });
@@ -41,15 +41,16 @@ export default class ViewEventScreen extends React.Component {
   }
 
   render() {
+    // const isAttending = (!!user.accepted) ? 'is attending!' : '';
     return (
       <View style={styles.container}>
         <Text style={styles.text}>
-          {this.state.event.type} ({this.state.event.id}) Host: {this.state.event.host.name}
+          {this.state.event.type} ({this.state.event.id}) Host: {this.state.event.host.name} 
         </Text>
         <Text>Attending</Text>
         <ListView
           dataSource={this.state.users}
-          renderRow={(user) => <Text>{user.name} ({user.uid})</Text>}
+          renderRow={(user) => <Text>{user.name} ({user.uid}) {(!!user.accepted) ? 'is attending!' : ''}</Text>}
         />
         <Button
           onPress={() => (this.onDoneTap())}
