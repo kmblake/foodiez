@@ -38,26 +38,27 @@ export default class HomeScreen extends React.Component {
     super(props);
     const self = this;
     this.state = {logged_in: false};
-    firebase.auth().onAuthStateChanged((user) => {
-      if (user != null) {
-        console.log("We are authenticated now!");
-        try {
-          AsyncStorage.setItem('user_data', JSON.stringify(user))
-          this.checkForFirstTime(user);
-          self.setState({user: user, logged_in: true});
-        } catch (error) {
-          console.error(error);
-        }
-      } else {
-        try {
-          AsyncStorage.removeItem('user_data');
-          self.logIn();
-        } catch (error) {
-          console.log("Could not remove user data")
-        }
-      }
+    
+  }
 
-      // Do other things
+   componentWillMount() {
+    this.getUserData();
+  }
+
+  getUserData() {
+    AsyncStorage.getItem('user_data').then((user_data_json) => {
+      let user_data = JSON.parse(user_data_json);
+      if (user_data === null) {
+        self.logIn();
+      } else  {
+        this.checkForFirstTime(user_data);
+        this.setState({
+          user: user_data,
+          logged_in: true
+        });
+      }
+    }).catch( (error) => {
+      console.error(error)
     });
   }
 
@@ -74,9 +75,7 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-  // Tests to see if /users/<userId> exists. 
   checkForFirstTime(user) {
-    // const usersRef = firebase.database().ref("users");
     firebase.database().ref('users/' + user.uid).once('value').then((snapshot) => {
       var exists = (snapshot.val() !== null);
       this.userFirstTimeCallback(user, exists);
@@ -109,25 +108,23 @@ export default class HomeScreen extends React.Component {
 
    }
 
-  getUserData() {
-    AsyncStorage.getItem('user_data').then((user_data_json) => {
-      let user_data = JSON.parse(user_data_json);
-      if (user_data === null) {
-        this.logIn()
-      } else  {
-        this.setState({
-          user: user_data,
-          logged_in: true
-        });
-      }
-    }).catch( (error) => {
-      console.log(error)
-    });
-  }
+  // getUserData() {
+  //   AsyncStorage.getItem('user_data').then((user_data_json) => {
+  //     let user_data = JSON.parse(user_data_json);
+  //     if (user_data === null) {
+  //       this.logIn()
+  //     } else  {
+  //       this.setState({
+  //         user: user_data,
+  //         logged_in: true
+  //       });
+  //     }
+  //   }).catch( (error) => {
+  //     console.log(error)
+  //   });
+  // }
 
-  componentWillMount() {
-    this.getUserData();
-  }
+ 
 
   renderFullView() {
 

@@ -1,5 +1,6 @@
 import { Platform } from 'react-native';
 import { Permissions, Notifications } from 'expo';
+// import Database from '../firebase'
 
 // Example server, implemented in Rails: https://git.io/vKHKv
 const PUSH_ENDPOINT = 'https://exponent-push-server.herokuapp.com/tokens';
@@ -16,6 +17,9 @@ export default (async function registerForPushNotificationsAsync() {
 
   // Get the token that uniquely identifies this device
   let token = await Notifications.getExponentPushTokenAsync();
+
+  // const 
+  // Database.setUserData()
 
   // POST the token to our backend so we can use it to send pushes from there
   return fetch(PUSH_ENDPOINT, {

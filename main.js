@@ -1,21 +1,40 @@
 import Expo from 'expo';
 import React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { Platform, StatusBar, StyleSheet, View, AsyncStorage } from 'react-native';
 import { NavigationProvider, StackNavigation } from '@expo/ex-navigation';
 import { FontAwesome } from '@expo/vector-icons';
 
 import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
 import Firebase from './firebase/firebase';
+import * as firebase from "firebase";
 
 class AppContainer extends React.Component {
   state = {
     appIsReady: false,
+    userLoaded: false
   };
 
   componentWillMount() {
     this._loadAssetsAsync();
-    Firebase.initialize()
+    Firebase.initialize();
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user != null) {
+        console.log("We are authenticated now!");
+        try {
+          AsyncStorage.setItem('user_data', JSON.stringify(user))
+        } catch (error) {
+          console.error(error);
+        }
+      } else {
+        try {
+          AsyncStorage.removeItem('user_data');
+        } catch (error) {
+          console.log("Could not remove user data");
+        }
+      }
+      this.setState({userLoaded: true});
+    });
   }
 
   async _loadAssetsAsync() {
@@ -39,7 +58,7 @@ class AppContainer extends React.Component {
   }
 
   render() {
-    if (this.state.appIsReady) {
+    if (this.state.appIsReady && this.state.userLoaded) {
       return (
         <View style={styles.container}>
           <NavigationProvider router={Router}>
