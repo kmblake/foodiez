@@ -7,7 +7,9 @@ import AvailabilityScreen from '../screens/AvailabilityScreen';
 import PickDateScreen from '../screens/PickDateScreen';
 import InviteFriendsScreen from '../screens/InviteFriendsScreen';
 import CreateEventScreen from '../screens/CreateEventScreen';
+import PickRecipesScreen from '../screens/PickRecipesScreen';
 import ViewEventScreen from '../screens/ViewEventScreen';
+import ConfirmEventScreen from '../screens/ConfirmEventScreen';
 import RootNavigation from './RootNavigation';
 
 export default createRouter(() => ({
@@ -19,5 +21,7 @@ export default createRouter(() => ({
   pickDate: () => PickDateScreen,
   inviteFriends: () => InviteFriendsScreen,
   createEvent: () => CreateEventScreen,
-  viewEvent: () => ViewEventScreen
+  viewEvent: () => ViewEventScreen,
+  pickRecipes: () => PickRecipesScreen,
+  confirmEvent: () => ConfirmEventScreen
 }));
