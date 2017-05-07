@@ -111,6 +111,7 @@ export default class HomeScreen extends React.Component {
  
 
   renderFullView() {
+    console.log(this.state.user.photoURL);
     return (
 
       <View style={styles.container}>

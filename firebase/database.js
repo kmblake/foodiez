@@ -173,8 +173,6 @@ class Database {
               }
             });
           });
-          console.log('invites');
-          console.log(invites);
           resolve(events);
       });
      });

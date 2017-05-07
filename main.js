@@ -26,7 +26,6 @@ class AppContainer extends React.Component {
         } catch (error) {
           console.error(error);
         }
-        console.log(firebase.auth().currentUser);
         this.setState({userLoaded: true});
       } else {
         this.logIn();
