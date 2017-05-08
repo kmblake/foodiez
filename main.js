@@ -8,6 +8,7 @@ import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
 import Firebase from './firebase/firebase';
 import * as firebase from "firebase";
+import Database from './firebase/database'
 
 class AppContainer extends React.Component {
   state = {
@@ -16,6 +17,7 @@ class AppContainer extends React.Component {
   };
 
   componentWillMount() {
+    global.initializing = true;
     this._loadAssetsAsync();
     Firebase.initialize();
     firebase.auth().onAuthStateChanged((user) => {
@@ -28,7 +30,13 @@ class AppContainer extends React.Component {
         }
         this.setState({userLoaded: true});
       } else {
-        this.logIn();
+        try {
+          AsyncStorage.removeItem('user_data');
+        } catch (error) {
+          console.log(error.message);
+        }
+        if (global.initializing)
+          Firebase.logIn();
       }
       
     });
@@ -54,22 +62,6 @@ class AppContainer extends React.Component {
     }
   }
 
-  async logIn() {
-    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('214299995728740', {
-        permissions: ['public_profile', 'email', 'user_friends'],
-      });
-    if (type === 'success') {
-      // Build Firebase credential with the Facebook access token.
-      const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-      // Sign in with credential from the Facebook user.
-      firebase.auth().signInWithCredential(credential).catch((error) => {
-        console.log(error)
-      });
-    }
-   }
-
-
   render() {
     if (this.state.appIsReady) {
       if (this.state.userLoaded) {
@@ -87,18 +79,9 @@ class AppContainer extends React.Component {
               <View style={styles.statusBarUnderlay} />}
           </View>
         );
-      } else {
-        <View style={styles.container}>
-          <Text>Welcome to Foodiez! Please log in</Text>
-        </View>
-      }
-    } else {
-      return <Expo.AppLoading />;
-    }
-    return (
-      <View style={styles.container}>
-        <Text>Welcome to Foodiez! Please log in</Text>
-      </View>);
+      } 
+    } 
+    return <Expo.AppLoading />;
   }
 }
 

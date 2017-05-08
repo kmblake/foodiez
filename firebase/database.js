@@ -38,45 +38,97 @@ class Database {
     });
   }
 
-  static getBestDays() {
-    const curUserAuth = firebase.auth().currentUser;
-
-    var getBestDaysGivenCurUserSnapshot = ((curUserSnapshot) => {
-      const curUser = curUserSnapshot.val();
-      return new Promise( (resolve, reject) => {
-        firebase.database().ref('/users').once('value').then((snapshot) => {
-          try {
-            userData = snapshot.val();
-            availabilityHash = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []}
-            daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-            for (const id in userData) {
-              if (id != curUserAuth.uid) {
-                var user = userData[id];
-                for (day in user.availability) {
-                  day = parseInt(day);
-                  if (curUser.availability.indexOf(day) >= 0) {
-                    availabilityHash[daysOfWeek[day]].push({uid: id, name: user.name, photoURL: user.photoURL})
-                  }
-                }
-              }
-            }
-            availability = []
-            for (day in availabilityHash) {
-              availability.push({
-                day: day,
-                users: availabilityHash[day]
-              });
-            }
-            resolve(availability);
-          } catch (e) {
-            reject(e);
-          }
-        });
-      });
-    });
-    //TODO: Update to query only friends
-    return firebase.database().ref('/users/' + curUserAuth.uid).once('value').then(getBestDaysGivenCurUserSnapshot);
+  static async syncFriends(token, uid) {
+    const url = "https://graph.facebook.com/v2.9/me?fields=friends&access_token=" + token; 
+    const response = await fetch(url);
+    const data = await response.json();
+    friends = [];
+    const userRef = firebase.database().ref('users')
+    for (i in data.friends.data) {
+      const friend = data.friends.data[i];
+      const friendName = friend.name;
+      const userSnap = await userRef.orderByChild('name').equalTo(friend.name).once('value');
+      const userObj = userSnap.val();
+      if (!!userObj) {
+        const friendUid = Object.keys(userObj)[0];
+        friends.push(friendUid);
+        userFriends = (!!userObj.friends) ? userObj.friends : [];
+        if (userFriends.indexOf(uid) < 0) {
+          userFriends.push(uid);
+          const res = await firebase.database().ref("/users/" + userObj.uid).update({friends: userFriends});
+        }
+      }
+    }
+    return firebase.database().ref("/users/" + uid).update({friends: friends});
   }
+
+  static async getBestDays() {
+    const curUserAuth = firebase.auth().currentUser;
+    const curUserSnapshot = await firebase.database().ref('/users/' + curUserAuth.uid).once('value');
+    const curUser = curUserSnapshot.val();
+    availabilityHash = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []}
+    daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    for (i in curUser.friends) {
+      const fuid = curUser.friends[i];
+      const friendSnapshot = await firebase.database().ref('/users/' + fuid).once('value');
+      const friend = friendSnapshot.val();
+      
+      for (day in friend.availability) {
+        day = parseInt(day);
+        if (curUser.availability.indexOf(day) >= 0) {
+          availabilityHash[daysOfWeek[day]].push({uid: fuid, name: friend.name, photoURL: friend.photoURL})
+        }
+      }
+    }
+    availability = []
+    for (day in availabilityHash) {
+      availability.push({
+        day: day,
+        users: availabilityHash[day]
+      });
+    }
+    return availability
+  }
+
+  // static getBestDays() {
+  //   const curUserAuth = firebase.auth().currentUser;
+
+  //   var getBestDaysGivenCurUserSnapshot = ((curUserSnapshot) => {
+  //     const curUser = curUserSnapshot.val();
+  //     return new Promise( (resolve, reject) => {
+  //       firebase.database().ref('/users').once('value').then((snapshot) => {
+  //         try {
+  //           userData = snapshot.val();
+  //           availabilityHash = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []}
+  //           daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+  //           for (const id in userData) {
+  //             if (id != curUserAuth.uid) {
+  //               var user = userData[id];
+  //               for (day in user.availability) {
+  //                 day = parseInt(day);
+  //                 if (curUser.availability.indexOf(day) >= 0) {
+  //                   availabilityHash[daysOfWeek[day]].push({uid: id, name: user.name, photoURL: user.photoURL})
+  //                 }
+  //               }
+  //             }
+  //           }
+  //           availability = []
+  //           for (day in availabilityHash) {
+  //             availability.push({
+  //               day: day,
+  //               users: availabilityHash[day]
+  //             });
+  //           }
+  //           resolve(availability);
+  //         } catch (e) {
+  //           reject(e);
+  //         }
+  //       });
+  //     });
+  //   });
+  //   //TODO: Update to query only friends
+  //   return firebase.database().ref('/users/' + curUserAuth.uid).once('value').then(getBestDaysGivenCurUserSnapshot);
+  // }
 
   static createEvent(event, invitedFriends) {
     const curUid = firebase.auth().currentUser.uid;
