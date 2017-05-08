@@ -14,18 +14,14 @@ export default class InviteFriendsScreen extends DefaultScreen {
   };
 
   constructor(props) {
-    super(props);
-    const availableFriends = JSON.parse(props.route.params.availableFriends);   
-   
+    super(props);  
     this.state = {
-      availableFriends: this.state.availableFriends,
+      availableFriends: JSON.parse(props.route.params.availableFriends),
       logged_in: true, 
       date: new Date(props.route.params.date),
       invitedFriends: []
     };
-
   }
-
 
   onNextTap() {
     const dateString = this.state.date.toString();
@@ -53,7 +49,7 @@ export default class InviteFriendsScreen extends DefaultScreen {
         style={styles.container}
       >
       <MultiSelectListView
-        dataSource={JSON.parse(this.props.route.params.availableFriends)}
+        dataSource={this.state.availableFriends}
         renderRowContents={this.renderRowContents.bind(this)}
         onSelectionChanged={this.onSelectionChanged.bind(this)}
       />

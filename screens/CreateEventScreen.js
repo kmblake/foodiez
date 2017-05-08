@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput , View, Button, ListView, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, TextInput , View, Button, DatePickerIOS, ListView, TouchableOpacity, TouchableHighlight } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -9,7 +9,7 @@ import Carousel from 'react-native-carousel';
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
     navigationBar: {
-      title: 'What\'s for Dinner?',
+      title: 'Event Details',
     }
   };
 
@@ -24,8 +24,8 @@ export default class CreateEventScreen extends DefaultScreen {
       date: new Date(props.route.params.date),
       eventType: 'Dinner',
       eventTypes: eventTypes,
-      description: "Test description",
-      location: "Test location"
+      description: "Description",
+      location: "Location"
     };
   }
 
@@ -92,9 +92,22 @@ export default class CreateEventScreen extends DefaultScreen {
           onChangeText={(text) => this.setState({description: text})}
           value={this.state.text}/>
       </Item>
+      <Item regular>
+        <Input 
+          placeholder='Location'
+          onChangeText={(text) => this.setState({location: text})}
+          value={this.state.location}/>
+      </Item>
 
-      {carousel}    
+       <DatePickerIOS
+          date={this.state.date}
+          mode="time"
+          onDateChange={this.onDateChange}
+        />
+
       
+
+        {carousel}    
       <Button
         onPress={() => (this.onNextTap())}
         title="Create Event"

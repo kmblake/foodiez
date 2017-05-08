@@ -14,9 +14,7 @@ import {
   Button,
   NavigatorIOS
 } from 'react-native';
-
 import Expo from 'expo';
-
 import { MonoText } from '../components/StyledText';
 
 import Database from "../firebase/database";
@@ -26,16 +24,13 @@ import Router from '../navigation/Router';
 import EventListView from '../components/EventListView';
 
 
-export default class HomeScreen extends React.Component {
+export default class HostedEventsScreen extends React.Component {
   static route = {
     navigationBar: {
       visible: true,
-      title: "My Invites",
-      renderRight: (route, props) => <Button title="New Event" />,
-      renderLeft: (route, props) => <Button name="hallo" title="Logout" />
+      title: "My Events"
     },
   };
-  //Todo: icons and functions for nav bar buttons
 
   constructor(props) {
     super(props);
@@ -114,13 +109,15 @@ export default class HomeScreen extends React.Component {
  
 
   renderFullView() {
+    console.log(this.state.user.photoURL);
     return (
+
       <View style={styles.container}>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
-          <EventListView
-            hosting={false} 
+          <EventListView 
+            hosting={true}
             shouldSync={this.state.shouldSync}
             navigator={this.props.navigator}/>
         </ScrollView>        
@@ -152,43 +149,7 @@ export default class HomeScreen extends React.Component {
       return this.renderFullView();
     }
   }
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will run slightly slower but
-          you have access to useful development tools. {learnMoreButton}.
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    Linking.openURL(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    Linking.openURL(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

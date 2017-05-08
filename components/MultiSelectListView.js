@@ -49,6 +49,19 @@ export default class MultiSelectListView extends React.Component {
       </ListItem>
     );
   }
+ componentWillReceiveProps(newProps) {
+    this.dataWithChecked = newProps.dataSource.map((item) => {
+      item.checked = !!this.props.initialCheckboxState;
+      return item;
+    });
+    this.setState({
+      items: this.ds.cloneWithRows(this.dataWithChecked)
+    });
+    const selectedItems = this.dataWithChecked.filter( (item) => {
+      return item.checked;
+    });
+    this.props.onSelectionChanged(selectedItems);
+  }
 
   render() {
     return (

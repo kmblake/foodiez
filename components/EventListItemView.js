@@ -54,12 +54,20 @@ export default class EventListItemView extends React.Component {
     const values = ['Yes!', 'No', 'Not Sure'];
     const value = 'Not selected';
     const selectedIndex = acceptedToSelectorIndex[this.props.event.invitation.accepted];
-    return (
-      <SegmentedControlIOS
-        values={values}
-        selectedIndex={selectedIndex}
-        onChange={this._onInviteResponseChange.bind(this)} />
-    );
+    if (!this.props.hosting) {
+      return (
+        <SegmentedControlIOS
+          values={values}
+          selectedIndex={selectedIndex}
+          onChange={this._onInviteResponseChange.bind(this)} />
+      );
+    }
+    else {
+      return (
+        <View>
+        </View>
+      )
+    }
   } 
 }
 

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityInd
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import EventListItemView from "./EventListItemView";
-
+import * as firebase from "firebase";
 
 export default class EventListView extends React.Component {
 
@@ -27,11 +27,17 @@ export default class EventListView extends React.Component {
     }
   }
 
+  filterEvents(events) {
+    return this.props.hosting ? events.filter((event) => event.host.uid == firebase.auth().currentUser.uid) : events.filter((event) => event.host.uid != firebase.auth().currentUser.uid)
+  }
+
   updateData() {
-    this.setState({loaded: false})
+    this.setState({loaded: false});
     Database.getEvents().then( (events) => {
+
+      filteredEvents = this.filterEvents(events);
       this.setState({
-      events: this.ds.cloneWithRows(events),
+      events: this.ds.cloneWithRows(filteredEvents),
       loaded: true
       });
     }).catch( (error) => {
@@ -58,6 +64,7 @@ export default class EventListView extends React.Component {
   _renderRow(event, sectionID, rowID) {
     return (
       <EventListItemView
+        hosting={this.props.hosting}
         style={styles.row} 
         event={event} 
         rowID={rowID}

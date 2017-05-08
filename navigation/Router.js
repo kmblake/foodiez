@@ -11,9 +11,11 @@ import PickRecipesScreen from '../screens/PickRecipesScreen';
 import ViewEventScreen from '../screens/ViewEventScreen';
 import ConfirmEventScreen from '../screens/ConfirmEventScreen';
 import RootNavigation from './RootNavigation';
+import HostedEventsScreen from '../screens/HostedEventsScreen';
 
 export default createRouter(() => ({
   home: () => HomeScreen,
+  hosting: () => HostedEventsScreen,
   links: () => DefaultScreen,
   settings: () => SettingsScreen,
   availability: () => AvailabilityScreen,

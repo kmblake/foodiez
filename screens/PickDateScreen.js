@@ -1,24 +1,34 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, DatePickerIOS } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, ListView, TouchableOpacity, DatePickerIOS } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import CalendarPicker from 'react-native-calendar-picker';
+import MultiSelectListView from "../components/MultiSelectListView";
 
 export default class PickDateScreen extends DefaultScreen {
   static route = {
     navigationBar: {
       title: 'Pick a Date',
     }
+
   };
 
   constructor(props) {
     super(props);
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {logged_in: false, availability: ds.cloneWithRows([]), chosenDate: new Date()};
+
+    this.state = {
+      logged_in: true,
+      chosenDate: new Date(),
+      availability: [],
+      availableFriends: [],
+      invitedFriends: []
+    }; 
+  }
+
+  componentDidMount() {
     Database.getBestDays().then((availability) => {
-      console.log(availability);
-      this.setState({availability: ds.cloneWithRows(availability)})
+      this.setState({availability: availability, availableFriends: availability[this.state.chosenDate.getDay()].users});
     }).catch((e) => {
       console.log('Could not get availability');
       console.log("Error", e.stack);
@@ -29,44 +39,45 @@ export default class PickDateScreen extends DefaultScreen {
 
   onNextTap() {
     const dayOfWeek = this.state.chosenDate.getDay();
-    const availableFriends = this.state.availability.getRowData(0, dayOfWeek).users;
     const dateString = this.state.chosenDate.toString();
-    console.log(dateString);
-    this.props.navigator.push(Router.getRoute('inviteFriends', {date: dateString, availableFriends: JSON.stringify(availableFriends)}));
+    this.props.navigator.push(Router.getRoute('createEvent', {date: dateString, invitedFriends: JSON.stringify(this.state.invitedFriends)}));
   }
 
-  onPressRow(rowData, sectionID) {
-    console.log('row pressed');
-  }
   onDateChange = (date) => {
-    this.setState({chosenDate: date});
+    this.setState({chosenDate: date, availableFriends: availability[date.getDay()].users});
+
   };
 
-  renderRow(rowData, sectionID, rowID) {
+  renderRowContents(user) {
     return (
-      <TouchableOpacity onPress={this.onPressRow}>
-          <View style={styles.row}>
-              <Text>{rowData.day}: {rowData.users.length} people available</Text>        
-          </View>
-      </TouchableOpacity>
+      <View style={styles.row}>
+        <Image style={styles.profileImage} source={{uri: user.photoURL}} />
+        <Text style={{paddingLeft: 5}} >{user.name}</Text>
+      </View>
     );
   }
 
+  onSelectionChanged(invitedFriends) {
+    this.state.invitedFriends = invitedFriends;
+  }
+
   renderView() {
-    // Add date picker
+
     return (
       <View
         style={styles.container}
       >
-      <CalendarPicker
+        <CalendarPicker
           onDateChange={this.onDateChange}
         />
+     
       <View style={styles.listHeader}>
         <Text > Friends Tentative availability </Text>
       </View>
-      <ListView
-          dataSource={this.state.availability}
-          renderRow={(rowData, sectionID, rowID) => this.renderRow(rowData, sectionID, rowID)}
+      <MultiSelectListView
+        dataSource={this.state.availableFriends}
+        renderRowContents={this.renderRowContents.bind(this)}
+        onSelectionChanged={this.onSelectionChanged.bind(this)}
       />
       <Button
         onPress={() => (this.onNextTap())}
@@ -89,10 +100,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10
   },
+  profileImage: {
+    width: 40, 
+    height: 40,
+    borderRadius: 20
+  },
   row: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
-    padding: 10,
-    backgroundColor: '#F6F6F6'
+    height: 40,
+    width: 300,
+    alignItems: 'center'
   }
 });
