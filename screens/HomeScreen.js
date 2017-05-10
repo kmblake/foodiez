@@ -31,8 +31,12 @@ export default class HomeScreen extends React.Component {
     navigationBar: {
       visible: true,
       title: "My Invites",
-      renderRight: (route, props) => <Button title="New Event" />,
-      renderLeft: (route, props) => <Button name="hallo" title="Logout" />
+      renderRight: (route, props) => 
+        <Button 
+          title="New Event" 
+          onPress={() => (console.log('right pressed'))} 
+        />,
+      renderLeft: (route, props) => <Button name="hallo" title="Logout" onPress={() => (console.log('left pressed'))} />
     },
   };
   //Todo: icons and functions for nav bar buttons

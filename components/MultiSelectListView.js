@@ -68,6 +68,7 @@ export default class MultiSelectListView extends React.Component {
       <ListView
           dataSource={this.state.items}
           renderRow={(rowData, sectionID, rowID) => this.renderRow(rowData, sectionID, rowID)}
+          enableEmptySections={true}
       />
     );
   }

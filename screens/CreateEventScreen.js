@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput , View, Button, DatePickerIOS, ListView, To
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import { Container, Content, Item, Input } from 'native-base';
+import { Container, Content, Item, Input, Form, Label } from 'native-base';
 import Carousel from 'react-native-carousel';
 
 export default class CreateEventScreen extends DefaultScreen {
@@ -25,7 +25,8 @@ export default class CreateEventScreen extends DefaultScreen {
       eventType: 'Dinner',
       eventTypes: eventTypes,
       description: "Description",
-      location: "Location"
+      location: "Location",
+      showDatePicker: false
     };
   }
 
@@ -62,6 +63,12 @@ export default class CreateEventScreen extends DefaultScreen {
       {event: JSON.stringify(event), invitedFriends: this.props.route.params.invitedFriends}));
   }
 
+  onDatePress() {
+    this.setState({
+      showDatePicker: !this.state.showDatePicker
+    })
+  }
+
   renderCarousel() {
     return (
       <Carousel width={375}  animate={false}>
@@ -80,34 +87,55 @@ export default class CreateEventScreen extends DefaultScreen {
     );
   }
 
+  renderDatePicker() {
+    if (this.state.showDatePicker) {
+      return (
+      <DatePickerIOS
+         date={this.state.date}
+         mode="time"
+         onDateChange={this.onDateChange.bind(this)}
+       />);
+    } else {
+      return null;
+    }
+  }
+
+  onDateChange(date) {
+    this.setState({date: date});
+  }
+
   renderView() {
     const carousel = this.renderCarousel();
+    const datePicker = this.renderDatePicker();
     return (  
-      <View
-        style={styles.container}
-      >
-      <Item regular>
-        <Input 
-          placeholder='Description'
-          onChangeText={(text) => this.setState({description: text})}
-          value={this.state.text}/>
-      </Item>
-      <Item regular>
-        <Input 
-          placeholder='Location'
-          onChangeText={(text) => this.setState({location: text})}
-          value={this.state.location}/>
-      </Item>
-
-       <DatePickerIOS
-          date={this.state.date}
-          mode="time"
-          onDateChange={this.onDateChange}
-        />
-
-      
-
-        {carousel}    
+      <View style={styles.container}>
+      <Form>
+        <Item regular>
+          <Input 
+            placeholder='Description'
+            onChangeText={(text) => this.setState({description: text})}
+            value={this.state.text}/>
+        </Item>
+        <Item regular>
+          <Input 
+            placeholder='Location'
+            onChangeText={(text) => this.setState({location: text})}
+            value={this.state.location}/>
+        </Item>
+        <Item fixedLabel
+          onPress={this.onDatePress.bind(this)}
+        >
+          <Label>Date</Label>
+          <Input disabled
+            placeholder='Location'
+            onChangeText={(text) => this.setState({location: text})}
+            value={this.state.date.toString()}/>
+        </Item>
+        
+      </Form>
+       
+      {datePicker}
+      {carousel}   
       <Button
         onPress={() => (this.onNextTap())}
         title="Create Event"
