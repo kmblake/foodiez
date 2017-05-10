@@ -22,11 +22,13 @@ export default class CreateEventScreen extends DefaultScreen {
     this.state = {
       logged_in: true, 
       event: event,
-      invitedFriends: invitedFriends
+      invitedFriends: invitedFriends,
+      cost: 5
     };
   }
 
   onNextTap() {
+    this.state.event.cost = this.state.cost
     Database.createEvent(this.state.event, this.state.invitedFriends);
     this.props.navigator.push(Router.getRoute('home'));
   }
