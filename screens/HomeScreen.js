@@ -31,8 +31,12 @@ export default class HomeScreen extends React.Component {
     navigationBar: {
       visible: true,
       title: "My Invites",
-      renderRight: (route, props) => <Button title="New Event" />,
-      renderLeft: (route, props) => <Button name="hallo" title="Logout" />
+      renderRight: (route, props) => 
+        <Button 
+          title="New Event" 
+          onPress={() => (console.log('right pressed'))} 
+        />,
+      renderLeft: (route, props) => <Button name="hallo" title="Logout" onPress={() => (console.log('left pressed'))} />
     },
   };
   //Todo: icons and functions for nav bar buttons
@@ -68,7 +72,8 @@ export default class HomeScreen extends React.Component {
 
   // Setup what to do with the user information.
   userFirstTimeCallback(user, exists) {
-    if (!exists) {
+    // if (!exists) {
+    if (true) {
       Database.setUserData(user.uid, {
         name: user.displayName,
         photoURL: user.photoURL,

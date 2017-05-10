@@ -8,6 +8,7 @@ import {
 } from 'react-native-material-kit';
 import { Container, Content, List, ListItem, Text, CheckBox } from 'native-base';
 import MultiSelectListView from "../components/MultiSelectListView";
+import { Item, Input, Form, Label } from 'native-base';
 
 
 export default class AvailabilityScreen extends DefaultScreen {
@@ -44,7 +45,7 @@ export default class AvailabilityScreen extends DefaultScreen {
         index: 6
       }
     ];
-    this.state = {availability: []};
+    this.state = {availability: [], venmo: null};
   }
 
   static route = {
@@ -61,7 +62,8 @@ export default class AvailabilityScreen extends DefaultScreen {
     });
     Database.setUserData(this.state.user.uid, {
       // Days of week: 0 = Sunday, 6 = Saturday
-      availability: availArray
+      availability: availArray,
+      venmo: this.state.venmo
     });
     this.props.navigator.push(Router.getRoute('home'));
   }
@@ -94,6 +96,12 @@ export default class AvailabilityScreen extends DefaultScreen {
           onSelectionChanged={this.onSelectionChanged.bind(this)}
           initialCheckboxState={true}
         />
+        <Item fixedLabel>
+          <Label>Your Venmo</Label>
+          <Input 
+            onChangeText={(text) => this.setState({venmo: text})}
+          />
+        </Item>
         <View style={styles.container} >
           <Button
             onPress={() => (this.onNextTap())}
