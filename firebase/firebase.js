@@ -2,6 +2,7 @@
 import * as firebase from "firebase";
 import { AsyncStorage } from 'react-native';
 import Expo from 'expo';
+import Database from './database'
 
 class Firebase {
 
@@ -16,6 +17,25 @@ class Firebase {
       projectId: "foodiez-94ef8",
       storageBucket: "foodiez-94ef8.appspot.com",
     });
+  }
+
+  static async logIn() {
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('214299995728740', {
+        permissions: ['public_profile', 'email', 'user_friends'],
+      });
+    if (type === 'success') {
+      // Build Firebase credential with the Facebook access token.
+      const credential = firebase.auth.FacebookAuthProvider.credential(token);    
+
+      // Sign in with credential from the Facebook user.
+      result = await firebase.auth().signInWithCredential(credential);
+      Database.syncFriends(token, result.uid).catch( (error) => {
+        console.error(error);
+      });
+      return result;
+    } else {
+    return null;
+   }
   }
 }
 

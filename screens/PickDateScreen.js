@@ -30,10 +30,7 @@ export default class PickDateScreen extends DefaultScreen {
     Database.getBestDays().then((availability) => {
       this.setState({availability: availability, availableFriends: availability[this.state.chosenDate.getDay()].users});
     }).catch((e) => {
-      console.log('Could not get availability');
-      console.log("Error", e.stack);
-      console.log("Error", e.name);
-      console.log("Error", e.message);
+      console.error(e);
     });
   }
 

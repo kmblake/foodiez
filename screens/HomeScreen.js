@@ -32,13 +32,18 @@ export default class HomeScreen extends React.Component {
     navigationBar: {
       visible: true,
       title: "My Invites",
-      renderRight: (route, props) => <Button title="New Event" />,
-      renderLeft: (route, props) => <Button name="hallo" title="Logout" />
+      renderRight: (route, props) => 
+        <Button 
+          title="New Event" 
+          onPress={() => (console.log('right pressed'))} 
+        />,
+      renderLeft: (route, props) => <Button name="hallo" title="Logout" onPress={() => (console.log('left pressed'))} />
     },
   };
   //Todo: icons and functions for nav bar buttons
 
   constructor(props) {
+    global.initializing = false;
     super(props);
     const self = this;
     this.state = {logged_in: false, shouldSync: false};
@@ -53,7 +58,7 @@ export default class HomeScreen extends React.Component {
     AsyncStorage.getItem('user_data').then((user_data_json) => {
       let user_data = JSON.parse(user_data_json);
       if (user_data === null) {
-        self.logIn();
+        Firebase.logIn();
       } else  {
         this.checkForFirstTime(user_data);
         this.setState({
@@ -81,31 +86,27 @@ export default class HomeScreen extends React.Component {
 
   checkForFirstTime(user) {
     firebase.database().ref('users/' + user.uid).once('value').then((snapshot) => {
-      var exists = (snapshot.val() !== null);
+      var exists = (!!snapshot.val() && !!snapshot.val().name);
       this.userFirstTimeCallback(user, exists);
     });
   }
 
-  async logIn() {
-    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('214299995728740', {
-        permissions: ['public_profile', 'email', 'user_friends'],
-      });
-    if (type === 'success') {
-      // Build Firebase credential with the Facebook access token.
-      const credential = firebase.auth.FacebookAuthProvider.credential(token);
-
-      // Sign in with credential from the Facebook user.
-      firebase.auth().signInWithCredential(credential).catch((error) => {
-        console.log(error)
-      });
-    }
-   }
-
-   logout() {
+  logout() {
+    var self = this;
     firebase.auth().signOut().then(function() {
       console.log('User logged out');
-      this.logIn();
-      // this.setState({logged_in: false, shouldSync: true});
+      
+      AsyncStorage.removeItem('user_data');
+      // this.setState({logged_in: false});
+      Firebase.logIn().then( (user) => {
+        if (!!user) {
+          AsyncStorage.setItem('user_data', JSON.stringify(user)).then( () => {
+            self.getUserData();
+            self.setState({shouldSync: true});
+          });
+          
+        }
+      });
     }).catch(function(error) {
       console.log(error);
     });
@@ -116,7 +117,7 @@ export default class HomeScreen extends React.Component {
   renderFullView() {
     return (
       <View style={styles.container}>
-       
+        <Text>Hello, {this.state.user.displayName}</Text>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>

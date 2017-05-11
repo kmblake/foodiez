@@ -23,7 +23,7 @@ export default class EventListView extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.shouldSync) {
-      updateData();
+      this.updateData();
     }
   }
 
@@ -81,6 +81,7 @@ export default class EventListView extends React.Component {
           dataSource={this.state.events}
           // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
           renderRow={this._renderRow.bind(this)}
+          enableEmptySections={true}
         />
       <Button
         onPress={() => (this.updateData())}
