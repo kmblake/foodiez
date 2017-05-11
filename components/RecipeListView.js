@@ -1,11 +1,11 @@
 import React from 'react';
-import { StyleSheet, View, Button, ListView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Button, ListView, TouchableOpacity, Image, Linking } from 'react-native';
 import { Container, Content, Body, ListItem, Text, CheckBox } from 'native-base';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 
 
-export default class MultiSelectListView extends React.Component {
+export default class RecipeListView extends React.Component {
 
   // Pass in renderRowContents function to render contents of row, 
   // onSelectionChanged callback to get filtered data,
@@ -38,14 +38,20 @@ export default class MultiSelectListView extends React.Component {
     this.setState({items: this.ds.cloneWithRows(this.dataWithChecked)});
   }
 
-  renderRow(item, sectionID, rowID) {
-    const rowContents = this.props.renderRowContents(item);
+  showRecipeURL(url) {
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
+  }
+
+  renderRow(recipe, sectionID, rowID) {
     return (
-      <ListItem onPress={() => (this.onPressRow(rowID))} onLongPress={() => console.log("long press 1")}>
+      <ListItem onPress={() => (this.onPressRow(rowID))} onLongPress={() => {this.showRecipeURL(recipe.url)}}>
           <Body>
-              <Text>{rowContents}</Text>
+            <View style={styles.row}>
+              <Image style={styles.recipeImage} source={{uri: recipe.photoURL}} />
+              <Text style={{paddingLeft: 5}} >{recipe.title}</Text>
+            </View>
           </Body>
-          <CheckBox checked={item.checked} />
+          <CheckBox checked={recipe.checked} />
       </ListItem>
     );
   }
@@ -79,4 +85,16 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
   },
+  row: {
+    flex: 1,
+    flexDirection: 'row',
+    height: 40,
+    width: 300,
+    alignItems: 'center'
+  },
+  recipeImage: {
+    width: 40, 
+    height: 40,
+    // borderRadius: 20
+  }
 });
