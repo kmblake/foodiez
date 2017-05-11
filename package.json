@@ -13,6 +13,7 @@
   "dependencies": {
     "@expo/ex-navigation": "~2.10.0",
     "@expo/samples": "~1.0.3",
+    "@shoutem/ui": "^0.14.0",
     "carbon-ui": "github:tuckerconnelly/carbon-ui",
     "expo": "16.0.0",
     "firebase": "^3.9.0",
@@ -29,6 +30,8 @@
     "jest-expo": "0.4.0"
   },
   "rnpm": {
-    "assets" : ["./assets/fonts/Roboto"]
+    "assets": [
+      "./assets/fonts/Roboto"
+    ]
   }
 }

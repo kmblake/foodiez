@@ -130,15 +130,41 @@ class Database {
   //   return firebase.database().ref('/users/' + curUserAuth.uid).once('value').then(getBestDaysGivenCurUserSnapshot);
   // }
 
-  static createEvent(event, invitedFriends) {
+  static async makeVenmoURL(event, curUid) {
+    const snapshot = await firebase.database().ref('/users/' + curUid).once('value');
+    const user = snapshot.val();
+    if (!!user.venmo) {
+      var url = 'https://venmo.com/?txn=pay&audience=friends&recipients=';
+      url += user.venmo;
+      url += '&amount=' + event.cost;
+      url += '&note=Dinner%20(foodiez)';
+      return url;
+    } else {
+      return null;
+    }
+  }
+
+  static async createEvent(event, invitedFriends) {
+    //TODO: add error checking
     const curUid = firebase.auth().currentUser.uid;
+    const venmoURL = await Database.makeVenmoURL(event, curUid);
+    event.venmoURL = venmoURL;
     const eventRef = firebase.database().ref('events').push(event);
     const eventId = eventRef.key;
+    var deadline = new Date(event.date);
+    deadline.setDate(deadline.getDate() - 1);
     for (i in invitedFriends) {
       const friend = invitedFriends[i];
-      firebase.database().ref('invitations').push({eventId: eventId, uid: friend.uid, accepted: null});
+      firebase.database().ref('invitations').push({
+        eventId: eventId, 
+        uid: friend.uid, 
+        accepted: null, 
+        event_date: event.date,
+        deadline: deadline.getTime(),
+        paid: false
+      });
     }
-    firebase.database().ref('invitations').push({eventId: eventId, uid: curUid, accepted: true});
+    firebase.database().ref('invitations').push({eventId: eventId, uid: curUid, accepted: true, event_date: event.date,});
     Database.notifyInvitees(event, invitedFriends);
 
   }
@@ -219,9 +245,12 @@ class Database {
               description: event.description,
               host: event.host,
               location: event.location,
+              cost: event.cost,
               invitation: {
                 id: Object.keys(invites)[i],
-                accepted: Object.values(invites)[i].accepted
+                accepted: Object.values(invites)[i].accepted,
+                deadline: Object.values(invites)[i].deadline,
+                paid: Object.values(invites)[i].paid
               }
             });
           });
@@ -257,57 +286,82 @@ class Database {
         accepted: invite.accepted
       });
     }
-    // var attendance = invites.map( async (invite) => {
-    //   let userSnap = await firebase.database().ref('/users/' + invite.uid).once('value');
-    //   let user = userSnap.val();
-    //   return {
-    //     name: user.name,
-    //     uid: invite.uid,
-    //     photoURL: user.photoURL,
-    //     accepted: invite.accepted
-    //   }
-    // });
-    console.log(attendance);
     return attendance
-
-
-    // return eventRef.once('value').then((snapshot) => {
-    //   return new Promise( (resolve, reject) => {
-    //     try {
-    //       var attending = snapshot.val().attending;
-    //       if (attending === undefined || attending == null) {
-    //         attending = [];
-    //       }
-    //       resolve(attending);
-    //     } catch(e) {
-    //       reject(e);
-    //     }
-    //   });
-    // });
   }
 
-  static respondToInvite(event, accepted) {
+  static async notifyHost(event, accepted, curUser) {
+    const hostId = event.host.uid;
+    const PUSH_ENDPOINT = 'https://exp.host/--/api/v2/push/send';
+    const eventTypeToText = {
+      'tapas': 'Tapas Night', 
+      'summer_bbq': 'Summer BBQ', 
+      'taco_night': 'Taco Night', 
+      'pizza': 'Pizza Party', 
+      'custom': 'Dinner'};
+    const status = !!accepted ? 'attending' : 'not attending';
+    const message = curUser.displayName + ' is ' + status + ' ' + eventTypeToText[event.type];
+    const hostSnap = await firebase.database().ref('/users/' + hostId).once('value');
+    const host = hostSnap.val()
+    if (!!host.token) {
+      var notifications = [];
+      notifications.push({
+        to: host.token,
+        body: message,
+        data: {
+          message: message
+        }
+      });
+      const response = await fetch(PUSH_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Accept-Encoding': 'gzip, deflate',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(notifications),
+      });
+      console.log(response);
+    }
+  }
+
+  static async respondToInvite(event, accepted) {
     //TODO: Handle failure?
     const curUser = firebase.auth().currentUser;
     const eventRef = firebase.database().ref('/events/' + event.id);
     const invitationRef = firebase.database().ref('/invitations/' + event.invitation.id);
     invitationRef.update({accepted: accepted});
-    eventRef.once('value').then((snapshot) => {
-      var event = snapshot.val();
-      var attending = event.attending;
-      if (!!accepted) {
-        attending.push({
-          name: curUser.displayName,
-          photoURL: curUser.photoURL,
-          uid: curUser.uid
-        });
-      } else {
-        attending = attending.filter((user) => {
-          return (user.uid != curUser.uid); 
-        });
-      }
-      eventRef.update({attending: attending});
-    });
+    const snapshot = await eventRef.once('value');
+    var event = snapshot.val();
+    var attending = event.attending;
+    if (!!accepted) {
+      attending.push({
+        name: curUser.displayName,
+        photoURL: curUser.photoURL,
+        uid: curUser.uid
+      });
+    } else {
+      attending = attending.filter((user) => {
+        return (user.uid != curUser.uid); 
+      });
+    }
+    eventRef.update({attending: attending});
+    Database.notifyHost(event, accepted, curUser)
+
+
+
+  //   .then((snapshot) => {
+      
+  //     try {
+  //       var notifications = [];
+  //       notifications.push({
+  //         to: user.token,
+  //         body: inviteMessage,
+  //         data: {
+  //           message: inviteMessage
+  //         }
+  //       });
+  //     }
+  //   });
   }
 
 
