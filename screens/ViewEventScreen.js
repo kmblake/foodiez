@@ -113,11 +113,11 @@ export default class ViewEventScreen extends React.Component {
                 Suggest Donation Amount $5
             </Text>
         </View>
-        <View style={styles.buttonContainer}>
+      
           <View style={styles.button}>
               <Button primary text="Pay With Venmo" icon="monetization-on" onPress={() => this.renderWebView()} />
           </View>
-        </View>
+
       </Card>
       </View>
     );
