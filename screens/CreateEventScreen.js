@@ -1,13 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput , View, Button, DatePickerIOS, ListView, TouchableOpacity, TouchableHighlight, Image } from 'react-native';
+import { StyleSheet, Text, TextInput , View, Button, DatePickerIOS, ListView, Dimensions, TouchableOpacity, TouchableHighlight, Image } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Container, Content, Item, Input, Form, Label } from 'native-base';
 import Carousel from 'react-native-carousel';
 import recipeData from "../firebase/recipes.json"
-
-
+import { Card } from 'react-native-material-ui'
+ 
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
     navigationBar: {
@@ -72,6 +72,8 @@ export default class CreateEventScreen extends DefaultScreen {
   }
 
   renderCarousel() {
+
+    var {height, width} = Dimensions.get('window');
     const eventTypeToText = {
       'tapas': 'Tapas Night', 
       'summer_bbq': 'Summer BBQ', 
@@ -81,18 +83,18 @@ export default class CreateEventScreen extends DefaultScreen {
     var carouselViews = Object.keys(recipeData.recipes).map( (key) => {
       const title = eventTypeToText[key]
       return (
-        <View key={key} style={styles.carouselContainer}>
-          <TouchableHighlight onPress={() => this.onMenuPress(key)}>
+        <View width={width} key={key} style={styles.carouselContainer}>
+          <Card onPress={() => this.onMenuPress(key)}>
             <View style={styles.eventTypeView} >
               <Image style={styles.recipeImage} source={{uri: recipeData.recipes[key][0].photoURL}} />
               <Text>{title}</Text>
             </View>
-          </TouchableHighlight>
+          </Card>
         </View>
       );
     });
     return (
-      <Carousel width={375}  animate={false} indicatorOffset={20}>
+      <Carousel width={width} style={styles.carouselContainer} animate={false} indicatorOffset={20}>
         {carouselViews}
       </Carousel>
     );
@@ -164,8 +166,8 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
   carouselContainer: {
-    width: 375,
     flex: 1,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
