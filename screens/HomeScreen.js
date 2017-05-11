@@ -24,6 +24,7 @@ import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
 import Router from '../navigation/Router';
 import EventListView from '../components/EventListView';
+import { Toolbar } from 'react-native-material-ui';
 
 
 export default class HomeScreen extends React.Component {
@@ -41,7 +42,6 @@ export default class HomeScreen extends React.Component {
     super(props);
     const self = this;
     this.state = {logged_in: false, shouldSync: false};
-    
   }
 
    componentWillMount() {
@@ -116,6 +116,7 @@ export default class HomeScreen extends React.Component {
   renderFullView() {
     return (
       <View style={styles.container}>
+       
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>

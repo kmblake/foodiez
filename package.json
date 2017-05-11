@@ -22,9 +22,13 @@
     "react-native-calendar-picker": "^5.7.0",
     "react-native-checkbox": "^1.1.0",
     "react-native-material-kit": "^0.4.1",
+    "react-native-material-ui": "^1.10.0",
     "react-native-search-bar": "^3.0.0"
   },
   "devDependencies": {
     "jest-expo": "0.4.0"
+  },
+  "rnpm": {
+    "assets" : ["./assets/fonts/Roboto"]
   }
 }

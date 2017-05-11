@@ -8,8 +8,23 @@ import Router from './navigation/Router';
 import cacheAssetsAsync from './utilities/cacheAssetsAsync';
 import Firebase from './firebase/firebase';
 import * as firebase from "firebase";
+import { COLOR, ThemeProvider } from 'react-native-material-ui';
+
+const uiTheme = {
+    palette: {
+        primaryColor: COLOR.green500,
+    },
+    toolbar: {
+        container: {
+            height: 50,
+        },
+    },
+  };
 
 class AppContainer extends React.Component {
+
+  
+
   state = {
     appIsReady: false,
     userLoaded: false
@@ -34,13 +49,71 @@ class AppContainer extends React.Component {
     });
   }
 
+
   async _loadAssetsAsync() {
+    try {
+      await Font.loadAsync({
+        'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
+        'Rubik-BlackItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BlackItalic.ttf'),
+        'Rubik-Bold': require('./node_modules/@shoutem/ui/fonts/Rubik-Bold.ttf'),
+        'Rubik-BoldItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BoldItalic.ttf'),
+        'Rubik-Italic': require('./node_modules/@shoutem/ui/fonts/Rubik-Italic.ttf'),
+        'Rubik-Light': require('./node_modules/@shoutem/ui/fonts/Rubik-Light.ttf'),
+        'Rubik-LightItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-LightItalic.ttf'),
+        'Rubik-Medium': require('./node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf'),
+        'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
+        'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
+        'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
+        'Roboto-Black': require('./assets/fonts/Roboto/Roboto-Black.ttf'),
+        'Roboto-BlackItalic': require('./assets/fonts/Roboto/Roboto-BlackItalic.ttf'),
+        'Roboto-Bold': require('./assets/fonts/Roboto/Roboto-Bold.ttf'),
+        'Roboto-BoldItalic': require('./assets/fonts/Roboto/Roboto-BoldItalic.ttf'),
+        'Roboto-Italic': require('./assets/fonts/Roboto/Roboto-Italic.ttf'),
+        'Roboto-Light': require('./assets/fonts/Roboto/Roboto-Light.ttf'),
+        'Roboto-LightItalic': require('./assets/fonts/Roboto/Roboto-LightItalic.ttf'),
+        'Roboto-Medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto-MediumItalic': require('./assets/fonts/Roboto/Roboto-MediumItalic.ttf'),
+        'Roboto-Regular': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+        'Roboto': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+        'Roboto-Thin': require('./assets/fonts/Roboto/Roboto-Thin.ttf'),
+        'Roboto-ThinItalic': require('./assets/fonts/Roboto/Roboto-ThinItalic.ttf'),
+      });
+    } catch (e) {
+
+    } finally {
+      this.setState({fontsAreLoaded: true});
+    }
+    
     try {
       await cacheAssetsAsync({
         images: [require('./assets/images/expo-wordmark.png')],
         fonts: [
           FontAwesome.font,
-          { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
+          { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+            'Rubik-Black': require('./node_modules/@shoutem/ui/fonts/Rubik-Black.ttf'),
+            'Rubik-BlackItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BlackItalic.ttf'),
+            'Rubik-Bold': require('./node_modules/@shoutem/ui/fonts/Rubik-Bold.ttf'),
+            'Rubik-BoldItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-BoldItalic.ttf'),
+            'Rubik-Italic': require('./node_modules/@shoutem/ui/fonts/Rubik-Italic.ttf'),
+            'Rubik-Light': require('./node_modules/@shoutem/ui/fonts/Rubik-Light.ttf'),
+            'Rubik-LightItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-LightItalic.ttf'),
+            'Rubik-Medium': require('./node_modules/@shoutem/ui/fonts/Rubik-Medium.ttf'),
+            'Rubik-MediumItalic': require('./node_modules/@shoutem/ui/fonts/Rubik-MediumItalic.ttf'),
+            'Rubik-Regular': require('./node_modules/@shoutem/ui/fonts/Rubik-Regular.ttf'),
+            'rubicon-icon-font': require('./node_modules/@shoutem/ui/fonts/rubicon-icon-font.ttf'),
+            'Roboto-Black': require('./assets/fonts/Roboto/Roboto-Black.ttf'),
+            'Roboto-BlackItalic': require('./assets/fonts/Roboto/Roboto-BlackItalic.ttf'),
+            'Roboto-Bold': require('./assets/fonts/Roboto/Roboto-Bold.ttf'),
+            'Roboto-BoldItalic': require('./assets/fonts/Roboto/Roboto-BoldItalic.ttf'),
+            'Roboto-Italic': require('./assets/fonts/Roboto/Roboto-Italic.ttf'),
+            'Roboto-Light': require('./assets/fonts/Roboto/Roboto-Light.ttf'),
+            'Roboto-LightItalic': require('./assets/fonts/Roboto/Roboto-LightItalic.ttf'),
+            'Roboto-Medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+            'Roboto-MediumItalic': require('./assets/fonts/Roboto/Roboto-MediumItalic.ttf'),
+            'Roboto-Regular': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+            'Roboto': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
+            'Roboto-Thin': require('./assets/fonts/Roboto/Roboto-Thin.ttf'),
+            'Roboto-ThinItalic': require('./assets/fonts/Roboto/Roboto-ThinItalic.ttf') },
         ],
       });
     } catch (e) {
@@ -71,9 +144,11 @@ class AppContainer extends React.Component {
 
 
   render() {
+
     if (this.state.appIsReady) {
       if (this.state.userLoaded) {
         return (
+          <ThemeProvider uiTheme={uiTheme}>
           <View style={styles.container}>
             <NavigationProvider router={Router}>
               <StackNavigation
@@ -86,6 +161,7 @@ class AppContainer extends React.Component {
             {Platform.OS === 'android' &&
               <View style={styles.statusBarUnderlay} />}
           </View>
+          </ThemeProvider>
         );
       } else {
         <View style={styles.container}>
