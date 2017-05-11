@@ -144,9 +144,9 @@ export default class CreateEventScreen extends DefaultScreen {
         </Item>
         
       </Form>
-      <Text>Choose a seasonal menu:</Text>
        
       {datePicker}
+      <Text>Choose a seasonal menu:</Text>
       {carousel}   
       <Button
         onPress={() => (this.onNextTap())}

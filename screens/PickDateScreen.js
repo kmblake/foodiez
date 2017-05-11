@@ -90,7 +90,7 @@ export default class PickDateScreen extends DefaultScreen {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 15
   },
   listHeader: {
     flexDirection: 'row',
