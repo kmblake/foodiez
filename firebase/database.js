@@ -320,7 +320,8 @@ class Database {
         },
         body: JSON.stringify(notifications),
       });
-      console.log(response);
+      // console.log(response);
+      //TODO: Handle response
     }
   }
 
