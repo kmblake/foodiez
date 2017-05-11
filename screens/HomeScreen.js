@@ -117,7 +117,7 @@ export default class HomeScreen extends React.Component {
   renderFullView() {
     return (
       <View style={styles.container}>
-        <Text>Hello, {this.state.user.displayName}</Text>
+        <Text style={styles.helloText} >Hello, {this.state.user.displayName}</Text>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
@@ -195,6 +195,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  helloText: {
+    color: 'rgba(0,0,0,0.4)'
   },
   developmentModeText: {
     marginBottom: 20,

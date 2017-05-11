@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, Button, ListView, TouchableOpacity, Image, Text } from 'react-native';
+import { StyleSheet, View, Button, ListView, TouchableHighlight, Image, Text, Linking } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import MultiSelectListView from "../components/MultiSelectListView";
+import RecipeListView from "../components/RecipeListView";
 import recipeData from "../firebase/recipes.json"
 
 export default class PickRecipesScreen extends DefaultScreen {
@@ -25,18 +25,24 @@ export default class PickRecipesScreen extends DefaultScreen {
 
   }
 
-
   onNextTap() {
     this.state.event.recipes = this.state.chosenRecipes;
     this.props.navigator.push(Router.getRoute('confirmEvent', 
       {event: JSON.stringify(this.state.event), invitedFriends: this.props.route.params.invitedFriends}));
   }
 
-  renderRowContents(recipe) {
-    return (
-      <Text>{recipe.title}</Text>
-    );
-  }
+  
+
+  // renderRowContents(recipe) {
+  //   return (
+  //       <TouchableHighlight onLongPress={() => {this.showRecipeURL(recipe.url)}} style={styles.row}>
+  //         <View style={styles.row}>
+  //           <Image style={styles.recipeImage} source={{uri: recipe.photoURL}} />
+  //           <Text style={{paddingLeft: 5}} >{recipe.title}</Text>
+  //         </View>
+  //       </TouchableHighlight>
+  //   );
+  // }
 
   onSelectionChanged(chosenRecipes) {
     this.state.chosenRecipes = chosenRecipes;
@@ -48,9 +54,8 @@ export default class PickRecipesScreen extends DefaultScreen {
       <View
         style={styles.container}
       >
-      <MultiSelectListView
+      <RecipeListView
         dataSource={recipeData.recipes[this.state.event.type]}
-        renderRowContents={this.renderRowContents.bind(this)}
         onSelectionChanged={this.onSelectionChanged.bind(this)}
       />
       <Button

@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput , View, Button, DatePickerIOS, ListView, TouchableOpacity, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, TextInput , View, Button, DatePickerIOS, ListView, TouchableOpacity, TouchableHighlight, Image } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Container, Content, Item, Input, Form, Label } from 'native-base';
 import Carousel from 'react-native-carousel';
+import recipeData from "../firebase/recipes.json"
+
 
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
@@ -70,19 +72,28 @@ export default class CreateEventScreen extends DefaultScreen {
   }
 
   renderCarousel() {
-    return (
-      <Carousel width={375}  animate={false}>
-        <View style={styles.carouselContainer}>
-          <TouchableHighlight onPress={() => this.onMenuPress('tapas')}>
-            <Text>Tapas</Text>
+    const eventTypeToText = {
+      'tapas': 'Tapas Night', 
+      'summer_bbq': 'Summer BBQ', 
+      'taco_night': 'Taco Night', 
+      'pizza': 'Pizza Party', 
+      'custom': 'Dinner'};
+    var carouselViews = Object.keys(recipeData.recipes).map( (key) => {
+      const title = eventTypeToText[key]
+      return (
+        <View key={key} style={styles.carouselContainer}>
+          <TouchableHighlight onPress={() => this.onMenuPress(key)}>
+            <View style={styles.eventTypeView} >
+              <Image style={styles.recipeImage} source={{uri: recipeData.recipes[key][0].photoURL}} />
+              <Text>{title}</Text>
+            </View>
           </TouchableHighlight>
         </View>
-        <View style={styles.carouselContainer}>
-          <Text>Page 2</Text>
-        </View>
-        <View style={styles.carouselContainer}>
-          <Text>Page 3</Text>
-        </View>
+      );
+    });
+    return (
+      <Carousel width={375}  animate={false} indicatorOffset={20}>
+        {carouselViews}
       </Carousel>
     );
   }
@@ -133,13 +144,13 @@ export default class CreateEventScreen extends DefaultScreen {
         </Item>
         
       </Form>
+      <Text>Choose a seasonal menu:</Text>
        
       {datePicker}
       {carousel}   
       <Button
         onPress={() => (this.onNextTap())}
-        title="Create Event"
-        color="#841584"
+        title="No thanks, I'll use my own menu!"
       />
 
       </View>
@@ -174,4 +185,13 @@ const styles = StyleSheet.create({
     height: 48,  // have to do it on iOS
     marginTop: 10,
   },
+  recipeImage: {
+    height: 250,
+    width: 350,
+    resizeMode: 'contain'
+  },
+  eventTypeView: {
+    flex: 1,
+    flexDirection: 'column'
+  }
 });
