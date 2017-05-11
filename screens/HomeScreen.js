@@ -119,11 +119,7 @@ export default class HomeScreen extends React.Component {
             navigator={this.props.navigator}/>
         </ScrollView>
 
-        <ActionButton
-          actions={[{ icon: 'sms', label: 'Create Event'}, { icon: 'favorite', label: 'logout'}]}
-          icon="share"
-          transition="speedDial"
-        />
+       
                
         <Button
           raised
@@ -141,6 +137,11 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   }
+   // <ActionButton
+   //        actions={[{ icon: 'sms', label: 'Create Event'}, { icon: 'favorite', label: 'logout'}]}
+   //        icon="share"
+   //        transition="speedDial"
+   //      />
 
   render() {
     if (!this.state.logged_in) {
