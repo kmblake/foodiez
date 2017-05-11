@@ -1,80 +1,49 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight, SegmentedControlIOS } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight, SegmentedControlIOS } from 'react-native';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import {
-  getTheme
-} from 'react-native-material-kit';
-
-const theme = getTheme();
+import { Avatar, Card, ListItem, Toolbar } from 'react-native-material-ui';
 
 export default class EventListItemView extends React.Component {
 
   render() {
-    const inviteResponseSelector = this.renderAttending();
     const d = new Date(this.props.event.date);
    
     return (
 
-      <View style={theme.cardStyle}>
-        <TouchableHighlight onPress={() => {
+      <Card onPress={() => {
             this._viewEvent(this.props.event.id);
           }}>
-            <View style={theme.cardStyle}>
-              <Text style={theme.cardContentStyle}>
-                {this.props.event.host.name} is hosting {this.props.event.type} on {d.toString()}
-              </Text>
-              <Text style={theme.cardContentStyle}>
-                Will you be attending?
-              </Text>
-              <View style={styles.response}>
-                {inviteResponseSelector}
-              </View>
-            </View>
-        </TouchableHighlight>
-      </View>
+        <ListItem
+            leftElement={<Image source={{uri: this.props.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
+            centerElement={{
+                primaryText: this.props.event.type,
+                secondaryText: d.toString(),
+            }}
+        />
+        <View style={styles.textContainer}>
+            <Text>
+                {this.props.event.host.name} is hosting {this.props.event.type} 
+            </Text>
+        </View>
+      </Card>
     );
   }
 
   _viewEvent (rowID: number) {
     this.props.navigator.push(Router.getRoute('viewEvent', {event: JSON.stringify(this.props.event)}));
   }
-
-  _onInviteResponseChange(event) {
-    const newIndex = event.nativeEvent.selectedSegmentIndex;
-    const selectorIndexToAccepted = [true, false, null];
-    console.log("New invite status");
-    console.log(selectorIndexToAccepted[newIndex]);
-    Database.respondToInvite(this.props.event, selectorIndexToAccepted[newIndex]);
-
-  }
-
-  renderAttending() {
-    const acceptedToSelectorIndex = {true: 0, false: 1, undefined: 2};
-    const values = ['Yes!', 'No', 'Not Sure'];
-    const value = 'Not selected';
-    const selectedIndex = acceptedToSelectorIndex[this.props.event.invitation.accepted];
-    if (!this.props.hosting) {
-      return (
-        <SegmentedControlIOS
-          values={values}
-          selectedIndex={selectedIndex}
-          onChange={this._onInviteResponseChange.bind(this)} />
-      );
-    }
-    else {
-      return (
-        <View>
-        </View>
-      )
-    }
-  } 
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+  },
+  textContainer: {
+    paddingLeft: 10,
+    paddingBottom: 10,
+    paddingRight: 10,
   },
   row: {
     flexDirection: 'row',

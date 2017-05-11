@@ -11,7 +11,6 @@ import {
   Alert,
   AsyncStorage,
   ActivityIndicator,
-  Button,
   NavigatorIOS
 } from 'react-native';
 import Expo from 'expo';
@@ -22,6 +21,7 @@ import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
 import Router from '../navigation/Router';
 import EventListView from '../components/EventListView';
+import { Toolbar, Button } from 'react-native-material-ui';
 
 
 export default class HostedEventsScreen extends React.Component {
@@ -122,13 +122,17 @@ export default class HostedEventsScreen extends React.Component {
             navigator={this.props.navigator}/>
         </ScrollView>        
         <Button
+          raised
+          primary
           onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
-          title="New Event"
+          text="New Event"
         />
         <Button
+          raised 
+          primary
           onPress={() => (this.logout())}
-          title="Logout"
-          color="#841584"
+          text="Logout"
+          
         />
       </View>
     );

@@ -11,7 +11,6 @@ import {
   Alert,
   AsyncStorage,
   ActivityIndicator,
-  Button,
   NavigatorIOS
 } from 'react-native';
 
@@ -24,20 +23,14 @@ import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
 import Router from '../navigation/Router';
 import EventListView from '../components/EventListView';
-import { Toolbar } from 'react-native-material-ui';
+import { Toolbar, Button, ActionButton } from 'react-native-material-ui';
 
 
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
       visible: true,
-      title: "My Invites",
-      renderRight: (route, props) => 
-        <Button 
-          title="New Event" 
-          onPress={() => (console.log('right pressed'))} 
-        />,
-      renderLeft: (route, props) => <Button name="hallo" title="Logout" onPress={() => (console.log('left pressed'))} />
+      title: "Events",
     },
   };
   //Todo: icons and functions for nav bar buttons
@@ -117,7 +110,6 @@ export default class HomeScreen extends React.Component {
   renderFullView() {
     return (
       <View style={styles.container}>
-        <Text>Hello, {this.state.user.displayName}</Text>
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
@@ -125,15 +117,26 @@ export default class HomeScreen extends React.Component {
             hosting={false} 
             shouldSync={this.state.shouldSync}
             navigator={this.props.navigator}/>
-        </ScrollView>        
+        </ScrollView>
+
+        <ActionButton
+          actions={[{ icon: 'sms', label: 'Create Event'}, { icon: 'favorite', label: 'logout'}]}
+          icon="share"
+          transition="speedDial"
+        />
+               
         <Button
+          raised
+          primary
           onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
-          title="New Event"
+          text="New Event"
         />
         <Button
+          raised 
+          primary
           onPress={() => (this.logout())}
-          title="Logout"
-          color="#841584"
+          text="Logout"
+          
         />
       </View>
     );

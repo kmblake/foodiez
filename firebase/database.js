@@ -246,6 +246,7 @@ class Database {
               host: event.host,
               location: event.location,
               cost: event.cost,
+              venmoURL: event.venmoURL,
               invitation: {
                 id: Object.keys(invites)[i],
                 accepted: Object.values(invites)[i].accepted,
