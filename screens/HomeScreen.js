@@ -113,14 +113,13 @@ export default class HomeScreen extends React.Component {
     });
   };
 
-
-  // renderEventList() {
-  //   if (this.state.selectedIndex == 0) {
-
-  //   } else {
-
-  //   }
-  // }
+  buttonPressed(icon) {
+    if (icon === 'schedule') {
+      this.props.navigator.push(Router.getRoute('pickDate'));
+    } else if (icon === 'input') {
+      this.logout();
+    }
+  }
  
 
   renderFullView() {
@@ -138,28 +137,32 @@ export default class HomeScreen extends React.Component {
             hosting={this.state.selectedIndex == 1} 
             shouldSync={this.state.shouldSync}
             navigator={this.props.navigator}/>
-        </ScrollView>    
-        <Button
-          raised
-          primary
-          onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
-          text="New Event"
-        />
-        <Button
-          raised 
-          primary
-          onPress={() => (this.logout())}
-          text="Logout"
-          
-        />
+        </ScrollView>  
+
+        
+        <ActionButton
+          actions={[{ icon: 'schedule', label: 'Create Event'}, { icon: 'input', label: 'logout'}]}
+          icon="share"
+          transition="speedDial"
+          onPress={this.buttonPressed.bind(this)}
+        />  
       </View>
     );
   }
-   // <ActionButton
-   //        actions={[{ icon: 'sms', label: 'Create Event'}, { icon: 'favorite', label: 'logout'}]}
-   //        icon="share"
-   //        transition="speedDial"
-   //      />
+  // <Button
+  //         raised
+  //         primary
+  //         onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
+  //         text="New Event"
+  //       />
+  //       <Button
+  //         raised 
+  //         primary
+  //         onPress={() => (this.logout())}
+  //         text="Logout"
+          
+  //       />
+   
 
   render() {
     if (!this.state.logged_in) {
