@@ -10,6 +10,7 @@ export default class EventListItemView extends React.Component {
   render() {
     const d = new Date(this.props.event.date);
     const m = Moment(this.props.event.date);
+    const hostingInfo = this.renderHostingInfo();
     return (
 
       <Card onPress={() => {
@@ -22,19 +23,30 @@ export default class EventListItemView extends React.Component {
                 secondaryText: m.format("ddd MMM Do h:mm a"),
             }}
         />
-        <View style={styles.textContainer}>
-            <Text>
-                {this.props.event.host.name} is hosting {this.props.event.type} 
-            </Text>
-        </View>
+        {hostingInfo}
+        
       </Card>
     );
   }
 
   _viewEvent (rowID: number) {
-    this.props.navigator.push(Router.getRoute('viewEvent', {event: JSON.stringify(this.props.event)}));
+    this.props.navigator.push(Router.getRoute('viewEvent', {event: JSON.stringify(this.props.event), hosting: this.props.hosting}));
+  }
+
+  renderHostingInfo() {
+    if(!this.props.hosting) {
+      return (
+        <View style={styles.textContainer}>
+            <Text>
+                {this.props.event.host.name} is hosting {this.props.event.type} 
+            </Text>
+        </View>
+      );
+    } 
   }
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

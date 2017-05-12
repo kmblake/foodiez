@@ -130,18 +130,14 @@ export default class HomeScreen extends React.Component {
           values={['Invited', 'Hosting']}
           selectedIndex={this.state.selectedIndex}
           onChange={this.onSelectionChange.bind(this)} />
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-          <EventListView
-            hosting={this.state.selectedIndex == 1} 
-            shouldSync={this.state.shouldSync}
-            navigator={this.props.navigator}/>
-        </ScrollView>  
+        <EventListView
+          hosting={this.state.selectedIndex == 1} 
+          shouldSync={this.state.shouldSync}
+          navigator={this.props.navigator}/>
 
         
         <ActionButton
-          actions={[{ icon: 'schedule', label: 'Create Event'}, { icon: 'input', label: 'logout'}]}
+          actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'input', label: 'logout'}]}
           icon="share"
           transition="speedDial"
           onPress={this.buttonPressed.bind(this)}

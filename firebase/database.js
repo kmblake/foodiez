@@ -178,6 +178,18 @@ class Database {
 
   }
 
+  static async deleteEvent(eventId) {
+    const eventRef = firebase.database().ref('events');
+    const invitationRef = firebase.database().ref('invitations');
+    const invitesSnap = await invitationRef.orderByChild('eventId').equalTo(eventId).once('value');
+    const invites = invitesSnap.val();
+    for (id in invites) {
+      // Send notification?
+      const success = await firebase.database().ref('invitations/' + id).remove();
+    }
+    return firebase.database().ref('events/' + eventId).remove()
+  }
+
   static getEvents(onEventsLoaded, onError) {
     const curUid = firebase.auth().currentUser.uid;
     const eventRef = firebase.database().ref('events');
