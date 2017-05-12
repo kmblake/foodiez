@@ -74,7 +74,8 @@ export default class HomeScreen extends React.Component {
         email: user.email,
         availability: [0, 1, 2, 3, 4, 5, 6]
       })
-    this.props.navigator.push(Router.getRoute('availability'));
+    user.availablity = [0, 1, 2, 3, 4, 5, 6]
+    this.props.navigator.push(Router.getRoute('availability', {user: this.state.user}));
     }
   }
 
@@ -114,10 +115,12 @@ export default class HomeScreen extends React.Component {
   };
 
   buttonPressed(icon) {
-    if (icon === 'schedule') {
+    if (icon === 'date-range') {
       this.props.navigator.push(Router.getRoute('pickDate'));
     } else if (icon === 'input') {
       this.logout();
+    } else if (icon === 'settings') {
+      this.props.navigator.push(Router.getRoute('availability', {user: this.state.user }));
     }
   }
  
@@ -137,7 +140,7 @@ export default class HomeScreen extends React.Component {
 
         
         <ActionButton
-          actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'input', label: 'logout'}]}
+          actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'settings', label: 'User Settings'}, { icon: 'input', label: 'logout'} ]}
           icon="share"
           transition="speedDial"
           onPress={this.buttonPressed.bind(this)}

@@ -14,12 +14,13 @@ export default class ViewEventScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.accepted !== r2.accepted});
     const event = JSON.parse(props.route.params.event);
     this.state = {
       event: event,
       users: this.ds.cloneWithRows(event.attending),
-      accepted: event.accepted
+      accepted: event.invitation.accepted,
+      loaded: false
     };
   }
 
@@ -30,7 +31,8 @@ export default class ViewEventScreen extends React.Component {
   updateData() {
     Database.getAttendance(this.state.event.id).then( (attending) => {
       this.setState({
-      users: this.ds.cloneWithRows(attending)
+        loaded: true,
+        users: this.ds.cloneWithRows(attending)
       });
     }).catch( (error) => {
       console.error(error);
@@ -89,7 +91,8 @@ export default class ViewEventScreen extends React.Component {
 
   handleInviteResponse(val) {
     Database.respondToInvite(this.state.event, val).then((res) => {
-      this.setState({accepted: val});
+      this.setState({accepted: val, loaded: false});
+      this.updateData();
     }).catch( (error) => {
       console.error(error);
     });
@@ -108,10 +111,37 @@ export default class ViewEventScreen extends React.Component {
     
   }
 
+  renderAttending() {
+    if (this.state.loaded) {
+      return (
+        <ListView
+          dataSource={this.state.users}
+          renderRow={(user) =><ListItem
+            leftElement={<Image source={{uri: user.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
+            centerElement={{
+                primaryText: user.name,
+                secondaryText: (!(user.accepted == null)) ? ( (!!user.accepted) ? 'is attending!' : 'not attending :(') : 'not sure if attending' ,
+            }}
+        />}
+      />);
+    } else {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            animating={true}
+            style={[styles.centering, {height: 80}]}
+            size="large"
+          />
+        </View>
+      );
+    }
+  }
+
   render() {
     const d = new Date(this.state.event.date);
     const deleteButton = this.renderDeleteEvent();
     const venmoButton = this.renderVenmoButton();
+    const attendingUsers = this.renderAttending();
     return (
       <ScrollView>
       <Card>
@@ -139,15 +169,8 @@ export default class ViewEventScreen extends React.Component {
           <View style={styles.button}>
               <Button accent style={this.getButtonStyle(false)} text="No" icon="thumb-down" onPress={() => {this.handleInviteResponse(false)}} />
           </View>
-          <View style={styles.button}>
-              <Button secondary style={this.getButtonStyle(undefined)} text="Not Sure" icon="thumbs-up-down"   onPress={() => {this.handleInviteResponse(null)}} />
-          </View>
         </View>
-        <ListView
-          scrollEnabled={false}
-          dataSource={this.state.users}
-          renderRow={(user) => <Text>{user.name}  {(!!user.accepted) ? 'is attending!' : ''}</Text>}
-        />
+        
       </Card>
       <Card >
         <View style={styles.textContainer}>
@@ -155,16 +178,7 @@ export default class ViewEventScreen extends React.Component {
                 Attendees
             </Text>
         </View>
-        <ListView
-          dataSource={this.state.users}
-          renderRow={(user) =><ListItem
-            leftElement={<Image source={{uri: user.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
-            centerElement={{
-                primaryText: user.name,
-                secondaryText: (!(user.accepted == null)) ? ( (!!user.accepted) ? 'is attending!' : 'not attending :(') : 'not sure if attending' ,
-            }}
-        />}
-        />
+        {attendingUsers}
       </Card>
       <Card>
         <View style={styles.textContainer}>
@@ -215,7 +229,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column'
   },
   buttonContainer: {
-    flex: 20, 
+    flex: 1, 
+    justifyContent: 'space-between',
     flexDirection: 'row', 
     height: 30,
     paddingBottom: 10,

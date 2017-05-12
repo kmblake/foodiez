@@ -308,43 +308,30 @@ class Database {
   }
 
   static async respondToInvite(event, accepted) {
-    //TODO: Handle failure?
     const curUser = firebase.auth().currentUser;
     const eventRef = firebase.database().ref('/events/' + event.id);
-    const invitationRef = firebase.database().ref('/invitations/' + event.invitation.id);
-    invitationRef.update({accepted: accepted});
-    const snapshot = await eventRef.once('value');
-    var event = snapshot.val();
-    var attending = event.attending;
-    if (!!accepted) {
+    const invitesSnap = await firebase.database().ref('invitations').orderByChild('eventId').equalTo(event.id).once('value')
+    const invites = invitesSnap.val();
+    attending = []
+    for (const id in invites) {
+      var invite = invites[id];
+      const userSnap = await firebase.database().ref('users/' + invite.uid).once('value');
+      const user = userSnap.val();
+      if (invite.accepted === undefined) invite.accepted = null;
+      if (invite.uid === curUser.uid) {
+        invite.accepted = accepted;
+        const invitationRef = firebase.database().ref('/invitations/' + id);
+        const res = await invitationRef.update({accepted: accepted});
+      }
       attending.push({
-        name: curUser.displayName,
-        photoURL: curUser.photoURL,
-        uid: curUser.uid
-      });
-    } else {
-      attending = attending.filter((user) => {
-        return (user.uid != curUser.uid); 
+        name: user.name,
+        photoURL: user.photoURL,
+        uid: invite.uid,
+        accepted: invite.accepted
       });
     }
     eventRef.update({attending: attending});
     Database.notifyHost(event, accepted, curUser)
-
-
-
-  //   .then((snapshot) => {
-      
-  //     try {
-  //       var notifications = [];
-  //       notifications.push({
-  //         to: user.token,
-  //         body: inviteMessage,
-  //         data: {
-  //           message: inviteMessage
-  //         }
-  //       });
-  //     }
-  //   });
   }
 
 

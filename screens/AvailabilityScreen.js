@@ -9,13 +9,15 @@ import {
 import { Container, Content, List, ListItem, Text, CheckBox } from 'native-base';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Item, Input, Form, Label } from 'native-base';
+import * as firebase from "firebase";
+
 
 
 export default class AvailabilityScreen extends DefaultScreen {
   
   constructor(props) {
     super(props);
-    this.availabilityOptions = [
+    const availabilityOptions = [
       {
         day: 'Sunday',
         index: 0
@@ -45,14 +47,35 @@ export default class AvailabilityScreen extends DefaultScreen {
         index: 6
       }
     ];
-    this.state = {availability: [], venmo: null};
+    this.state = {availability: [0,1,2,3,4,5,6], venmo: null, availabilityOptions: availabilityOptions};
+    
   }
 
   static route = {
     navigationBar: {
-      title: 'Step One: Availability',
+      title: 'User Settings',
     }
   };
+
+  componentDidMount() {
+    this.getUserData();
+    firebase.database().ref('users/' + this.props.route.params.user.uid).once('value').then((snapshot) => {
+      const user = snapshot.val();
+      const venmo = (!!user.venmo) ? user.venmo : null;
+      const newOptions = this.state.availabilityOptions.map( (option) => {
+        if (user.availability.indexOf(option.index) >= 0) {
+          option.checked = true;
+        } else {
+          option.checked = false;
+        }
+        return option
+      });
+      this.setState({
+        venmo: venmo,
+        availabilityOptions: newOptions
+      })
+    });
+  }
 
 
   onNextTap() {
@@ -88,10 +111,11 @@ export default class AvailabilityScreen extends DefaultScreen {
 
 
   renderView() {
+    // const venmoPlaceholder = (!!this.state.venmo) ? this.state.venmo : 'Your Venmo'
     return (
       <View style={styles.container}>
         <MultiSelectListView
-          dataSource={this.availabilityOptions}
+          dataSource={this.state.availabilityOptions}
           renderRowContents={this.renderRowContents.bind(this)}
           onSelectionChanged={this.onSelectionChanged.bind(this)}
           initialCheckboxState={true}
@@ -100,6 +124,7 @@ export default class AvailabilityScreen extends DefaultScreen {
           <Label>Your Venmo</Label>
           <Input 
             onChangeText={(text) => this.setState({venmo: text})}
+            placeholder={this.state.venmo}
           />
         </Item>
         <View style={styles.container} >

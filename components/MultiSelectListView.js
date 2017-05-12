@@ -16,7 +16,7 @@ export default class MultiSelectListView extends React.Component {
     super(props);
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.dataWithChecked = props.dataSource.map((item) => {
-      item.checked = !!this.props.initialCheckboxState;
+      if (item.checked === undefined) item.checked = !!this.props.initialCheckboxState;
       return item;
     });
     this.state = {
@@ -51,9 +51,9 @@ export default class MultiSelectListView extends React.Component {
   }
  componentWillReceiveProps(newProps) {
     this.dataWithChecked = newProps.dataSource.map((item) => {
-      item.checked = !!this.props.initialCheckboxState;
-      return item;
-    });
+      if (item.checked === undefined) item.checked = !!this.props.initialCheckboxState;
+      return item;
+    });
     this.setState({
       items: this.ds.cloneWithRows(this.dataWithChecked)
     });
