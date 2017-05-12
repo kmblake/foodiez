@@ -1,5 +1,6 @@
 
 import * as firebase from "firebase";
+import Moment from 'moment';
 
 class Database {
 
@@ -89,46 +90,6 @@ class Database {
     }
     return availability
   }
-
-  // static getBestDays() {
-  //   const curUserAuth = firebase.auth().currentUser;
-
-  //   var getBestDaysGivenCurUserSnapshot = ((curUserSnapshot) => {
-  //     const curUser = curUserSnapshot.val();
-  //     return new Promise( (resolve, reject) => {
-  //       firebase.database().ref('/users').once('value').then((snapshot) => {
-  //         try {
-  //           userData = snapshot.val();
-  //           availabilityHash = {'Sunday': [], 'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': [], 'Saturday': []}
-  //           daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
-  //           for (const id in userData) {
-  //             if (id != curUserAuth.uid) {
-  //               var user = userData[id];
-  //               for (day in user.availability) {
-  //                 day = parseInt(day);
-  //                 if (curUser.availability.indexOf(day) >= 0) {
-  //                   availabilityHash[daysOfWeek[day]].push({uid: id, name: user.name, photoURL: user.photoURL})
-  //                 }
-  //               }
-  //             }
-  //           }
-  //           availability = []
-  //           for (day in availabilityHash) {
-  //             availability.push({
-  //               day: day,
-  //               users: availabilityHash[day]
-  //             });
-  //           }
-  //           resolve(availability);
-  //         } catch (e) {
-  //           reject(e);
-  //         }
-  //       });
-  //     });
-  //   });
-  //   //TODO: Update to query only friends
-  //   return firebase.database().ref('/users/' + curUserAuth.uid).once('value').then(getBestDaysGivenCurUserSnapshot);
-  // }
 
   static async makeVenmoURL(event, curUid) {
     const snapshot = await firebase.database().ref('/users/' + curUid).once('value');
@@ -222,13 +183,18 @@ class Database {
     const eventRef = firebase.database().ref('events');
     const invitationRef = firebase.database().ref('invitations');
     const userRef = firebase.database().ref('users')
+    const dateThreshold = parseInt(Moment().subtract(12, 'hours').format('x'));
     return invitationRef.orderByChild('uid').equalTo(curUid).once('value').then((snapshot) => {
       return new Promise( (resolve, reject) => {
         const invites = snapshot.val();
         var promises = [];
         for (const id in invites) {
-          const query = eventRef.orderByKey().equalTo(invites[id].eventId);
-          promises.push(query.once('value'));
+          const invite = invites[id];
+          if (invite.event_date > dateThreshold) {
+          // if (true) {
+            const query = eventRef.orderByKey().equalTo(invites[id].eventId);
+            promises.push(query.once('value'));
+          }
         }
         Promise.all(promises).then( (snaps) => {
           var events = [];
@@ -254,6 +220,9 @@ class Database {
                 paid: Object.values(invites)[i].paid
               }
             });
+          });
+          events.sort((e1, e2) => {
+            return e1.date - e2.date
           });
           resolve(events);
       });
