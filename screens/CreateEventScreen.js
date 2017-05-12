@@ -140,7 +140,7 @@ export default class CreateEventScreen extends DefaultScreen {
         <Item fixedLabel
           onPress={this.onDatePress.bind(this)}
         >
-          <Label>Date</Label>
+          <Label>Time</Label>
           <Input disabled
             placeholder='Location'
             onChangeText={(text) => this.setState({location: text})}

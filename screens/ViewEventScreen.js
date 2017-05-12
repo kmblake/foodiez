@@ -137,11 +137,43 @@ export default class ViewEventScreen extends React.Component {
     }
   }
 
+  renderInviteResponse() {
+    if (!this.props.route.params.hosting) {
+      return (
+        <View>
+          <View style={styles.textContainer}>
+            <Text>
+              Are you planning to attend?
+            </Text>
+          </View>
+          <View style={styles.buttonContainer}>
+            <View style={styles.button}>
+              <Button primary style={this.getButtonStyle(true)} text="Yes" icon="thumb-up" onPress={() => {this.handleInviteResponse(true)}} />
+            </View>
+            <View style={styles.button}>
+                <Button accent style={this.getButtonStyle(false)} text="No" icon="thumb-down" onPress={() => {this.handleInviteResponse(false)}} />
+            </View>
+          </View>
+        </View>
+      );
+    }
+  }
+
+  renderHostingText() {
+    if (this.props.route.params.hosting) {
+      return (<Text>You are hosting {this.state.event.type}!</Text>);
+    } else {
+      return (<Text>{this.state.event.host.name} is hosting {this.state.event.type}!</Text>);
+    }
+  }
+
   render() {
     const d = new Date(this.state.event.date);
     const deleteButton = this.renderDeleteEvent();
     const venmoButton = this.renderVenmoButton();
     const attendingUsers = this.renderAttending();
+    const inviteResponse = this.renderInviteResponse();
+    const hostingText = this.renderHostingText();
     return (
       <ScrollView>
       <Card>
@@ -153,24 +185,9 @@ export default class ViewEventScreen extends React.Component {
           }}
         />
         <View style={styles.textContainer}>
-          <Text>
-            {this.state.event.host.name} is hosting {this.state.event.type}!
-          </Text>
+          {hostingText}
         </View>
-        <View style={styles.textContainer}>
-          <Text>
-            Are you planning to attend?
-          </Text>
-        </View>
-        <View style={styles.buttonContainer}>
-          <View style={styles.button}>
-            <Button primary style={this.getButtonStyle(true)} text="Yes" icon="thumb-up" onPress={() => {this.handleInviteResponse(true)}} />
-          </View>
-          <View style={styles.button}>
-              <Button accent style={this.getButtonStyle(false)} text="No" icon="thumb-down" onPress={() => {this.handleInviteResponse(false)}} />
-          </View>
-        </View>
-        
+        {inviteResponse}
       </Card>
       <Card >
         <View style={styles.textContainer}>
