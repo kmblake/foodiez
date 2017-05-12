@@ -41,6 +41,8 @@ export default class PickDateScreen extends DefaultScreen {
   }
 
   onDateChange = (date) => {
+    // Set event to 6 pm by default
+    date.setHours(18);
     this.setState({chosenDate: date, availableFriends: availability[date.getDay()].users});
 
   };

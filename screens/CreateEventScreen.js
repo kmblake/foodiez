@@ -7,6 +7,8 @@ import { Container, Content, Item, Input, Form, Label } from 'native-base';
 import Carousel from 'react-native-carousel';
 import recipeData from "../firebase/recipes.json"
 import { Card } from 'react-native-material-ui'
+import Moment from 'moment'
+
  
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
@@ -26,8 +28,8 @@ export default class CreateEventScreen extends DefaultScreen {
       date: new Date(props.route.params.date),
       eventType: 'Dinner',
       eventTypes: eventTypes,
-      description: "Description",
-      location: "Location",
+      description: "",
+      location: "",
       showDatePicker: false
     };
   }
@@ -142,7 +144,7 @@ export default class CreateEventScreen extends DefaultScreen {
           <Input disabled
             placeholder='Location'
             onChangeText={(text) => this.setState({location: text})}
-            value={this.state.date.toString()}/>
+            value={Moment(this.state.date).format("ddd MMM Do h:mm a")}/>
         </Item>
         
       </Form>

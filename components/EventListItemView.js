@@ -3,12 +3,13 @@ import { StyleSheet, Text, View, Button, Image, ListView, TouchableOpacity, Acti
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Avatar, Card, ListItem, Toolbar } from 'react-native-material-ui';
+import Moment from 'moment'
 
 export default class EventListItemView extends React.Component {
 
   render() {
     const d = new Date(this.props.event.date);
-   
+    const m = Moment(this.props.event.date);
     return (
 
       <Card onPress={() => {
@@ -18,7 +19,7 @@ export default class EventListItemView extends React.Component {
             leftElement={<Image source={{uri: this.props.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
             centerElement={{
                 primaryText: this.props.event.type,
-                secondaryText: d.toString(),
+                secondaryText: m.format("ddd MMM Do h:mm a"),
             }}
         />
         <View style={styles.textContainer}>
