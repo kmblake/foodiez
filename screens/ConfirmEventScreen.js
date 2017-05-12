@@ -30,7 +30,7 @@ export default class CreateEventScreen extends DefaultScreen {
   onNextTap() {
     this.state.event.cost = this.state.cost
     Database.createEvent(this.state.event, this.state.invitedFriends);
-    this.props.navigator.push(Router.getRoute('home'));
+    this.props.navigator.popToTop();
   }
 
 

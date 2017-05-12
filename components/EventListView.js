@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight, RefreshControl } from 'react-native';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import EventListItemView from "./EventListItemView";
@@ -82,6 +82,12 @@ export default class EventListView extends React.Component {
           // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
           renderRow={this._renderRow.bind(this)}
           enableEmptySections={true}
+          refreshControl={
+            <RefreshControl
+              refreshing={!this.state.loaded}
+              onRefresh={this.updateData.bind(this)}
+            />
+          }
         />
       <Button
         onPress={() => (this.updateData())}

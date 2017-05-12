@@ -149,19 +149,6 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   }
-  // <Button
-  //         raised
-  //         primary
-  //         onPress={() => (this.props.navigator.push(Router.getRoute('pickDate')))}
-  //         text="New Event"
-  //       />
-  //       <Button
-  //         raised 
-  //         primary
-  //         onPress={() => (this.logout())}
-  //         text="Logout"
-          
-  //       />
    
 
   render() {
