@@ -11,7 +11,8 @@ import {
   Alert,
   AsyncStorage,
   ActivityIndicator,
-  NavigatorIOS
+  NavigatorIOS,
+  SegmentedControlIOS
 } from 'react-native';
 
 import Expo from 'expo';
@@ -39,10 +40,10 @@ export default class HomeScreen extends React.Component {
     global.initializing = false;
     super(props);
     const self = this;
-    this.state = {logged_in: false, shouldSync: false};
+    this.state = {logged_in: false, shouldSync: false, selectedIndex: 0};
   }
 
-   componentWillMount() {
+  componentWillMount() {
     this.getUserData();
   }
 
@@ -105,22 +106,39 @@ export default class HomeScreen extends React.Component {
     });
 
    }
+
+  onSelectionChange(event) {
+    this.setState({
+      selectedIndex: event.nativeEvent.selectedSegmentIndex,
+    });
+  };
+
+
+  // renderEventList() {
+  //   if (this.state.selectedIndex == 0) {
+
+  //   } else {
+
+  //   }
+  // }
  
 
   renderFullView() {
+
     return (
       <View style={styles.container}>
+        <SegmentedControlIOS
+          values={['Invited', 'Hosting']}
+          selectedIndex={this.state.selectedIndex}
+          onChange={this.onSelectionChange.bind(this)} />
         <ScrollView
           style={styles.container}
           contentContainerStyle={styles.contentContainer}>
           <EventListView
-            hosting={false} 
+            hosting={this.state.selectedIndex == 1} 
             shouldSync={this.state.shouldSync}
             navigator={this.props.navigator}/>
-        </ScrollView>
-
-       
-               
+        </ScrollView>    
         <Button
           raised
           primary
@@ -158,41 +176,6 @@ export default class HomeScreen extends React.Component {
       return this.renderFullView();
     }
   }
-
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
-
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will run slightly slower but
-          you have access to useful development tools. {learnMoreButton}.
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
-
-  _handleLearnMorePress = () => {
-    Linking.openURL(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    Linking.openURL(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({

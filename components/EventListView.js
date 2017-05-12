@@ -22,7 +22,7 @@ export default class EventListView extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.shouldSync) {
+    if (nextProps != this.props) {
       this.updateData();
     }
   }
