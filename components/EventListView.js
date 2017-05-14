@@ -13,7 +13,8 @@ export default class EventListView extends React.Component {
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       loaded: false,
-      events: this.ds.cloneWithRows([])
+      events: this.ds.cloneWithRows([]),
+      empty: true
     };
   }
 
@@ -38,6 +39,7 @@ export default class EventListView extends React.Component {
       filteredEvents = this.filterEvents(events);
       this.setState({
       events: this.ds.cloneWithRows(filteredEvents),
+      empty: filteredEvents.length == 0,
       loaded: true
       });
     }).catch( (error) => {
@@ -74,23 +76,29 @@ export default class EventListView extends React.Component {
   }
 
   renderView() {
-    // Add date picker
-    return (
-    <View>
-       <ListView
-          dataSource={this.state.events}
-          // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
-          renderRow={this._renderRow.bind(this)}
-          enableEmptySections={true}
-          refreshControl={
-            <RefreshControl
-              refreshing={!this.state.loaded}
-              onRefresh={this.updateData.bind(this)}
-            />
-          }
-        />
-    </View>
-    );
+    if (!this.state.empty) {
+      return (
+      <View>
+         <ListView
+            dataSource={this.state.events}
+            // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
+            renderRow={this._renderRow.bind(this)}
+            enableEmptySections={true}
+            refreshControl={
+              <RefreshControl
+                refreshing={!this.state.loaded}
+                onRefresh={this.updateData.bind(this)}
+              />
+            }
+          />
+      </View>
+      );    
+    } else if (this.props.hosting) {
+      return (<Text style={styles.prompt} >No upcoming events. Host an event now!</Text>);
+    } else {
+      return (<Text style={styles.prompt} >No upcoming events yet!</Text>);
+    }
+
   }
 }
 
@@ -111,5 +119,10 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+  },
+  prompt: {
+    textAlign: 'center',
+    color: 'rgba(0,0,0,0.4)',
+    paddingTop: 15
   }
 });
