@@ -121,7 +121,7 @@ export default class CreateEventScreen extends DefaultScreen {
       <Card>
         <View style={styles.textContainer}>
             
-            <Item floatingLabel>
+            <Item stackedLabel>
               <Label>Suggested Donation Amount </Label>
               <Input 
                 onChangeText={(text) => this.setState({cost: text})}
