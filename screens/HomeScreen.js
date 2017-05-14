@@ -141,7 +141,7 @@ export default class HomeScreen extends React.Component {
         
         <ActionButton
           actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'settings', label: 'User Settings'}, { icon: 'input', label: 'logout'} ]}
-          icon="share"
+          icon="menu"
           transition="speedDial"
           onPress={this.buttonPressed.bind(this)}
         />  

@@ -42,7 +42,6 @@ export default class ViewEventScreen extends React.Component {
 
   renderWebView() {
     var url = this.state.event.venmoURL;
-    console.log
     Linking.canOpenURL(url).then(supported => {
       if (!supported) {
         console.log('Can\'t handle url: ' + url);

@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button, ListView, TouchableOpacity, DatePickerIOS } from 'react-native';
+import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerIOS } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import CalendarPicker from 'react-native-calendar-picker';
 import MultiSelectListView from "../components/MultiSelectListView";
+import { Button } from 'react-native-material-ui'
 
 export default class PickDateScreen extends DefaultScreen {
   static route = {
@@ -22,7 +23,8 @@ export default class PickDateScreen extends DefaultScreen {
       chosenDate: new Date(),
       availability: [],
       availableFriends: [],
-      invitedFriends: []
+      invitedFriends: [],
+      showNextButton: false
     }; 
   }
 
@@ -57,10 +59,28 @@ export default class PickDateScreen extends DefaultScreen {
   }
 
   onSelectionChanged(invitedFriends) {
-    this.state.invitedFriends = invitedFriends;
+    if (this.state.invitedFriends.length != invitedFriends.length) {
+      this.setState({
+        invitedFriends: invitedFriends
+      });
+    }
+  }
+
+  renderNextButton() {
+    if(this.state.invitedFriends.length > 0) {
+      return (
+        <Button
+          primary
+          raised
+          onPress={() => (this.onNextTap())}
+          text="Craft Your Menu"
+        />
+      );
+    }
   }
 
   renderView() {
+    const nextButton = this.renderNextButton();
 
     return (
       <View
@@ -71,18 +91,15 @@ export default class PickDateScreen extends DefaultScreen {
         />
      
       <View style={styles.listHeader}>
-        <Text > Friends Tentative availability </Text>
+        <Text style={styles.prompt} > Pick friends to invite </Text>
       </View>
       <MultiSelectListView
         dataSource={this.state.availableFriends}
         renderRowContents={this.renderRowContents.bind(this)}
         onSelectionChanged={this.onSelectionChanged.bind(this)}
       />
-      <Button
-        onPress={() => (this.onNextTap())}
-        title="Next"
-        color="#841584"
-      />
+      {nextButton}
+      
 
       </View>
     );
@@ -93,6 +110,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15
+  },
+  prompt: {
+    textAlign: 'center',
+    color: 'rgba(0,0,0,0.4)'
   },
   listHeader: {
     flexDirection: 'row',
