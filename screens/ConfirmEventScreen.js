@@ -128,11 +128,14 @@ export default class CreateEventScreen extends DefaultScreen {
         </View>
 
       </Card>
-      <Button
+
+        <Button
+        raised
+        primary
         onPress={() => (this.onNextTap())}
         text="Create Event"
-        color="#841584"
-      />
+        />
+   
       </ScrollView>
     );  
   }
