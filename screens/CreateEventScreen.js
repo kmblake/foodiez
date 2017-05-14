@@ -1,19 +1,19 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput , View, Button, DatePickerIOS, ListView, Dimensions, TouchableOpacity, TouchableHighlight, Image } from 'react-native';
+import { StyleSheet, Text, TextInput , View, DatePickerIOS, ListView, Dimensions, TouchableOpacity, TouchableHighlight, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Container, Content, Item, Input, Form, Label } from 'native-base';
 import Carousel from 'react-native-carousel';
 import recipeData from "../firebase/recipes.json"
-import { Card } from 'react-native-material-ui'
+import { Card, Button } from 'react-native-material-ui'
 import Moment from 'moment'
 
  
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
     navigationBar: {
-      title: 'Event Details',
+      title: 'Craft Your Menu',
     }
   };
 
@@ -68,6 +68,7 @@ export default class CreateEventScreen extends DefaultScreen {
   }
 
   onDatePress() {
+    Keyboard.dismiss();
     this.setState({
       showDatePicker: !this.state.showDatePicker
     })
@@ -85,11 +86,11 @@ export default class CreateEventScreen extends DefaultScreen {
     var carouselViews = Object.keys(recipeData.recipes).map( (key) => {
       const title = eventTypeToText[key]
       return (
-        <View width={width} key={key} style={styles.carouselContainer}>
+        <View width={width} key={key} style={styles.carouselRow} >
           <Card onPress={() => this.onMenuPress(key)}>
             <View style={styles.eventTypeView} >
-              <Image style={styles.recipeImage} source={{uri: recipeData.recipes[key][0].photoURL}} />
-              <Text>{title}</Text>
+              <Image style={{ height: height*4/10, width: width - 10, resizeMode: 'contain'}} source={{uri: recipeData.recipes[key][0].photoURL}} />
+              <Text style={styles.menuTheme} >{title}</Text>
             </View>
           </Card>
         </View>
@@ -137,7 +138,7 @@ export default class CreateEventScreen extends DefaultScreen {
             onChangeText={(text) => this.setState({location: text})}
             value={this.state.location}/>
         </Item>
-        <Item fixedLabel
+        <Item fixedLabel last
           onPress={this.onDatePress.bind(this)}
         >
           <Label>Time</Label>
@@ -148,13 +149,19 @@ export default class CreateEventScreen extends DefaultScreen {
         </Item>
         
       </Form>
-       
+      
+
       {datePicker}
-      <Text>Choose a seasonal menu:</Text>
-      {carousel}   
+      <TouchableWithoutFeedback style={styles.container} onPress={() => this.setState({showDatePicker: false}) }>
+        <View style={styles.container}>
+          <Text style={styles.menuPrompt}>Create an awesome menu. Choose a seasonal theme below:</Text>
+          {carousel}
+        </View>
+      </TouchableWithoutFeedback>   
       <Button
+        primary 
         onPress={() => (this.onNextTap())}
-        title="No thanks, I'll use my own menu!"
+        text="No thanks, I'll use my own menu!"
       />
 
       </View>
@@ -167,7 +174,26 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
   },
+  menuPrompt: {
+    textAlign: 'center',
+    color: 'rgba(0,0,0,0.4)'
+  },
+  menuTheme: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontStyle: 'italic'
+  },
+  skipMenuButton: {
+    fontSize: 10
+  },
   carouselContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+  carouselRow: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',

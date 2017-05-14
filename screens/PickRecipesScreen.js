@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Button, ListView, TouchableHighlight, Image, Text, Linking } from 'react-native';
+import { StyleSheet, View, ListView, TouchableHighlight, Image, Text, Linking } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import RecipeListView from "../components/RecipeListView";
 import recipeData from "../firebase/recipes.json"
+import { Button } from 'react-native-material-ui'
+
 
 export default class PickRecipesScreen extends DefaultScreen {
   static route = {
@@ -31,39 +33,39 @@ export default class PickRecipesScreen extends DefaultScreen {
       {event: JSON.stringify(this.state.event), invitedFriends: this.props.route.params.invitedFriends}));
   }
 
-  
-
-  // renderRowContents(recipe) {
-  //   return (
-  //       <TouchableHighlight onLongPress={() => {this.showRecipeURL(recipe.url)}} style={styles.row}>
-  //         <View style={styles.row}>
-  //           <Image style={styles.recipeImage} source={{uri: recipe.photoURL}} />
-  //           <Text style={{paddingLeft: 5}} >{recipe.title}</Text>
-  //         </View>
-  //       </TouchableHighlight>
-  //   );
-  // }
-
   onSelectionChanged(chosenRecipes) {
-    this.state.chosenRecipes = chosenRecipes;
+    if (this.state.chosenRecipes.length != chosenRecipes.length) {
+      this.setState({
+        chosenRecipes: chosenRecipes
+      });
+    }
+  }
+
+  renderNextButton() {
+    if(this.state.chosenRecipes.length > 0) {
+      return (
+        <Button
+          primary
+          raised
+          onPress={() => (this.onNextTap())}
+          text="Add Recipes to Menu"
+        />
+      );
+    }
   }
 
   renderView() {
-    // Add date picker
+    const nextButton = this.renderNextButton();
     return (
       <View
         style={styles.container}
       >
+      <Text style={styles.prompt} >Tip: Press and hold to view the full recipe!</Text>
       <RecipeListView
         dataSource={recipeData.recipes[this.state.event.type]}
         onSelectionChanged={this.onSelectionChanged.bind(this)}
       />
-      <Button
-        onPress={() => (this.onNextTap())}
-        title="Next"
-        color="#841584"
-      />
-
+      {nextButton}
       </View>
     );
   }
@@ -73,5 +75,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
-  }
+  },
+  prompt: {
+    textAlign: 'center',
+    color: 'rgba(0,0,0,0.4)'
+  },
 });
