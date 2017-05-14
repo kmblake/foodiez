@@ -5,6 +5,7 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
 
+
 export default class ViewEventScreen extends React.Component {
   static route = {
     navigationBar: {
@@ -110,6 +111,22 @@ export default class ViewEventScreen extends React.Component {
     
   }
 
+  renderMenu() {
+    var menuItems = [];
+    console.log(this.state.event.recipes);
+    if (this.state.event.recipes != null) {
+      menuItems = this.state.event.recipes.map((recipe) => <ListItem
+              leftElement={<Image source={{uri: recipe.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
+              centerElement={{
+                  primaryText: recipe.title,
+              }}
+          />);
+    }
+   console.log(menuItems);
+   return menuItems; 
+
+  }
+
   renderAttending() {
     if (this.state.loaded) {
       return (
@@ -173,6 +190,7 @@ export default class ViewEventScreen extends React.Component {
     const attendingUsers = this.renderAttending();
     const inviteResponse = this.renderInviteResponse();
     const hostingText = this.renderHostingText();
+    const menu = this.renderMenu();
     return (
       <ScrollView>
       <Card>
@@ -195,6 +213,14 @@ export default class ViewEventScreen extends React.Component {
             </Text>
         </View>
         {attendingUsers}
+      </Card>
+      <Card>
+        <View style={styles.textContainer}>
+            <Text>
+                Menu
+            </Text>
+        </View>
+        { menu }
       </Card>
       <Card>
         <View style={styles.textContainer}>
