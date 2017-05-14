@@ -125,7 +125,9 @@ export default class CreateEventScreen extends DefaultScreen {
               <Label>Suggested Donation Amount </Label>
               <Input 
                 onChangeText={(text) => this.setState({cost: text})}
-                value={this.state.cost}/>
+                value={this.state.cost}
+                keyboardType={'number-pad'}
+                />
             </Item>
         </View>
 
