@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, ScrollView , Image , View, ListView, Activ
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import { Container, Content, Item, Input } from 'native-base';
+import { Container, Content, Item, Input, Label } from 'native-base';
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
 
 
@@ -13,8 +13,6 @@ export default class CreateEventScreen extends DefaultScreen {
       title: 'Confirm Event Details',
     }
   };
-
-  
 
   constructor(props) {
     super(props);
@@ -27,7 +25,7 @@ export default class CreateEventScreen extends DefaultScreen {
       event: event,
       invitedFriends: invitedFriends,
       invited: this.ds.cloneWithRows(invitedFriends),
-      cost: 5,
+      cost: '5',
       loaded: true,
     };
   }
@@ -122,9 +120,13 @@ export default class CreateEventScreen extends DefaultScreen {
       </Card>
       <Card>
         <View style={styles.textContainer}>
-            <Text>
-                Would you like to add a suggest donation amount? $5
-            </Text>
+            
+            <Item floatingLabel>
+              <Label>Suggested Donation Amount </Label>
+              <Input 
+                onChangeText={(text) => this.setState({cost: text})}
+                value={this.state.cost}/>
+            </Item>
         </View>
 
       </Card>
