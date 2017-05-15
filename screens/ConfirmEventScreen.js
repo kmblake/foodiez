@@ -94,7 +94,7 @@ export default class CreateEventScreen extends DefaultScreen {
         <ListItem
           leftElement={<Image source={{uri: this.state.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
           centerElement={{
-              primaryText: this.state.event.type,
+              primaryText: this.state.event.name,
               secondaryText: d.toString(),
           }}
         />

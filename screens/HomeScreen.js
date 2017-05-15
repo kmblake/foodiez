@@ -144,13 +144,13 @@ export default class HomeScreen extends React.Component {
           </Right>
         </Header>
         <Tabs tabStyle={styles.tabStyle} >
-          <Tab heading={ <TabHeading><Icon name="home" /><Text>Hosting</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="home" /><Text>  Hosting</Text></TabHeading>}>
             <EventListView
               hosting={true} 
               shouldSync={this.state.shouldSync}
               navigator={this.props.navigator}/>
           </Tab>
-          <Tab heading={ <TabHeading><Icon name="mail" /><Text>Invites</Text></TabHeading>}>
+          <Tab heading={ <TabHeading><Icon name="mail" /><Text>  Invites</Text></TabHeading>}>
             <EventListView
               hosting={false} 
               shouldSync={this.state.shouldSync}

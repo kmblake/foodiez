@@ -76,7 +76,7 @@ export default class EventListView extends React.Component {
   renderView() {
     // Add date picker
     return (
-    <View>
+    <View style={styles.container}>
        <ListView
           dataSource={this.state.events}
           // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}

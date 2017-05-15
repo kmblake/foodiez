@@ -152,7 +152,7 @@ export default class AvailabilityScreen extends DefaultScreen {
         <View style={styles.container} >
           <Button
             onPress={() => (this.onNextTap())}
-            title="Next"
+            title="Save"
             color="#841584"
           />
         </View>
@@ -165,56 +165,6 @@ export default class AvailabilityScreen extends DefaultScreen {
         </View>
       </View>
     );
-
-
-    // return (
-    //   <View style={styles.container}>
-    //     <View style={styles.datePicker}>
-    //       <Button
-    //         onPress={() => (this.toggleAvailability(0))}
-    //         title="Su"
-    //         color="#841584"
-    //       />
-    //       <Button
-    //         onPress={() => (this.toggleAvailability(1))}
-    //         title="M"
-    //         color="#841584"
-    //       />
-    //       <Button
-    //         onPress={() => (this.toggleAvailability(2))}
-    //         title="Tu"
-    //         color="#841584"
-    //       />
-    //       <Button
-    //         onPress={() => (this.toggleAvailability(3))}
-    //         title="W"
-    //         color="#841584"
-    //       />
-    //       <Button
-    //         onPress={() => (this.toggleAvailability(4))}
-    //         title="Th"
-    //         color="#841584"
-    //       />
-    //       <Button
-    //         onPress={() => (this.toggleAvailability(5))}
-    //         title="F"
-    //         color="#841584"
-    //       />
-    //       <Button
-    //         onPress={() => (this.toggleAvailability(6))}
-    //         title="S"
-    //         color="#841584"
-    //       />
-    //     </View>
-    //     <View style={styles.container} >
-    //       <Button
-    //         onPress={() => (this.onNextTap())}
-    //         title="Next"
-    //         color="#841584"
-    //       />
-    //     </View>
-    //   </View>
-    // );
   }
 }
 
