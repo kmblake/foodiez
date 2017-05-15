@@ -127,7 +127,8 @@ export default class HomeScreen extends React.Component {
  
 
   renderFullView() {
-
+    Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
+    Expo.Amplitude.logEvent("Test");
     return (
       <View style={styles.container}>
         <Header hasTabs>
@@ -149,9 +150,6 @@ export default class HomeScreen extends React.Component {
               navigator={this.props.navigator}/>
           </Tab>
         </Tabs>
-        
-
-        
         <ActionButton
           actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'settings', label: 'User Settings'}, { icon: 'input', label: 'logout'} ]}
           icon="share"
@@ -161,15 +159,7 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   }
-   
-// <SegmentedControlIOS
-//           values={['Invited', 'Hosting']}
-//           selectedIndex={this.state.selectedIndex}
-//           onChange={this.onSelectionChange.bind(this)} />
-//         <EventListView
-//           hosting={this.state.selectedIndex == 1} 
-//           shouldSync={this.state.shouldSync}
-//           navigator={this.props.navigator}/>
+
   render() {
     if (!this.state.logged_in) {
       return (

@@ -89,11 +89,6 @@ export default class EventListView extends React.Component {
             />
           }
         />
-      <Button
-        onPress={() => (this.updateData())}
-        title="Sync"
-        color="#841584"
-      />
     </View>
     );
   }
