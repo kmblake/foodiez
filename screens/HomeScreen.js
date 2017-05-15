@@ -14,7 +14,7 @@ import {
   NavigatorIOS,
   SegmentedControlIOS
 } from 'react-native';
-import { Header, TabHeading, Icon, Body, Title, Container, Content, Tab, Tabs } from 'native-base';
+import { Header, TabHeading, ScrollableTab, Icon, Body, Title, Container, Content, Tab, Tabs } from 'native-base';
 import Expo from 'expo';
 
 import { MonoText } from '../components/StyledText';
@@ -30,8 +30,9 @@ import { Toolbar, Button, ActionButton } from 'react-native-material-ui';
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
-      visible: true,
+      visible: false,
       title: "Events",
+      backgroundColor: "white",
     },
   };
   //Todo: icons and functions for nav bar buttons
@@ -129,8 +130,12 @@ export default class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-      
-        <Tabs>
+        <Header hasTabs>
+          <Body>
+            <Title>Events</Title>
+          </Body>
+        </Header>
+        <Tabs tabStyle={styles.tabStyle} >
           <Tab heading={ <TabHeading><Icon name="home" /><Text>Hosting</Text></TabHeading>}>
             <EventListView
               hosting={true} 
@@ -189,6 +194,9 @@ const styles = StyleSheet.create({
   },
   helloText: {
     color: 'rgba(0,0,0,0.4)'
+  },
+  tabStyle: {
+    backgroundColor: '#fff'
   },
   developmentModeText: {
     marginBottom: 20,
