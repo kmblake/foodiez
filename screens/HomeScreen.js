@@ -14,7 +14,7 @@ import {
   NavigatorIOS,
   SegmentedControlIOS
 } from 'react-native';
-
+import { Header, TabHeading, Icon, Body, Title, Container, Content, Tab, Tabs } from 'native-base';
 import Expo from 'expo';
 
 import { MonoText } from '../components/StyledText';
@@ -129,14 +129,22 @@ export default class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <SegmentedControlIOS
-          values={['Invited', 'Hosting']}
-          selectedIndex={this.state.selectedIndex}
-          onChange={this.onSelectionChange.bind(this)} />
-        <EventListView
-          hosting={this.state.selectedIndex == 1} 
-          shouldSync={this.state.shouldSync}
-          navigator={this.props.navigator}/>
+      
+        <Tabs>
+          <Tab heading={ <TabHeading><Icon name="home" /><Text>Hosting</Text></TabHeading>}>
+            <EventListView
+              hosting={true} 
+              shouldSync={this.state.shouldSync}
+              navigator={this.props.navigator}/>
+          </Tab>
+          <Tab heading={ <TabHeading><Icon name="mail" /><Text>Invites</Text></TabHeading>}>
+            <EventListView
+              hosting={false} 
+              shouldSync={this.state.shouldSync}
+              navigator={this.props.navigator}/>
+          </Tab>
+        </Tabs>
+        
 
         
         <ActionButton
@@ -149,7 +157,14 @@ export default class HomeScreen extends React.Component {
     );
   }
    
-
+// <SegmentedControlIOS
+//           values={['Invited', 'Hosting']}
+//           selectedIndex={this.state.selectedIndex}
+//           onChange={this.onSelectionChange.bind(this)} />
+//         <EventListView
+//           hosting={this.state.selectedIndex == 1} 
+//           shouldSync={this.state.shouldSync}
+//           navigator={this.props.navigator}/>
   render() {
     if (!this.state.logged_in) {
       return (
