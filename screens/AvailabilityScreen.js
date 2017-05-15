@@ -77,6 +77,28 @@ export default class AvailabilityScreen extends DefaultScreen {
     });
   }
 
+  logout() {
+    var self = this;
+    firebase.auth().signOut().then(function() {
+      console.log('User logged out');
+      
+      AsyncStorage.removeItem('user_data');
+      // this.setState({logged_in: false});
+      Firebase.logIn().then( (user) => {
+        if (!!user) {
+          AsyncStorage.setItem('user_data', JSON.stringify(user)).then( () => {
+            self.getUserData();
+            self.setState({shouldSync: true});
+          });
+          
+        }
+      });
+    }).catch(function(error) {
+      console.log(error);
+    });
+
+   }
+
 
   onNextTap() {
     //TODO: Update this line with the user's actual availability
@@ -131,6 +153,13 @@ export default class AvailabilityScreen extends DefaultScreen {
           <Button
             onPress={() => (this.onNextTap())}
             title="Next"
+            color="#841584"
+          />
+        </View>
+        <View style={styles.container} >
+          <Button
+            onPress={() => (this.logout())}
+            title="logout"
             color="#841584"
           />
         </View>

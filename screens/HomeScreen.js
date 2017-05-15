@@ -14,7 +14,7 @@ import {
   NavigatorIOS,
   SegmentedControlIOS
 } from 'react-native';
-import { Header, TabHeading, ScrollableTab, Icon, Body, Title, Container, Content, Tab, Tabs } from 'native-base';
+import { Header, TabHeading, Right, Left, Button, ScrollableTab, Icon, Body, Title, Container, Content, Tab, Tabs } from 'native-base';
 import Expo from 'expo';
 
 import { MonoText } from '../components/StyledText';
@@ -24,7 +24,7 @@ import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
 import Router from '../navigation/Router';
 import EventListView from '../components/EventListView';
-import { Toolbar, Button, ActionButton } from 'react-native-material-ui';
+import { Toolbar, ActionButton } from 'react-native-material-ui';
 
 
 export default class HomeScreen extends React.Component {
@@ -132,9 +132,16 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Header hasTabs>
+          <Left>
+          </Left>
           <Body>
             <Title>Events</Title>
           </Body>
+          <Right>
+              <Button transparent>
+                  <Icon name='settings' onPress={() => this.props.navigator.push(Router.getRoute('availability', {user: this.state.user }))}/>
+              </Button>
+          </Right>
         </Header>
         <Tabs tabStyle={styles.tabStyle} >
           <Tab heading={ <TabHeading><Icon name="home" /><Text>Hosting</Text></TabHeading>}>
@@ -151,10 +158,9 @@ export default class HomeScreen extends React.Component {
           </Tab>
         </Tabs>
         <ActionButton
-          actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'settings', label: 'User Settings'}, { icon: 'input', label: 'logout'} ]}
-          icon="share"
-          transition="speedDial"
-          onPress={this.buttonPressed.bind(this)}
+          actions={[]}
+          icon="add"
+          onPress={() => this.props.navigator.push(Router.getRoute('pickDate'))}
         />  
       </View>
     );
