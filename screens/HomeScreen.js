@@ -158,10 +158,9 @@ export default class HomeScreen extends React.Component {
           </Tab>
         </Tabs>
         <ActionButton
-          actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'settings', label: 'User Settings'}, { icon: 'input', label: 'logout'} ]}
-          icon="menu"
-          transition="speedDial"
-          onPress={this.buttonPressed.bind(this)}
+          actions={[]}
+          icon="add"
+          onPress={() => this.props.navigator.push(Router.getRoute('pickDate'))}
         />  
       </View>
     );
