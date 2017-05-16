@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput , View, DatePickerIOS, ListView, Dimensions
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import { Container, Content, Item, Input, Form, Label } from 'native-base';
+import { Container, Content, Item, Input, Form, Label, Header, CardItem, TabHeading, Right, Left, ScrollableTab, Icon, Body, Title, Tab, Tabs } from 'native-base';
 import Carousel from 'react-native-carousel';
 import recipeData from "../firebase/recipes.json"
 import { Card, Button } from 'react-native-material-ui'
@@ -30,7 +30,8 @@ export default class CreateEventScreen extends DefaultScreen {
       eventTypes: eventTypes,
       description: "",
       location: "",
-      showDatePicker: false
+      showDatePicker: false,
+      name: ""
     };
   }
 
@@ -48,7 +49,8 @@ export default class CreateEventScreen extends DefaultScreen {
       description: this.state.description,
       location: this.state.location,
       host: curUser,
-      attending: [curUser]
+      attending: [curUser],
+      name: this.state.name
     };
     return event;
   }
@@ -128,6 +130,12 @@ export default class CreateEventScreen extends DefaultScreen {
       <Form>
         <Item regular>
           <Input 
+            placeholder='Name'
+            onChangeText={(text) => this.setState({name: text})}
+            value={this.state.name}/>
+        </Item>
+        <Item regular>
+          <Input 
             placeholder='Description'
             onChangeText={(text) => this.setState({description: text})}
             value={this.state.text}/>
@@ -147,7 +155,6 @@ export default class CreateEventScreen extends DefaultScreen {
             onChangeText={(text) => this.setState({location: text})}
             value={Moment(this.state.date).format("ddd MMM Do h:mm a")}/>
         </Item>
-        
       </Form>
       
 
@@ -168,6 +175,23 @@ export default class CreateEventScreen extends DefaultScreen {
     );
   }
 }
+
+ // <Header hasTabs>
+          
+ //    <Body>
+ //      <Title>Themes</Title>
+ //    </Body>
+    
+ //  </Header>
+ //  <Tabs>
+ //    <Tab heading={ <TabHeading><Text>Theme 1</Text></TabHeading>}>
+      
+ //    </Tab>
+ //    <Tab heading={ <TabHeading><Text>Theme 2</Text></TabHeading>}>
+      
+ //    </Tab>
+ //  </Tabs>
+
 
 const styles = StyleSheet.create({
   container: {

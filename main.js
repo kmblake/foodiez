@@ -55,6 +55,8 @@ class AppContainer extends React.Component {
       }
       
     });
+
+    Expo.Amplitude.initialize('e14119a8345b525877a5d5d6443b0f01');
   }
 
 

@@ -14,7 +14,7 @@ import {
   NavigatorIOS,
   SegmentedControlIOS
 } from 'react-native';
-
+import { Header, TabHeading, Right, Left, Button, ScrollableTab, Icon, Body, Title, Container, Content, Tab, Tabs } from 'native-base';
 import Expo from 'expo';
 
 import { MonoText } from '../components/StyledText';
@@ -24,14 +24,15 @@ import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
 import Router from '../navigation/Router';
 import EventListView from '../components/EventListView';
-import { Toolbar, Button, ActionButton } from 'react-native-material-ui';
+import { Toolbar, ActionButton } from 'react-native-material-ui';
 
 
 export default class HomeScreen extends React.Component {
   static route = {
     navigationBar: {
-      visible: true,
+      visible: false,
       title: "Events",
+      backgroundColor: "white",
     },
   };
   //Todo: icons and functions for nav bar buttons
@@ -126,19 +127,36 @@ export default class HomeScreen extends React.Component {
  
 
   renderFullView() {
-
+    Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
+    Expo.Amplitude.logEvent("Test");
     return (
       <View style={styles.container}>
-        <SegmentedControlIOS
-          values={['Invited', 'Hosting']}
-          selectedIndex={this.state.selectedIndex}
-          onChange={this.onSelectionChange.bind(this)} />
-        <EventListView
-          hosting={this.state.selectedIndex == 1} 
-          shouldSync={this.state.shouldSync}
-          navigator={this.props.navigator}/>
-
-        
+        <Header hasTabs>
+          <Left>
+          </Left>
+          <Body>
+            <Title>Events</Title>
+          </Body>
+          <Right>
+              <Button transparent>
+                  <Icon name='settings' onPress={() => this.props.navigator.push(Router.getRoute('availability', {user: this.state.user }))}/>
+              </Button>
+          </Right>
+        </Header>
+        <Tabs tabStyle={styles.tabStyle} >
+          <Tab heading={ <TabHeading><Icon name="home" /><Text>  Hosting</Text></TabHeading>}>
+            <EventListView
+              hosting={true} 
+              shouldSync={this.state.shouldSync}
+              navigator={this.props.navigator}/>
+          </Tab>
+          <Tab heading={ <TabHeading><Icon name="mail" /><Text>  Invites</Text></TabHeading>}>
+            <EventListView
+              hosting={false} 
+              shouldSync={this.state.shouldSync}
+              navigator={this.props.navigator}/>
+          </Tab>
+        </Tabs>
         <ActionButton
           actions={[{ icon: 'date-range', label: 'Create Event'}, { icon: 'settings', label: 'User Settings'}, { icon: 'input', label: 'logout'} ]}
           icon="menu"
@@ -148,7 +166,6 @@ export default class HomeScreen extends React.Component {
       </View>
     );
   }
-   
 
   render() {
     if (!this.state.logged_in) {
@@ -174,6 +191,9 @@ const styles = StyleSheet.create({
   },
   helloText: {
     color: 'rgba(0,0,0,0.4)'
+  },
+  tabStyle: {
+    backgroundColor: '#fff'
   },
   developmentModeText: {
     marginBottom: 20,

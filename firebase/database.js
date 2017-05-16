@@ -218,6 +218,7 @@ class Database {
             events.push({
               id: Object.keys(snap.val())[0],
               type: event.type,
+              name: event.name,
               attending: attending,
               date: event.date,
               description: event.description,

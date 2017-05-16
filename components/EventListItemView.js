@@ -19,7 +19,7 @@ export default class EventListItemView extends React.Component {
         <ListItem
             leftElement={<Image source={{uri: this.props.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
             centerElement={{
-                primaryText: this.props.event.type,
+                primaryText: this.props.event.name,
                 secondaryText: m.format("ddd MMM Do h:mm a"),
             }}
         />

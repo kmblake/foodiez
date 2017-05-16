@@ -98,7 +98,6 @@ export default class EventListView extends React.Component {
     } else {
       return (<Text style={styles.prompt} >No upcoming events yet!</Text>);
     }
-
   }
 }
 

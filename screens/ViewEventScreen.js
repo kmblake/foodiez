@@ -197,7 +197,7 @@ export default class ViewEventScreen extends React.Component {
         <ListItem
           leftElement={<Image source={{uri: this.state.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
           centerElement={{
-              primaryText: this.state.event.type,
+              primaryText: this.state.event.name,
               secondaryText: d.toString(),
           }}
         />
@@ -278,3 +278,4 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   }
 });
+
