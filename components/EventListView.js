@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight, RefreshControl } from 'react-native';
+import { StyleSheet, Text, View, Button, ListView, TouchableOpacity, ActivityIndicator, TouchableHighlight, RefreshControl, AsyncStorage } from 'react-native';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import EventListItemView from "./EventListItemView";
@@ -32,16 +32,32 @@ export default class EventListView extends React.Component {
     return this.props.hosting ? events.filter((event) => event.host.uid == firebase.auth().currentUser.uid) : events.filter((event) => event.host.uid != firebase.auth().currentUser.uid)
   }
 
-  updateData() {
-    this.setState({loaded: false});
-    Database.getEvents().then( (events) => {
+  async showCachedEvents() {
+    cached_events = await AsyncStorage.getItem('event_data');
+    if (!!cached_events) {
+      this.updateEvents(JSON.parse(cached_events));
+    }
+  }
 
-      filteredEvents = this.filterEvents(events);
-      this.setState({
+  updateEvents(events) {
+    filteredEvents = this.filterEvents(events);
+    this.setState({
       events: this.ds.cloneWithRows(filteredEvents),
       empty: filteredEvents.length == 0,
       loaded: true
-      });
+    });
+  }
+
+  updateData() {
+    this.setState({loaded: false});
+    this.showCachedEvents();
+    Database.getEvents().then( (events) => {
+       try {
+        AsyncStorage.setItem('event_data', JSON.stringify(events))
+      } catch (error) {
+        console.error(error);
+      }
+      this.updateEvents(events);
     }).catch( (error) => {
       console.error(error);
     });

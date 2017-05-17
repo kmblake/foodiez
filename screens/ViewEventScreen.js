@@ -4,6 +4,7 @@ import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
+import Moment from 'moment'
 
 
 export default class ViewEventScreen extends React.Component {
@@ -200,6 +201,7 @@ export default class ViewEventScreen extends React.Component {
 
   render() {
     const d = new Date(this.state.event.date);
+    const m = Moment(this.props.event.date);
     const deleteButton = this.renderDeleteEvent();
     const venmoButton = this.renderVenmoButton();
     const attendingUsers = this.renderAttending();
@@ -213,7 +215,7 @@ export default class ViewEventScreen extends React.Component {
           leftElement={<Image source={{uri: this.state.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
           centerElement={{
               primaryText: this.state.event.name,
-              secondaryText: d.toString(),
+              secondaryText: m.format("ddd MMM Do h:mm a"),
           }}
         />
         <View style={styles.textContainer}>

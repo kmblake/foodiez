@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerAndroid, Platform } from 'react-native';
+import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerAndroid, Platform, Share } from 'react-native';
 import { Form, Label, Item, Input} from 'native-base';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
@@ -92,6 +92,14 @@ export default class PickDateScreen extends DefaultScreen {
     } 
   }
 
+  shareFoodiez() {
+    Share.share({
+      message: 'Join me for dinner using a new app called Foodiez! You\'ll need to download an app called Expo first and then open Foodiez using this link: https://exp.host/@kmblake/foodiez',
+      url: 'https://exp.host/@kmblake/foodiez',
+      title: 'Join me on Foodiez!'
+    });
+  }
+
   renderCalendarPicker() {
     if (Platform.OS === 'ios') {
       return (
@@ -105,7 +113,7 @@ export default class PickDateScreen extends DefaultScreen {
           <Item fixedLabel last
             onPress={this.onDatePress.bind(this)}
           >
-            <Label>Date</Label>
+            <Label>Date (tap to change)</Label>
             <Input disabled
               value={Moment(this.state.chosenDate).format("ddd MMM Do")}/>
           </Item>
@@ -117,6 +125,7 @@ export default class PickDateScreen extends DefaultScreen {
   renderView() {
     const nextButton = this.renderNextButton();
     const calendar = this.renderCalendarPicker();
+    const prompt = 'Tap to invite friends available on '+ Moment(this.state.chosenDate).format("MMM Do") + '.';
     return (
       <View
         style={styles.container}
@@ -124,7 +133,12 @@ export default class PickDateScreen extends DefaultScreen {
         {calendar}
      
       <View style={styles.listHeader}>
-        <Text style={styles.prompt} > Pick friends to invite </Text>
+        <Text style={styles.prompt} > {prompt} </Text>
+        <Button
+          primary
+          onPress={this.shareFoodiez}
+          text="Invite more friends to Foodiez"
+        />
       </View>
       <MultiSelectListView
         dataSource={this.state.availableFriends}
@@ -149,7 +163,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.4)'
   },
   listHeader: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     padding: 10
   },

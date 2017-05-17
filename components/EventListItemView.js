@@ -11,6 +11,7 @@ export default class EventListItemView extends React.Component {
     const d = new Date(this.props.event.date);
     const m = Moment(this.props.event.date);
     const hostingInfo = this.renderHostingInfo();
+    const name = !!this.props.event.name ? this.props.event.name : 'Dinner';
     return (
 
       <Card onPress={() => {
@@ -19,7 +20,7 @@ export default class EventListItemView extends React.Component {
         <ListItem
             leftElement={<Image source={{uri: this.props.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
             centerElement={{
-                primaryText: this.props.event.name,
+                primaryText: name,
                 secondaryText: m.format("ddd MMM Do h:mm a"),
             }}
         />

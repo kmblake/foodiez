@@ -25,8 +25,6 @@ import Database from './firebase/database'
 
 class AppContainer extends React.Component {
 
-  
-
   state = {
     appIsReady: false,
     userLoaded: false

@@ -5,6 +5,7 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Container, Content, Item, Input, Label } from 'native-base';
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
+import Moment from 'moment'
 
 
 export default class CreateEventScreen extends DefaultScreen {
@@ -88,6 +89,7 @@ export default class CreateEventScreen extends DefaultScreen {
 
   renderView() {
     const d = new Date(this.state.event.date);
+    const m = Moment(this.props.event.date);
     const attendingUsers = this.renderAttending();
     const hostingText = this.renderHostingText();
     const menu = this.renderMenu();
@@ -98,7 +100,7 @@ export default class CreateEventScreen extends DefaultScreen {
           leftElement={<Image source={{uri: this.state.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
           centerElement={{
               primaryText: this.state.event.name,
-              secondaryText: d.toString(),
+              secondaryText: m.format("ddd MMM Do h:mm a"),
           }}
         />
         <View style={styles.textContainer}>

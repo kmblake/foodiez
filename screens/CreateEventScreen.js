@@ -50,7 +50,7 @@ export default class CreateEventScreen extends DefaultScreen {
       location: this.state.location,
       host: curUser,
       attending: [curUser],
-      name: this.state.name
+      name: (!!this.state.name) ? this.state.name : 'Dinner'
     };
     return event;
   }
