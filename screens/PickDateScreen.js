@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerIOS } from 'react-native';
+import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerAndroid, Platform } from 'react-native';
+import { Form, Label, Item, Input} from 'native-base';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import CalendarPicker from 'react-native-calendar-picker';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Button } from 'react-native-material-ui'
+import Moment from 'moment';
 
 export default class PickDateScreen extends DefaultScreen {
   static route = {
@@ -79,16 +81,47 @@ export default class PickDateScreen extends DefaultScreen {
     }
   }
 
+  async onDatePress() {
+    if (Platform.OS === 'android') {
+     const {action, year, month, day} = await DatePickerAndroid.open({date: this.state.chosenDate});
+     if (action === DatePickerAndroid.dateSetAction) {
+      var date = new Date(year, month, day);
+      this.onDateChange(date);
+     }
+      
+    } 
+  }
+
+  renderCalendarPicker() {
+    if (Platform.OS === 'ios') {
+      return (
+         <CalendarPicker
+          onDateChange={this.onDateChange}
+        />
+      );
+    } else {
+      return (
+        <Form>
+          <Item fixedLabel last
+            onPress={this.onDatePress.bind(this)}
+          >
+            <Label>Date</Label>
+            <Input disabled
+              value={Moment(this.state.chosenDate).format("ddd MMM Do")}/>
+          </Item>
+        </Form>
+      );
+    }
+  }
+
   renderView() {
     const nextButton = this.renderNextButton();
-
+    const calendar = this.renderCalendarPicker();
     return (
       <View
         style={styles.container}
       >
-        <CalendarPicker
-          onDateChange={this.onDateChange}
-        />
+        {calendar}
      
       <View style={styles.listHeader}>
         <Text style={styles.prompt} > Pick friends to invite </Text>

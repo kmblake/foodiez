@@ -57,6 +57,7 @@ class AppContainer extends React.Component {
       
     });
 
+
     Expo.Amplitude.initialize('e14119a8345b525877a5d5d6443b0f01');
   }
 
@@ -82,7 +83,7 @@ class AppContainer extends React.Component {
         'Roboto-Italic': require('./assets/fonts/Roboto/Roboto-Italic.ttf'),
         'Roboto-Light': require('./assets/fonts/Roboto/Roboto-Light.ttf'),
         'Roboto-LightItalic': require('./assets/fonts/Roboto/Roboto-LightItalic.ttf'),
-        'Roboto-Medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto_medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
         'Roboto-MediumItalic': require('./assets/fonts/Roboto/Roboto-MediumItalic.ttf'),
         'Roboto-Regular': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
         'Roboto': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
@@ -119,7 +120,7 @@ class AppContainer extends React.Component {
             'Roboto-Italic': require('./assets/fonts/Roboto/Roboto-Italic.ttf'),
             'Roboto-Light': require('./assets/fonts/Roboto/Roboto-Light.ttf'),
             'Roboto-LightItalic': require('./assets/fonts/Roboto/Roboto-LightItalic.ttf'),
-            'Roboto-Medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+            'Roboto_medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
             'Roboto-MediumItalic': require('./assets/fonts/Roboto/Roboto-MediumItalic.ttf'),
             'Roboto-Regular': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
             'Roboto': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
@@ -161,6 +162,7 @@ class AppContainer extends React.Component {
       } 
     } 
     return <LoadingScreen />;
+
   }
 }
 

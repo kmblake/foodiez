@@ -43,7 +43,7 @@ export default class MultiSelectListView extends React.Component {
     return (
       <ListItem onPress={() => (this.onPressRow(rowID))} onLongPress={() => console.log("long press 1")}>
           <Body>
-              <Text>{rowContents}</Text>
+              <View>{rowContents}</View>
           </Body>
           <CheckBox checked={item.checked} />
       </ListItem>
