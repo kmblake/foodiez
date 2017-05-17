@@ -9,6 +9,7 @@ import cacheAssetsAsync from './utilities/cacheAssetsAsync';
 import Firebase from './firebase/firebase';
 import * as firebase from "firebase";
 import { COLOR, ThemeProvider } from 'react-native-material-ui';
+import LoadingScreen from './screens/LoadingScreen';
 
 const uiTheme = {
     palette: {
@@ -159,7 +160,7 @@ class AppContainer extends React.Component {
         );
       } 
     } 
-    return <Expo.AppLoading />;
+    return <LoadingScreen />;
   }
 }
 
