@@ -87,12 +87,27 @@ export default class ViewEventScreen extends React.Component {
     if (this.state.accepted == val) {
       return ({text: styles.selected});
     } 
-  }  
+  } 
+
+  renderVenmoPrompt() {
+    if (!!this.state.event.venmoURL) {
+      const prompt = this.state.event.host.name + ' requested a $' + this.state.event.cost + ' donation to help with the cost of the meal. Do you want to pay via Venmo now?';
+      return (Alert.alert(
+        'Ready to Pay?',
+        prompt,
+        [
+          {text: 'No'},
+          {text: 'Yes', onPress: () => this.renderWebView()}
+        ]
+      ));
+    }
+  } 
 
   handleInviteResponse(val) {
     Database.respondToInvite(this.state.event, val).then((res) => {
       this.setState({accepted: val, loaded: false});
       this.updateData();
+      if (!!val) this.renderVenmoPrompt();
     }).catch( (error) => {
       console.error(error);
     });
