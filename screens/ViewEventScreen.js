@@ -201,7 +201,7 @@ export default class ViewEventScreen extends React.Component {
 
   render() {
     const d = new Date(this.state.event.date);
-    const m = Moment(this.props.event.date);
+    const m = Moment(this.state.event.date);
     const deleteButton = this.renderDeleteEvent();
     const venmoButton = this.renderVenmoButton();
     const attendingUsers = this.renderAttending();
@@ -242,7 +242,7 @@ export default class ViewEventScreen extends React.Component {
       <Card>
         <View style={styles.textContainer}>
             <Text>
-                Suggest Donation Amount $5
+                Suggest Donation Amount ${this.state.event.cost}
             </Text>
         </View>
       
