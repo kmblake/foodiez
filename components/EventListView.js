@@ -78,7 +78,7 @@ export default class EventListView extends React.Component {
   renderView() {
     if (!this.state.empty) {
       return (
-      <View>
+      <View style={styles.viewContainer}>
          <ListView
             dataSource={this.state.events}
             // renderRow={(event) => <Text>{event.type} ({event.id}) Host: {event.host.name} </Text>}
@@ -102,6 +102,9 @@ export default class EventListView extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  viewContainer: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     paddingTop: 15,

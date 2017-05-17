@@ -13,7 +13,7 @@ import Moment from 'moment'
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
     navigationBar: {
-      title: 'Craft Your Menu',
+      title: 'Event Details',
     }
   };
 
@@ -30,7 +30,7 @@ export default class CreateEventScreen extends DefaultScreen {
       eventTypes: eventTypes,
       description: "",
       location: "",
-      showDatePicker: false,
+      showDatePicker: true,
       name: ""
     };
   }
@@ -159,22 +159,32 @@ export default class CreateEventScreen extends DefaultScreen {
       
 
       {datePicker}
-      <TouchableWithoutFeedback style={styles.container} onPress={() => this.setState({showDatePicker: false}) }>
-        <View style={styles.container}>
-          <Text style={styles.menuPrompt}>Create an awesome menu. Choose a seasonal theme below:</Text>
-          {carousel}
-        </View>
-      </TouchableWithoutFeedback>   
+
+      <Button
+        primary 
+        onPress={() => (this.onMenuPress('tapas'))}
+        text="Choose Theme & Recipes"
+      />  
       <Button
         primary 
         onPress={() => (this.onNextTap())}
-        text="No thanks, I'll use my own menu!"
+        text="Confirm Event Details"
       />
 
       </View>
     );
   }
 }
+
+
+
+      // <TouchableWithoutFeedback style={styles.container} onPress={() => this.setState({showDatePicker: false}) }>
+      //   <View style={styles.container}>
+      //     <Text style={styles.menuPrompt}>Create an awesome menu. Choose a seasonal theme below:</Text>
+      //     {carousel}
+      //   </View>
+      // </TouchableWithoutFeedback> 
+      
 
  // <Header hasTabs>
           

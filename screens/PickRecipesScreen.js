@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, View, ListView, TouchableHighlight, Image, Text, Linking } from 'react-native';
+import { StyleSheet, View, ListView, TouchableHighlight, Image, Text, Linking, Dimensions } from 'react-native';
+import { Container, Content, Item, Input, Form, Label, Header, CardItem, Card, Body, Title, TabHeading, Icon, Tab, Tabs  } from 'native-base';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import RecipeListView from "../components/RecipeListView";
 import recipeData from "../firebase/recipes.json"
 import { Button } from 'react-native-material-ui'
+import Carousel from 'react-native-carousel';
 
 
 export default class PickRecipesScreen extends DefaultScreen {
@@ -18,13 +20,12 @@ export default class PickRecipesScreen extends DefaultScreen {
   constructor(props) {
     super(props);
     const event = JSON.parse(props.route.params.event);   
-   
     this.state = {
       logged_in: true, 
       event: event,
+      eventType: 'Dinner',
       chosenRecipes: []
     };
-
   }
 
   onNextTap() {
@@ -54,18 +55,39 @@ export default class PickRecipesScreen extends DefaultScreen {
     }
   }
 
+  renderTabs() {
+    var {height, width} = Dimensions.get('window');
+    const eventTypeToText = {
+      'tapas': 'Tapas Night', 
+      'summer_bbq': 'Summer BBQ', 
+      'taco_night': 'Taco Night', 
+      'pizza': 'Pizza Party', 
+      'custom': 'Dinner'};
+    var tabs = Object.keys(recipeData.recipes).map( (key) => {
+      const title = eventTypeToText[key]
+      return (
+        <Tab heading={ <TabHeading><Text> {title} </Text></TabHeading>}>
+         <Image style={{ height: height*4/10, width: width - 10, resizeMode: 'contain'}} source={{uri: recipeData.recipes[key][0].photoURL}} />
+          <Text style={styles.prompt} >Tip: Press and hold to view the full recipe!</Text>
+          <RecipeListView
+            dataSource={recipeData.recipes[key]}
+            onSelectionChanged={this.onSelectionChanged.bind(this)}
+          />
+        </Tab>
+      );
+    });
+    return tabs;
+  }
+
   renderView() {
     const nextButton = this.renderNextButton();
+    const tabs = this.renderTabs();
     return (
-      <View
-        style={styles.container}
-      >
-      <Text style={styles.prompt} >Tip: Press and hold to view the full recipe!</Text>
-      <RecipeListView
-        dataSource={recipeData.recipes[this.state.event.type]}
-        onSelectionChanged={this.onSelectionChanged.bind(this)}
-      />
-      {nextButton}
+      <View style={styles.container}>
+        <Tabs tabStyle={styles.tabStyle} >
+          {tabs}
+        </Tabs>
+        {nextButton}
       </View>
     );
   }
@@ -74,7 +96,6 @@ export default class PickRecipesScreen extends DefaultScreen {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
   },
   prompt: {
     textAlign: 'center',

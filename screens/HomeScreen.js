@@ -42,6 +42,8 @@ export default class HomeScreen extends React.Component {
     super(props);
     const self = this;
     this.state = {logged_in: false, shouldSync: false, selectedIndex: 0};
+    Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
+    Expo.Amplitude.logEvent("Test");
   }
 
   componentWillMount() {
@@ -127,8 +129,6 @@ export default class HomeScreen extends React.Component {
  
 
   renderFullView() {
-    Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
-    Expo.Amplitude.logEvent("Test");
     return (
       <View style={styles.container}>
         <Header hasTabs>
