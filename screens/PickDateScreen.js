@@ -94,7 +94,7 @@ export default class PickDateScreen extends DefaultScreen {
 
   shareFoodiez() {
     Share.share({
-      message: 'Join me for dinner using a new app called Foodiez! You\'ll need to download an app called Expo first and then open Foodiez using this link: https://exp.host/@kmblake/foodiez',
+      message: 'Join me for dinner using a new app called Foodiez! You\'ll need to download an app called Expo first and then open Foodiez using this link:',
       url: 'https://exp.host/@kmblake/foodiez',
       title: 'Join me on Foodiez!'
     });
