@@ -30,7 +30,7 @@ export default class CreateEventScreen extends DefaultScreen {
       eventTypes: eventTypes,
       description: "",
       location: "",
-      showDatePicker: true,
+      showDatePicker: false, 
       name: ""
     };
   }
@@ -149,12 +149,14 @@ export default class CreateEventScreen extends DefaultScreen {
         <Item regular>
           <Input 
             placeholder='Description'
+            multiline={true}
             onChangeText={(text) => this.setState({description: text})}
             value={this.state.text}/>
         </Item>
         <Item regular>
           <Input 
             placeholder='Location'
+            multiline={true}
             onChangeText={(text) => this.setState({location: text})}
             value={this.state.location}/>
         </Item>

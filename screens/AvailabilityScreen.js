@@ -1,14 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Text } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import {
-  MKCheckbox,
-} from 'react-native-material-kit';
-import { Container, Content, List, ListItem, Text, CheckBox } from 'native-base';
+// import {
+//   MKCheckbox,
+// } from 'react-native-material-kit';
+// import { Container, Content, List, ListItem, Text, CheckBox } from 'native-base';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Item, Input, Form, Label } from 'native-base';
+import { Button } from 'react-native-material-ui'
 import * as firebase from "firebase";
 
 
@@ -136,6 +137,9 @@ export default class AvailabilityScreen extends DefaultScreen {
     // const venmoPlaceholder = (!!this.state.venmo) ? this.state.venmo : 'Your Venmo'
     return (
       <View style={styles.container}>
+        <Text style={styles.prompt}>
+          Tap to choose the days that you're generally available. Also add your Venmo username to make it easy for friends to pay you back!
+        </Text>
         <MultiSelectListView
           dataSource={this.state.availabilityOptions}
           renderRowContents={this.renderRowContents.bind(this)}
@@ -149,20 +153,17 @@ export default class AvailabilityScreen extends DefaultScreen {
             placeholder={this.state.venmo}
           />
         </Item>
-        <View style={styles.container} >
-          <Button
-            onPress={() => (this.onNextTap())}
-            title="Save"
-            color="#841584"
-          />
-        </View>
-        <View style={styles.container} >
-          <Button
-            onPress={() => (this.logout())}
-            title="logout"
-            color="#841584"
-          />
-        </View>
+        <Button
+          accent
+          onPress={() => (this.logout())}
+          text="Logout"
+        /> 
+        <Button
+          primary 
+          raised
+          onPress={() => (this.onNextTap())}
+          text="Save"
+        />  
       </View>
     );
   }
@@ -172,6 +173,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+  },
+  prompt: {
+    color: 'rgba(0,0,0,0.4)',
+    marginLeft: 15
   },
   datePicker: {
     paddingTop: '50%',
