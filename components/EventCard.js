@@ -20,7 +20,7 @@ export class EventCard extends React.Component {
 
 const styles = StyleSheet.create({
   header: {
-    padding: 10,
+    padding: 6,
     backgroundColor: 'whitesmoke'
   },
   headerText: {

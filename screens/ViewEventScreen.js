@@ -140,9 +140,9 @@ export default class ViewEventScreen extends React.Component {
     } else {
       return (<Text style={styles.greyText} >{this.state.event.host.name} has not linked their Venmo account.</Text>);
     }
-    
+  
   }
-
+  
   renderMenu() {
     var menuItems = [];
     console.log(this.state.event.recipes);

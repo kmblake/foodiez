@@ -3,8 +3,7 @@ import { StyleSheet, View, Button, ListView, TouchableOpacity, Image, Linking, D
 import { Container, Content, Body, ListItem, Text, CheckBox } from 'native-base';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-
-
+import Expo from 'expo'
 export default class RecipeListView extends React.Component {
 
   // Pass in renderRowContents function to render contents of row, 

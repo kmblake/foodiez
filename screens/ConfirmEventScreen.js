@@ -53,25 +53,6 @@ export default class CreateEventScreen extends DefaultScreen {
   }
 
 
-  // renderMenu() {
-  //   var menuItems = [];
-  //   console.log(this.state.event.recipes);
-  //   if (this.state.event.recipes != null) {
-  //     menuItems = this.state.event.recipes.map((recipe) => 
-  //           <ListItem 
-  //             key={recipe.photoURL}
-  //             leftElement={<Image source={{uri: recipe.photoURL}} 
-  //             style={{width: 40, height: 40, borderRadius: 20}} />}
-  //             centerElement={{
-  //                 primaryText: recipe.title,
-  //             }}
-  //         />);
-  //   }
-  //  console.log(menuItems);
-  //  return menuItems; 
-
-  // }
-
   renderMenu() {
     var menuItems = [];
     console.log(this.state.event.recipes);

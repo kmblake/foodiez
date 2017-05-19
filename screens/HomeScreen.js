@@ -140,7 +140,7 @@ export default class HomeScreen extends React.Component {
               </Button>
           </Right>
         </Header>
-        <Tabs tabStyle={styles.tabStyle} >
+        <Tabs topTabBarActiveBorderColor={{color: COLOR.green500}} tabStyle={styles.tabStyle} >
           <Tab heading={ <TabHeading><Icon name="home" /><Text>  Hosting</Text></TabHeading>}>
             <EventListView
               hosting={true} 
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.4)'
   },
   tabStyle: {
-    backgroundColor: 'green'
+    backgroundColor: COLOR.green500
   },
   developmentModeText: {
     marginBottom: 20,
