@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableHighlight, Text } from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -78,26 +78,10 @@ export default class AvailabilityScreen extends DefaultScreen {
     });
   }
 
-  logout() {
-    var self = this;
-    firebase.auth().signOut().then(function() {
-      console.log('User logged out');
-      
-      AsyncStorage.removeItem('user_data');
-      // this.setState({logged_in: false});
-      Firebase.logIn().then( (user) => {
-        if (!!user) {
-          AsyncStorage.setItem('user_data', JSON.stringify(user)).then( () => {
-            self.getUserData();
-            self.setState({shouldSync: true});
-          });
-          
-        }
-      });
-    }).catch(function(error) {
-      console.log(error);
-    });
-
+  async logout() {
+    await AsyncStorage.removeItem('user_data');
+    await firebase.auth().signOut()
+    this.props.navigator.push(Router.getRoute('home'));
    }
 
 
