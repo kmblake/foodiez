@@ -5,7 +5,7 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
 import Moment from 'moment'
-import { COLOR, ThemeProvider } from 'react-native-material-ui';
+import { EventCard } from '../components/EventCard';
 
 
 export default class ViewEventScreen extends React.Component {
@@ -179,7 +179,7 @@ export default class ViewEventScreen extends React.Component {
   renderInviteResponse() {
     if (!this.props.route.params.hosting) {
       return (
-        <View>
+        <View style={{paddingBottom: 10}}>
           <Text style={styles.detailsHeader}>Are you planning to attend?</Text>
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
@@ -242,44 +242,25 @@ export default class ViewEventScreen extends React.Component {
           }}
         />
         <View style={styles.responseContainer}>
+          {this.renderDetails('Host', this.state.event.host.name)}
           {this.renderDetails('Location', this.state.event.location)}
           {this.renderDetails('More Info', this.state.event.description)}
-          <View style={{paddingBottom: 10}}>
-            {inviteResponse}
-          </View>
+          {inviteResponse}
         </View>
         
       </Card>
-      <Card >
-        <View style={styles.header}>
-          <Text style={styles.headerText}>
-              Attendees
-          </Text>
-        </View>
+      <EventCard title="Attendees">
         {attendingUsers}
-      </Card>
-      <Card>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>
-              Menu
-          </Text>
-        </View>
+      </EventCard>
+      <EventCard title="Menu">
         { menu }
-      </Card>
-      <Card>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>
-              Suggested Donation
-          </Text>
-        </View>
-
+      </EventCard>
+      <EventCard title="Suggested Contribution">
         <View style={styles.textContainer}>
           {paymentText}
         </View>
-      
-        {venmoButton}
-
-      </Card>
+        {venmoButton} 
+      </EventCard>
       {deleteButton}
       </ScrollView>
     );
@@ -321,11 +302,11 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 10,
-    backgroundColor: COLOR.green500
+    backgroundColor: 'whitesmoke'
   },
   headerText: {
-    color: 'white',
-    textAlign: 'center',
+    // color: 'darkgrey',
+    // textAlign: 'center',
     fontWeight: 'bold'
   },
   detailsHeader: {
