@@ -145,7 +145,6 @@ export default class ViewEventScreen extends React.Component {
   
   renderMenu() {
     var menuItems = [];
-    console.log(this.state.event.recipes);
     if (this.state.event.recipes != null && this.state.event.recipes.length > 0) {
         menuItems = this.state.event.recipes.map((recipe) => <ListItem
                 key={recipe.title}

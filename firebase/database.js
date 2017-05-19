@@ -190,59 +190,49 @@ class Database {
     return firebase.database().ref('events/' + eventId).remove()
   }
 
-  static getEvents(onEventsLoaded, onError) {
+
+  static async getEvents() {
     const curUid = firebase.auth().currentUser.uid;
     const eventRef = firebase.database().ref('events');
     const invitationRef = firebase.database().ref('invitations');
     const userRef = firebase.database().ref('users')
     const dateThreshold = parseInt(Moment().subtract(3, 'hours').format('x'));
-    return invitationRef.orderByChild('uid').equalTo(curUid).once('value').then((snapshot) => {
-      return new Promise( (resolve, reject) => {
-        const invites = snapshot.val();
-        var promises = [];
-        for (var id in invites) {
-          const invite = invites[id];
-          if (invite.event_date > dateThreshold) {
-          // if (true) {
-            const query = eventRef.orderByKey().equalTo(invites[id].eventId);
-            promises.push(query.once('value'));
+    const invitesSnap = await invitationRef.orderByChild('uid').equalTo(curUid).once('value');
+    const invites = invitesSnap.val();
+    var events = [];
+    for (id in invites) {
+      const invite = invites[id];
+      if (invite.event_date > dateThreshold) {
+        const eventSnap = await firebase.database().ref('events/' + invite.eventId).once('value');
+        const event = eventSnap.val();
+        var attending = []
+        if (!!event.attending) attending = event.attending;
+        events.push({
+          id: invite.eventId,
+          type: event.type,
+          name: event.name,
+          attending: attending,
+          date: event.date,
+          description: event.description,
+          host: event.host,
+          location: event.location,
+          cost: event.cost,
+          venmoURL: event.venmoURL,
+          recipes: event.recipes,
+          invitation: {
+            id: id,
+            accepted: invite.accepted,
+            deadline: invite.deadline,
+            paid: invite.paid
           }
-        }
-        Promise.all(promises).then( (snaps) => {
-          var events = [];
-          snaps.forEach((snap, i) => {
-            var userPromises = [];
-            var event = Object.values(snap.val())[0];
-            var attending = []
-            if (!!event.attending) attending = event.attending;
-            events.push({
-              id: Object.keys(snap.val())[0],
-              type: event.type,
-              name: event.name,
-              attending: attending,
-              date: event.date,
-              description: event.description,
-              host: event.host,
-              location: event.location,
-              cost: event.cost,
-              venmoURL: event.venmoURL,
-              recipes: event.recipes,
-              invitation: {
-                id: Object.keys(invites)[i],
-                accepted: Object.values(invites)[i].accepted,
-                deadline: Object.values(invites)[i].deadline,
-                paid: Object.values(invites)[i].paid
-              }
-            });
-          });
-          events.sort((e1, e2) => {
-            return e1.date - e2.date
-          });
-          resolve(events);
+        });
+      }
+      events.sort((e1, e2) => {
+        return e1.date - e2.date
       });
-     });
-    });
-
+    }
+    const events1 = events;
+    return events;
   }
 
   static async getAttendance(eventId) {

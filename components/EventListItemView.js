@@ -11,7 +11,7 @@ export default class EventListItemView extends React.Component {
   render() {
     const d = new Date(this.props.event.date);
     const m = Moment(this.props.event.date);
-    const hostingInfo = this.renderHostingInfo();
+    // const hostingInfo = this.renderHostingInfo();
     const name = !!this.props.event.name ? this.props.event.name : 'Dinner';
     return (
 
@@ -25,7 +25,7 @@ export default class EventListItemView extends React.Component {
                 secondaryText: m.format("ddd MMM Do h:mm a"),
             }}
         />
-        {hostingInfo}
+        {this.renderAccepted()}
       </Card>
     );
   }
@@ -40,11 +40,35 @@ export default class EventListItemView extends React.Component {
       return (
         <View style={styles.textContainer}>
             <Text>
-                {this.props.event.host.name} is hosting {this.props.event.type} 
+                {this.props.event.host.name} is hosting
             </Text>
         </View>
       );
     } 
+  }
+
+  renderAccepted() {
+    if(!this.props.hosting) {
+      if (!!this.props.event.invitation.accepted) {
+        return (
+          <View style={styles.textContainer}>
+            <Text>You're going!</Text>
+          </View>
+        );
+      } else if (this.props.event.invitation.accepted == false) {
+        return (
+          <View style={styles.textContainer}>
+            <Text>You're not going</Text>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.textContainer}>
+            <Text style={styles.actionRequired}>Let {this.props.event.host.name} know if you're going!</Text>
+          </View>
+        );
+      }
+    }
   }
 }
 
@@ -75,5 +99,8 @@ const styles = StyleSheet.create({
   },
   text: {
     flex: 1,
+  },
+  actionRequired: {
+    fontWeight: 'bold'
   }
 });
