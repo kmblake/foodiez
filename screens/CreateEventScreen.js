@@ -119,35 +119,35 @@ export default class CreateEventScreen extends DefaultScreen {
         <ScrollView style={styles.container}>
         <Text style={styles.prompt}>Enter the details about your event here, including how much you'd like each guest to contribute to cover the cost!</Text>
         <Form>
-          <Item inlineLabel>
+          <Item stackedLabel>
+            <Label>Name</Label>
             <Input 
-              placeholder='Name'
               onChangeText={(text) => this.setState({name: text})}
               value={this.state.name}/>
           </Item>
-          <Item inlineLabel>
+          <Item stackedLabel>
+            <Label>Description</Label>
             <Input 
-              placeholder='Description'
               multiline={true}
               onChangeText={(text) => this.setState({description: text})}
               value={this.state.text}/>
           </Item>
-          <Item inlineLabel>
+          <Item stackedLabel>
+            <Label>Location</Label>
             <Input 
-              placeholder='Location'
               multiline={true}
               onChangeText={(text) => this.setState({location: text})}
               value={this.state.location}/>
           </Item>
 
-          <Item fixedLabel >
+          <Item stackedLabel >
             <Label>Suggested Contribution ($)</Label>
             <Input 
               keyboardType = 'numeric'
               onChangeText={(text) => this.setState({cost: text})}
               value={this.state.cost}/>
           </Item>
-          <Item fixedLabel last
+          <Item stackedLabel last
             onPress={this.onDatePress.bind(this)}
           >
             <Label>Time</Label>

@@ -110,6 +110,17 @@ export default class CreateEventScreen extends DefaultScreen {
       }
   }
 
+  renderDetails(title, attribute) {
+    if (!!attribute) {
+      return (
+        <View style={{paddingBottom: 10}}>
+          <Text style={styles.detailsHeader}>{title}</Text>
+          <Text>{attribute}</Text>
+        </View>
+      );
+    }
+  }
+
   renderView() {
     const d = new Date(this.state.event.date);
     const m = Moment(this.props.event.date);
@@ -117,6 +128,7 @@ export default class CreateEventScreen extends DefaultScreen {
     const menu = this.renderMenu();
     return (
       <ScrollView>
+
       <Card>
         <ListItem
           leftElement={<Image source={{uri: this.state.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
@@ -125,7 +137,14 @@ export default class CreateEventScreen extends DefaultScreen {
               secondaryText: m.format("ddd MMM Do h:mm a"),
           }}
         />
+        <View style={styles.responseContainer}>
+          {this.renderDetails('Host', this.state.event.host.name)}
+          {this.renderDetails('Location', this.state.event.location)}
+          {this.renderDetails('More Info', this.state.event.description)}
+        </View>
+        
       </Card>
+
       <EventCard title="Invited Friends">
         {attendingUsers}
       </EventCard>
@@ -186,6 +205,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row', 
     height: 30,
     paddingBottom: 10,
+  },
+  responseContainer: {
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10
+  },
+  detailsHeader: {
+    fontWeight: 'bold',
+    paddingBottom: 5
   }
 });
 
