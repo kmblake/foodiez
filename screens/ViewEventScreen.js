@@ -179,7 +179,7 @@ export default class ViewEventScreen extends React.Component {
   renderInviteResponse() {
     if (!this.props.route.params.hosting) {
       return (
-        <View>
+        <View style={{paddingBottom: 10}}>
           <Text style={styles.detailsHeader}>Are you planning to attend?</Text>
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
@@ -242,11 +242,10 @@ export default class ViewEventScreen extends React.Component {
           }}
         />
         <View style={styles.responseContainer}>
+          {this.renderDetails('Host', this.state.event.host.name)}
           {this.renderDetails('Location', this.state.event.location)}
           {this.renderDetails('More Info', this.state.event.description)}
-          <View style={{paddingBottom: 10}}>
-            {inviteResponse}
-          </View>
+          {inviteResponse}
         </View>
         
       </Card>
@@ -321,10 +320,10 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 10,
-    backgroundColor: COLOR.green500
+    backgroundColor: 'gainsboro'
   },
   headerText: {
-    color: 'white',
+    // color: 'darkgrey',
     textAlign: 'center',
     fontWeight: 'bold'
   },

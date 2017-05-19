@@ -26,7 +26,8 @@ export default class PickDateScreen extends DefaultScreen {
       availability: [],
       availableFriends: [],
       invitedFriends: [],
-      showNextButton: false
+      showNextButton: false,
+      friendsLoaded: false
     }; 
   }
 
@@ -122,14 +123,26 @@ export default class PickDateScreen extends DefaultScreen {
     }
   }
 
+  renderAvailableFriends() {
+    if (this.state.availableFriends.length > 0) {
+      return (
+        <MultiSelectListView
+          dataSource={this.state.availableFriends}
+          renderRowContents={this.renderRowContents.bind(this)}
+          onSelectionChanged={this.onSelectionChanged.bind(this)}
+        />
+      );
+    } else {
+      return (<Text style={styles.prompt} >No one is available on that day.</Text>);
+    }
+  }
+
   renderView() {
     const nextButton = this.renderNextButton();
     const calendar = this.renderCalendarPicker();
     const prompt = 'Tap to invite friends available on '+ Moment(this.state.chosenDate).format("MMM Do") + '.';
     return (
-      <View
-        style={styles.container}
-      >
+      <View style={styles.container} >
         {calendar}
      
       <View style={styles.listHeader}>
@@ -140,11 +153,7 @@ export default class PickDateScreen extends DefaultScreen {
           text="Invite more friends to Foodiez"
         />
       </View>
-      <MultiSelectListView
-        dataSource={this.state.availableFriends}
-        renderRowContents={this.renderRowContents.bind(this)}
-        onSelectionChanged={this.onSelectionChanged.bind(this)}
-      />
+      {this.renderAvailableFriends()}
       {nextButton}
       
 
