@@ -109,7 +109,6 @@ export default class CreateEventScreen extends DefaultScreen {
     const d = new Date(this.state.event.date);
     const m = Moment(this.props.event.date);
     const attendingUsers = this.renderAttending();
-    const hostingText = this.renderHostingText();
     const menu = this.renderMenu();
     return (
       <ScrollView>
@@ -121,9 +120,6 @@ export default class CreateEventScreen extends DefaultScreen {
               secondaryText: m.format("ddd MMM Do h:mm a"),
           }}
         />
-        <View style={styles.textContainer}>
-          {hostingText}
-        </View>
       </Card>
       <EventCard title="Invited Friends">
         {attendingUsers}
