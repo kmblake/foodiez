@@ -5,7 +5,7 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
 import Moment from 'moment'
-import { COLOR, ThemeProvider } from 'react-native-material-ui';
+import { EventCard } from '../components/EventCard';
 
 
 export default class ViewEventScreen extends React.Component {
@@ -249,36 +249,18 @@ export default class ViewEventScreen extends React.Component {
         </View>
         
       </Card>
-      <Card >
-        <View style={styles.header}>
-          <Text style={styles.headerText}>
-              Attendees
-          </Text>
-        </View>
+      <EventCard title="Attendees">
         {attendingUsers}
-      </Card>
-      <Card>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>
-              Menu
-          </Text>
-        </View>
+      </EventCard>
+      <EventCard title="Menu">
         { menu }
-      </Card>
-      <Card>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>
-              Suggested Donation
-          </Text>
-        </View>
-
+      </EventCard>
+      <EventCard title="Suggested Contribution">
         <View style={styles.textContainer}>
           {paymentText}
         </View>
-      
-        {venmoButton}
-
-      </Card>
+        {venmoButton} 
+      </EventCard>
       {deleteButton}
       </ScrollView>
     );
@@ -320,11 +302,11 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 10,
-    backgroundColor: 'gainsboro'
+    backgroundColor: 'whitesmoke'
   },
   headerText: {
     // color: 'darkgrey',
-    textAlign: 'center',
+    // textAlign: 'center',
     fontWeight: 'bold'
   },
   detailsHeader: {
