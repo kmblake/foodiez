@@ -283,7 +283,7 @@ class Database {
       'pizza': 'Pizza Party', 
       'custom': 'Dinner'};
     const status = !!accepted ? 'attending' : 'not attending';
-    const message = curUser.displayName + ' is ' + status + ' ' + eventTypeToText[event.type];
+    const message = curUser.displayName + ' is ' + status + ' ' + event.name;
     const hostSnap = await firebase.database().ref('/users/' + hostId).once('value');
     const host = hostSnap.val()
     if (!!host.token) {

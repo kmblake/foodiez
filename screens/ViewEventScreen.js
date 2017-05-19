@@ -221,7 +221,7 @@ export default class ViewEventScreen extends React.Component {
     if (!!this.state.event.cost && parseInt(this.state.event.cost) > 0) {
         return (<Text>${this.state.event.cost} per guest </Text>);
       } else {
-        return (<Text>N/A</Text>);
+        return (<Text>None</Text>);
       }
   }
 

@@ -28,7 +28,6 @@ export default class CreateEventScreen extends DefaultScreen {
       event: event,
       invitedFriends: invitedFriends,
       invited: this.ds.cloneWithRows(invitedFriends),
-      cost: '5',
       loaded: true,
     };
   }
@@ -47,7 +46,6 @@ export default class CreateEventScreen extends DefaultScreen {
        changesVenmoAmount: this.changesVenmoAmount(this.state.cost) 
       });
     
-    this.state.event.cost = this.state.cost
     Database.createEvent(this.state.event, this.state.invitedFriends);
     this.props.navigator.popToTop();
   }
@@ -55,7 +53,6 @@ export default class CreateEventScreen extends DefaultScreen {
 
   renderMenu() {
     var menuItems = [];
-    console.log(this.state.event.recipes);
     if (this.state.event.recipes != null && this.state.event.recipes.length > 0) {
         menuItems = this.state.event.recipes.map((recipe) => <ListItem
                 key={recipe.title}
@@ -105,6 +102,14 @@ export default class CreateEventScreen extends DefaultScreen {
     return (<Text>You are hosting {this.state.event.type}!</Text>);
   }
 
+  renderPaymentText() {
+    if (!!this.state.event.cost && parseInt(this.state.event.cost) > 0) {
+        return (<Text>${this.state.event.cost} per guest </Text>);
+      } else {
+        return (<Text>None</Text>);
+      }
+  }
+
   renderView() {
     const d = new Date(this.state.event.date);
     const m = Moment(this.props.event.date);
@@ -127,20 +132,11 @@ export default class CreateEventScreen extends DefaultScreen {
       <EventCard title="Menu">
         {menu}
       </EventCard>
-      <Card>
+      <EventCard title="Suggested Contribution">
         <View style={styles.textContainer}>
-            
-            <Item stackedLabel>
-              <Label>Suggested Donation Amount </Label>
-              <Input 
-                onChangeText={(text) => this.setState({cost: text})}
-                value={this.state.cost}
-                keyboardType={'number-pad'}
-                />
-            </Item>
+          {this.renderPaymentText()}
         </View>
-
-      </Card>
+      </EventCard>
 
         <Button
         raised

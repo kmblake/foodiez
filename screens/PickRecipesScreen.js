@@ -70,7 +70,7 @@ export default class PickRecipesScreen extends DefaultScreen {
     var tabs = Object.keys(recipeData.recipes).map( (key) => {
       const title = eventTypeToText[key]
       return (
-        <Tab heading={ <TabHeading><Text> {title} </Text></TabHeading>}>
+        <Tab key={recipeData.recipes[key][0].title} heading={ <TabHeading><Text> {title} </Text></TabHeading>}>
          <Image style={{ height: height*4/10, width: width, resizeMode: 'cover'}} source={{uri: recipeData.recipes[key][0].photoURL}} />
           <Text style={styles.prompt} >Tip: Press and hold to view the full recipe!</Text>
           <RecipeListView

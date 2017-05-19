@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput , View, DatePickerIOS, ListView, Dimensions, TouchableOpacity, TouchableHighlight, Image, Keyboard, TouchableWithoutFeedback, Platform, TimePickerAndroid} from 'react-native';
+import { StyleSheet, Text, TextInput , View, DatePickerIOS, ListView, Dimensions, TouchableOpacity, TouchableHighlight, Image, Keyboard, TouchableWithoutFeedback, Platform, TimePickerAndroid, ScrollView} from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -31,7 +31,8 @@ export default class CreateEventScreen extends DefaultScreen {
       description: "",
       location: "",
       showDatePicker: false, 
-      name: ""
+      name: "",
+      cost: '5'
     };
   }
 
@@ -50,6 +51,7 @@ export default class CreateEventScreen extends DefaultScreen {
       location: this.state.location,
       host: curUser,
       attending: [curUser],
+      cost: this.state.cost,
       name: (!!this.state.name) ? this.state.name : 'Dinner'
     };
     return event;
@@ -112,55 +114,72 @@ export default class CreateEventScreen extends DefaultScreen {
 
   renderView() {
     const datePicker = this.renderDatePicker();
-    return (  
-      <View style={styles.container}>
-      <Form>
-        <Item regular>
-          <Input 
-            placeholder='Name'
-            onChangeText={(text) => this.setState({name: text})}
-            value={this.state.name}/>
-        </Item>
-        <Item regular>
-          <Input 
-            placeholder='Description'
-            multiline={true}
-            onChangeText={(text) => this.setState({description: text})}
-            value={this.state.text}/>
-        </Item>
-        <Item regular>
-          <Input 
-            placeholder='Location'
-            multiline={true}
-            onChangeText={(text) => this.setState({location: text})}
-            value={this.state.location}/>
-        </Item>
-        <Item fixedLabel last
-          onPress={this.onDatePress.bind(this)}
-        >
-          <Label>Time</Label>
-          <Input disabled
-            placeholder='Location'
-            onChangeText={(text) => this.setState({location: text})}
-            value={Moment(this.state.date).format("ddd MMM Do h:mm a")}/>
-        </Item>
-      </Form>
+    return ( 
+      <View style={{flex: 1}}>
+        <ScrollView style={styles.container}>
+        <Text style={styles.prompt}>Enter the details about your event here, including how much you'd like each guest to contribute to cover the cost!</Text>
+        <Form>
+          <Item inlineLabel>
+            <Input 
+              placeholder='Name'
+              onChangeText={(text) => this.setState({name: text})}
+              value={this.state.name}/>
+          </Item>
+          <Item inlineLabel>
+            <Input 
+              placeholder='Description'
+              multiline={true}
+              onChangeText={(text) => this.setState({description: text})}
+              value={this.state.text}/>
+          </Item>
+          <Item inlineLabel>
+            <Input 
+              placeholder='Location'
+              multiline={true}
+              onChangeText={(text) => this.setState({location: text})}
+              value={this.state.location}/>
+          </Item>
+
+          <Item fixedLabel >
+            <Label>Suggested Contribution ($)</Label>
+            <Input 
+              keyboardType = 'numeric'
+              onChangeText={(text) => this.setState({cost: text})}
+              value={this.state.cost}/>
+          </Item>
+          <Item fixedLabel last
+            onPress={this.onDatePress.bind(this)}
+          >
+            <Label>Time</Label>
+            <Input disabled
+              placeholder='Location'
+              onChangeText={(text) => this.setState({location: text})}
+              value={Moment(this.state.date).format("ddd MMM Do h:mm a")}/>
+          </Item>
+        </Form>
+        
+
+        {datePicker}
+
+        </ScrollView>
+
+        <View >
+
+        <Button
+          primary 
+          onPress={() => (this.onNextTap())}
+          text="Use my own recipes"
+        />
+        <Button raised
+          primary 
+          onPress={() => (this.onMenuPress('tapas'))} //taps bug is here
+          text="Choose Recipes"
+        /> 
+      </View> 
+    </View> 
       
 
-      {datePicker}
-
-      <Button
-        primary 
-        onPress={() => (this.onMenuPress('tapas'))} //taps bug is here
-        text="Choose Theme & Recipes"
-      />  
-      <Button
-        primary 
-        onPress={() => (this.onNextTap())}
-        text="Confirm Event Details"
-      />
-
-      </View>
+      
     );
   }
 }
@@ -170,6 +189,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
   },
+
   menuPrompt: {
     textAlign: 'center',
     color: 'rgba(0,0,0,0.4)'
@@ -219,5 +239,9 @@ const styles = StyleSheet.create({
   eventTypeView: {
     flex: 1,
     flexDirection: 'column'
-  }
+  },
+  prompt: {
+    color: 'rgba(0,0,0,0.4)',
+    marginLeft: 15
+  },
 });
