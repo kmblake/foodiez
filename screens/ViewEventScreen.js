@@ -142,12 +142,18 @@ export default class ViewEventScreen extends React.Component {
     }
   
   }
+
+  showRecipeURL(url) {
+    Expo.Amplitude.logEvent("Recipe viewed from event page");
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
+  }
   
   renderMenu() {
     var menuItems = [];
     if (this.state.event.recipes != null && this.state.event.recipes.length > 0) {
         menuItems = this.state.event.recipes.map((recipe) => <ListItem
                 key={recipe.title}
+                onPress={() => this.showRecipeURL(recipe.url)}
                 leftElement={<Image source={{uri: recipe.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
                 centerElement={{
                     primaryText: recipe.title,
