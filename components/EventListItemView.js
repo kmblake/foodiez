@@ -4,6 +4,7 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Avatar, Card, ListItem, Toolbar } from 'react-native-material-ui';
 import Moment from 'moment'
+import Expo from 'expo'
 
 export default class EventListItemView extends React.Component {
 
@@ -24,12 +25,12 @@ export default class EventListItemView extends React.Component {
             }}
         />
         {hostingInfo}
-        
       </Card>
     );
   }
 
   _viewEvent (rowID: number) {
+    Expo.Amplitude.logEvent("Views an event");
     this.props.navigator.push(Router.getRoute('viewEvent', {event: JSON.stringify(this.props.event), hosting: this.props.hosting}));
   }
 

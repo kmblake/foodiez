@@ -8,7 +8,7 @@ import RecipeListView from "../components/RecipeListView";
 import recipeData from "../firebase/recipes.json"
 import { Button } from 'react-native-material-ui'
 import Carousel from 'react-native-carousel';
-
+import Expo from 'expo';
 
 export default class PickRecipesScreen extends DefaultScreen {
   static route = {
@@ -29,7 +29,11 @@ export default class PickRecipesScreen extends DefaultScreen {
   }
 
   onNextTap() {
+    
+    //log which recipe and which theme as well
     this.state.event.recipes = this.state.chosenRecipes;
+    Expo.Amplitude.logEventWithProperties("Completes choosing theme & recipies", 
+      {theme: this.state.eventType, numRecipies: this.state.event.recipes.length, recipes: this.state.event.recipes });
     this.props.navigator.push(Router.getRoute('confirmEvent', 
       {event: JSON.stringify(this.state.event), invitedFriends: this.props.route.params.invitedFriends}));
   }

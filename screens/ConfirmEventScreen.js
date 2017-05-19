@@ -5,7 +5,7 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Container, Content, Item, Input, Label } from 'native-base';
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
-
+import Expo from 'expo';
 
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
@@ -29,8 +29,21 @@ export default class CreateEventScreen extends DefaultScreen {
       loaded: true,
     };
   }
+  isFieldFilled(field) {
+    return field == "" ? "no" : "yes";
+  }
 
+  changesVenmoAmount(cost) {
+    return cost == 5 ? "no" : "yes";
+  }
   onNextTap() {
+    Expo.Amplitude.logEventWithProperties("Finished event creation",
+      {includesName: this.isFieldFilled(this.state.event.name), 
+       includesDescription: this.isFieldFilled(this.state.event.description), 
+       includesLocation: this.isFieldFilled(this.state.event.location),
+       changesVenmoAmount: this.changesVenmoAmount(this.state.cost) 
+      });
+    
     this.state.event.cost = this.state.cost
     Database.createEvent(this.state.event, this.state.invitedFriends);
     this.props.navigator.popToTop();

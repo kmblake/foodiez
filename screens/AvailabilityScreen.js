@@ -6,11 +6,11 @@ import Database from "../firebase/database";
 import {
   MKCheckbox,
 } from 'react-native-material-kit';
-import { Container, Content, List, ListItem, Text, CheckBox } from 'native-base';
+import { Container, Content, List, ListItem, Text, CheckBox, Header, Body, Title } from 'native-base';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Item, Input, Form, Label } from 'native-base';
 import * as firebase from "firebase";
-
+import Expo from 'expo';
 
 
 export default class AvailabilityScreen extends DefaultScreen {
@@ -54,6 +54,7 @@ export default class AvailabilityScreen extends DefaultScreen {
   static route = {
     navigationBar: {
       title: 'User Settings',
+      visible: false
     }
   };
 
@@ -101,10 +102,16 @@ export default class AvailabilityScreen extends DefaultScreen {
 
 
   onNextTap() {
+
     //TODO: Update this line with the user's actual availability
     const availArray = this.state.availability.map( (option) => {
       return option.index;
     });
+    Expo.Amplitude.logEventWithProperties("Adds availability", {availability: availArray});
+    if (this.state.venmo != null) {
+      Expo.Amplitude.logEvent("Adds Venmo");
+    }
+    
     Database.setUserData(this.state.user.uid, {
       // Days of week: 0 = Sunday, 6 = Saturday
       availability: availArray,
@@ -113,13 +120,7 @@ export default class AvailabilityScreen extends DefaultScreen {
     this.props.navigator.push(Router.getRoute('home'));
   }
 
-  // toggleAvailability(day) {
-  //   index = this.state.availability.indexOf(day);
-  //   if (index > 0)
-  //     this.state.availability.splice(1, index);
-  //   else
-  //     this.state.availability.push(day);
-  // }
+ 
 
   renderRowContents(option) {
     return (
@@ -136,6 +137,14 @@ export default class AvailabilityScreen extends DefaultScreen {
     // const venmoPlaceholder = (!!this.state.venmo) ? this.state.venmo : 'Your Venmo'
     return (
       <View style={styles.container}>
+      <Header>
+                    
+        <Body>
+            <Title>Settings</Title>
+        </Body>
+        
+      </Header>
+      <Label>What's your availability this week? </Label>
         <MultiSelectListView
           dataSource={this.state.availabilityOptions}
           renderRowContents={this.renderRowContents.bind(this)}

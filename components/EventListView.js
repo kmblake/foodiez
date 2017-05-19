@@ -94,7 +94,7 @@ export default class EventListView extends React.Component {
       </View>
       );    
     } else if (this.props.hosting) {
-      return (<Text style={styles.prompt} >No upcoming events. Host an event now!</Text>);
+      return (<Text style={styles.prompt} >No upcoming events. Why not host an event?!</Text>);
     } else {
       return (<Text style={styles.prompt} >No upcoming events yet!</Text>);
     }

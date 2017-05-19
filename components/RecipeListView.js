@@ -39,6 +39,7 @@ export default class RecipeListView extends React.Component {
   }
 
   showRecipeURL(url) {
+    Expo.Amplitude.logEvent("Long presses to view recipe");
     Linking.openURL(url).catch(err => console.error('An error occurred', err));
   }
 

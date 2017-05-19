@@ -8,7 +8,7 @@ import Carousel from 'react-native-carousel';
 import recipeData from "../firebase/recipes.json"
 import { Card, Button } from 'react-native-material-ui'
 import Moment from 'moment'
-
+import Expo from 'expo'
  
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
@@ -55,7 +55,11 @@ export default class CreateEventScreen extends DefaultScreen {
     return event;
   }
 
+  
+
   onNextTap() {
+    Expo.Amplitude.logEvent("Skips adding theme")
+
     var event = this.formatEvent();
     event.type = 'custom'
     this.props.navigator.push(Router.getRoute('confirmEvent', 
@@ -63,6 +67,7 @@ export default class CreateEventScreen extends DefaultScreen {
   }
 
   onMenuPress(eventType) {
+    Expo.Amplitude.logEvent("Pick theme started");
     var event = this.formatEvent();
     event.type = eventType
     this.props.navigator.push(Router.getRoute('pickRecipes', 
@@ -74,35 +79,6 @@ export default class CreateEventScreen extends DefaultScreen {
     this.setState({
       showDatePicker: !this.state.showDatePicker
     })
-  }
-
-  renderCarousel() {
-
-    var {height, width} = Dimensions.get('window');
-    const eventTypeToText = {
-      'tapas': 'Tapas Night', 
-      'summer_bbq': 'Summer BBQ', 
-      'taco_night': 'Taco Night', 
-      'pizza': 'Pizza Party', 
-      'custom': 'Dinner'};
-    var carouselViews = Object.keys(recipeData.recipes).map( (key) => {
-      const title = eventTypeToText[key]
-      return (
-        <View width={width} key={key} style={styles.carouselRow} >
-          <Card onPress={() => this.onMenuPress(key)}>
-            <View style={styles.eventTypeView} >
-              <Image style={{ height: height*4/10, width: width - 10, resizeMode: 'contain'}} source={{uri: recipeData.recipes[key][0].photoURL}} />
-              <Text style={styles.menuTheme} >{title}</Text>
-            </View>
-          </Card>
-        </View>
-      );
-    });
-    return (
-      <Carousel width={width} style={styles.carouselContainer} animate={false} indicatorOffset={20}>
-        {carouselViews}
-      </Carousel>
-    );
   }
 
   renderDatePicker() {
@@ -123,7 +99,6 @@ export default class CreateEventScreen extends DefaultScreen {
   }
 
   renderView() {
-    const carousel = this.renderCarousel();
     const datePicker = this.renderDatePicker();
     return (  
       <View style={styles.container}>
@@ -162,7 +137,7 @@ export default class CreateEventScreen extends DefaultScreen {
 
       <Button
         primary 
-        onPress={() => (this.onMenuPress('tapas'))}
+        onPress={() => (this.onMenuPress('tapas'))} //taps bug is here
         text="Choose Theme & Recipes"
       />  
       <Button
@@ -175,33 +150,6 @@ export default class CreateEventScreen extends DefaultScreen {
     );
   }
 }
-
-
-
-      // <TouchableWithoutFeedback style={styles.container} onPress={() => this.setState({showDatePicker: false}) }>
-      //   <View style={styles.container}>
-      //     <Text style={styles.menuPrompt}>Create an awesome menu. Choose a seasonal theme below:</Text>
-      //     {carousel}
-      //   </View>
-      // </TouchableWithoutFeedback> 
-      
-
- // <Header hasTabs>
-          
- //    <Body>
- //      <Title>Themes</Title>
- //    </Body>
-    
- //  </Header>
- //  <Tabs>
- //    <Tab heading={ <TabHeading><Text>Theme 1</Text></TabHeading>}>
-      
- //    </Tab>
- //    <Tab heading={ <TabHeading><Text>Theme 2</Text></TabHeading>}>
-      
- //    </Tab>
- //  </Tabs>
-
 
 const styles = StyleSheet.create({
   container: {

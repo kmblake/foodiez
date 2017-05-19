@@ -4,7 +4,7 @@ import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
-
+import Expo from 'expo';
 
 export default class ViewEventScreen extends React.Component {
   static route = {
@@ -52,6 +52,7 @@ export default class ViewEventScreen extends React.Component {
   }
 
   deleteEvent() {
+    Expo.Amplitude.logEvent("Deletes event");
     Database.deleteEvent(this.state.event.id).then((res) => {
       this.props.navigator.pop();
     });
@@ -89,6 +90,18 @@ export default class ViewEventScreen extends React.Component {
     } 
   } 
 
+  handleVenmoClick() {
+    Expo.Amplitude.logEvent("clicks pays with venmo");
+    this.renderWebView();
+  }
+
+  handleVenmoResonse(response) {
+    Expo.Amplitude.logEventWithProperties("responds to venmo prompt", {response: response});
+    if (response == "yes") {
+      this.renderWebView();
+    }
+  }
+
   renderVenmoPrompt() {
     if (!!this.state.event.venmoURL) {
       const prompt = this.state.event.host.name + ' requested a $' + this.state.event.cost + ' donation to help with the cost of the meal. Do you want to pay via Venmo now?';
@@ -96,14 +109,15 @@ export default class ViewEventScreen extends React.Component {
         'Ready to Pay?',
         prompt,
         [
-          {text: 'No'},
-          {text: 'Yes', onPress: () => this.renderWebView()}
+          {text: 'No', onPress: () => this.handleVenmoResonse("no")},
+          {text: 'Yes', onPress: () => this.handleVenmoResonse("yes")}
         ]
       ));
     }
   } 
 
   handleInviteResponse(val) {
+    Expo.Amplitude.logEventWithProperties("Responds to event invite", {response: val});
     Database.respondToInvite(this.state.event, val).then((res) => {
       this.setState({accepted: val, loaded: false});
       this.updateData();
@@ -117,7 +131,7 @@ export default class ViewEventScreen extends React.Component {
     if (!!this.state.event.venmoURL) {
       return (
         <View style={styles.button}>
-            <Button primary text="Pay With Venmo" icon="monetization-on" onPress={() => this.renderWebView()} />
+            <Button primary text="Pay With Venmo" icon="monetization-on" onPress={() => this.handleVenmoClick()} />
         </View>
       );
     } else {
@@ -240,7 +254,7 @@ export default class ViewEventScreen extends React.Component {
       <Card>
         <View style={styles.textContainer}>
             <Text>
-                Suggest Donation Amount $5
+                Suggest Donation Amount ${this.state.event.cost}
             </Text>
         </View>
       

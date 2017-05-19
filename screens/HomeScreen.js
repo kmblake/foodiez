@@ -16,9 +16,7 @@ import {
 } from 'react-native';
 import { Header, TabHeading, Right, Left, Button, ScrollableTab, Icon, Body, Title, Container, Content, Tab, Tabs } from 'native-base';
 import Expo from 'expo';
-
 import { MonoText } from '../components/StyledText';
-
 import Database from "../firebase/database";
 import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
@@ -43,7 +41,7 @@ export default class HomeScreen extends React.Component {
     const self = this;
     this.state = {logged_in: false, shouldSync: false, selectedIndex: 0};
     Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
-    Expo.Amplitude.logEvent("Test");
+    Expo.Amplitude.logEvent("Opens App");
   }
 
   componentWillMount() {
@@ -93,7 +91,6 @@ export default class HomeScreen extends React.Component {
     var self = this;
     firebase.auth().signOut().then(function() {
       console.log('User logged out');
-      
       AsyncStorage.removeItem('user_data');
       // this.setState({logged_in: false});
       Firebase.logIn().then( (user) => {
@@ -110,23 +107,16 @@ export default class HomeScreen extends React.Component {
     });
 
    }
-
-  onSelectionChange(event) {
-    this.setState({
-      selectedIndex: event.nativeEvent.selectedSegmentIndex,
-    });
-  };
-
-  buttonPressed(icon) {
-    if (icon === 'date-range') {
-      this.props.navigator.push(Router.getRoute('pickDate'));
-    } else if (icon === 'input') {
-      this.logout();
-    } else if (icon === 'settings') {
-      this.props.navigator.push(Router.getRoute('availability', {user: this.state.user }));
-    }
-  }
  
+  createEvent() {
+    Expo.Amplitude.logEvent("Event Creation Started");
+    this.props.navigator.push(Router.getRoute('pickDate'));
+  }
+
+  renderUserSettings() {
+    Expo.Amplitude.logEvent("Visits Settings Page");
+    this.props.navigator.push(Router.getRoute('availability', {user: this.state.user }))
+  }
 
   renderFullView() {
     return (
@@ -139,7 +129,7 @@ export default class HomeScreen extends React.Component {
           </Body>
           <Right>
               <Button transparent>
-                  <Icon name='settings' onPress={() => this.props.navigator.push(Router.getRoute('availability', {user: this.state.user }))}/>
+                  <Icon name='settings' onPress={() => (this.renderUserSettings())}/>
               </Button>
           </Right>
         </Header>
@@ -160,7 +150,7 @@ export default class HomeScreen extends React.Component {
         <ActionButton
           actions={[]}
           icon="add"
-          onPress={() => this.props.navigator.push(Router.getRoute('pickDate'))}
+          onPress={() => (this.createEvent())}
         />  
       </View>
     );

@@ -6,6 +6,7 @@ import Database from "../firebase/database";
 import CalendarPicker from 'react-native-calendar-picker';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Button } from 'react-native-material-ui'
+import Expo from 'expo';
 
 export default class PickDateScreen extends DefaultScreen {
   static route = {
@@ -39,11 +40,13 @@ export default class PickDateScreen extends DefaultScreen {
   onNextTap() {
     const dayOfWeek = this.state.chosenDate.getDay();
     const dateString = this.state.chosenDate.toString();
+    Expo.Amplitude.logEventWithProperties("Completes inviting friends", {numInvitees: this.state.invitedFriends.length , dayOfWeek: dayOfWeek });
     this.props.navigator.push(Router.getRoute('createEvent', {date: dateString, invitedFriends: JSON.stringify(this.state.invitedFriends)}));
   }
 
   onDateChange = (date) => {
     // Set event to 6 pm by default
+    Expo.Amplitude.logEvent("Selects Calendar Date");
     date.setHours(18);
     this.setState({chosenDate: date, availableFriends: availability[date.getDay()].users});
 
