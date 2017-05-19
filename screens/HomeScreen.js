@@ -38,10 +38,7 @@ export default class HomeScreen extends React.Component {
   constructor(props) {
     global.initializing = false;
     super(props);
-    const self = this;
     this.state = {logged_in: false, shouldSync: false, selectedIndex: 0};
-    Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
-    Expo.Amplitude.logEvent("Opens App");
   }
 
   componentWillMount() {
@@ -53,9 +50,18 @@ export default class HomeScreen extends React.Component {
     AsyncStorage.getItem('user_data').then((user_data_json) => {
       let user_data = JSON.parse(user_data_json);
       if (user_data === null) {
-        Firebase.logIn();
+        // Firebase.logIn();
+        Firebase.logIn().then( (user) => {
+          if (!!user) {
+            AsyncStorage.setItem('user_data', JSON.stringify(user)).then( () => {
+              self.getUserData();
+              self.setState({shouldSync: true});
+            });
+          }
+        });
       } else  {
         this.checkForFirstTime(user_data);
+        Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
         this.setState({
           user: user_data,
           logged_in: true

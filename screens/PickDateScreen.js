@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerIOS } from 'react-native';
+import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerAndroid, Platform, Share } from 'react-native';
+import { Form, Label, Item, Input} from 'native-base';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -7,6 +8,7 @@ import CalendarPicker from 'react-native-calendar-picker';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Button } from 'react-native-material-ui'
 import Expo from 'expo';
+import Moment from 'moment';
 
 export default class PickDateScreen extends DefaultScreen {
   static route = {
@@ -25,7 +27,8 @@ export default class PickDateScreen extends DefaultScreen {
       availability: [],
       availableFriends: [],
       invitedFriends: [],
-      showNextButton: false
+      showNextButton: false,
+      friendsLoaded: false
     }; 
   }
 
@@ -82,25 +85,78 @@ export default class PickDateScreen extends DefaultScreen {
     }
   }
 
-  renderView() {
-    const nextButton = this.renderNextButton();
+  async onDatePress() {
+    if (Platform.OS === 'android') {
+     const {action, year, month, day} = await DatePickerAndroid.open({date: this.state.chosenDate});
+     if (action === DatePickerAndroid.dateSetAction) {
+      var date = new Date(year, month, day);
+      this.onDateChange(date);
+     }
+      
+    } 
+  }
 
-    return (
-      <View
-        style={styles.container}
-      >
-        <CalendarPicker
+  shareFoodiez() {
+    Share.share({
+      message: 'Join me for dinner using a new app called Foodiez! You\'ll need to download an app called Expo first and then open Foodiez using this link:',
+      url: 'https://exp.host/@kmblake/foodiez',
+      title: 'Join me on Foodiez!'
+    });
+  }
+
+  renderCalendarPicker() {
+    if (Platform.OS === 'ios') {
+      return (
+         <CalendarPicker
           onDateChange={this.onDateChange}
         />
+      );
+    } else {
+      return (
+        <Form>
+          <Item fixedLabel last
+            onPress={this.onDatePress.bind(this)}
+          >
+            <Label>Date (tap to change)</Label>
+            <Input disabled
+              value={Moment(this.state.chosenDate).format("ddd MMM Do")}/>
+          </Item>
+        </Form>
+      );
+    }
+  }
+
+  renderAvailableFriends() {
+    if (this.state.availableFriends.length > 0) {
+      return (
+        <MultiSelectListView
+          dataSource={this.state.availableFriends}
+          renderRowContents={this.renderRowContents.bind(this)}
+          onSelectionChanged={this.onSelectionChanged.bind(this)}
+        />
+      );
+    } else {
+      return (<Text style={styles.prompt} >No one is available on that day.</Text>);
+    }
+  }
+
+  renderView() {
+    const nextButton = this.renderNextButton();
+    const calendar = this.renderCalendarPicker();
+    const prompt = 'Tap to invite friends available on '+ Moment(this.state.chosenDate).format("MMM Do") + '.';
+    return (
+      <View style={styles.container} >
+        {calendar}
      
       <View style={styles.listHeader}>
-        <Text style={styles.prompt} > Pick friends to invite </Text>
+        <Text style={styles.prompt} > {prompt} </Text>
+        <Button
+          primary
+          onPress={this.shareFoodiez}
+          text="Invite more friends to Foodiez"
+        />
       </View>
-      <MultiSelectListView
-        dataSource={this.state.availableFriends}
-        renderRowContents={this.renderRowContents.bind(this)}
-        onSelectionChanged={this.onSelectionChanged.bind(this)}
-      />
+      {this.renderAvailableFriends()}
       {nextButton}
       
 
@@ -119,7 +175,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.4)'
   },
   listHeader: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'center',
     padding: 10
   },

@@ -25,8 +25,6 @@ import Database from './firebase/database'
 
 class AppContainer extends React.Component {
 
-  
-
   state = {
     appIsReady: false,
     userLoaded: false
@@ -82,7 +80,7 @@ class AppContainer extends React.Component {
         'Roboto-Italic': require('./assets/fonts/Roboto/Roboto-Italic.ttf'),
         'Roboto-Light': require('./assets/fonts/Roboto/Roboto-Light.ttf'),
         'Roboto-LightItalic': require('./assets/fonts/Roboto/Roboto-LightItalic.ttf'),
-        'Roboto-Medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+        'Roboto_medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
         'Roboto-MediumItalic': require('./assets/fonts/Roboto/Roboto-MediumItalic.ttf'),
         'Roboto-Regular': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
         'Roboto': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
@@ -119,7 +117,7 @@ class AppContainer extends React.Component {
             'Roboto-Italic': require('./assets/fonts/Roboto/Roboto-Italic.ttf'),
             'Roboto-Light': require('./assets/fonts/Roboto/Roboto-Light.ttf'),
             'Roboto-LightItalic': require('./assets/fonts/Roboto/Roboto-LightItalic.ttf'),
-            'Roboto-Medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
+            'Roboto_medium': require('./assets/fonts/Roboto/Roboto-Medium.ttf'),
             'Roboto-MediumItalic': require('./assets/fonts/Roboto/Roboto-MediumItalic.ttf'),
             'Roboto-Regular': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
             'Roboto': require('./assets/fonts/Roboto/Roboto-Regular.ttf'),
@@ -161,6 +159,7 @@ class AppContainer extends React.Component {
       } 
     } 
     return <LoadingScreen />;
+
   }
 }
 

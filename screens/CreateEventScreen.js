@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TextInput , View, DatePickerIOS, ListView, Dimensions, TouchableOpacity, TouchableHighlight, Image, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import { StyleSheet, Text, TextInput , View, DatePickerIOS, ListView, Dimensions, TouchableOpacity, TouchableHighlight, Image, Keyboard, TouchableWithoutFeedback, Platform, TimePickerAndroid} from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -30,7 +30,7 @@ export default class CreateEventScreen extends DefaultScreen {
       eventTypes: eventTypes,
       description: "",
       location: "",
-      showDatePicker: true,
+      showDatePicker: false, 
       name: ""
     };
   }
@@ -50,7 +50,7 @@ export default class CreateEventScreen extends DefaultScreen {
       location: this.state.location,
       host: curUser,
       attending: [curUser],
-      name: this.state.name
+      name: (!!this.state.name) ? this.state.name : 'Dinner'
     };
     return event;
   }
@@ -74,24 +74,36 @@ export default class CreateEventScreen extends DefaultScreen {
       {event: JSON.stringify(event), invitedFriends: this.props.route.params.invitedFriends}));
   }
 
-  onDatePress() {
+  async onDatePress() {
     Keyboard.dismiss();
-    this.setState({
-      showDatePicker: !this.state.showDatePicker
-    })
+    if (Platform.OS === 'android') {
+     const {action, minute, hour} = await TimePickerAndroid.open({hour: this.state.date.getHours(), minute: this.state.date.getMinutes()});
+     if (action === TimePickerAndroid.timeSetAction) {
+        var date = new Date(this.state.date);
+        date.setHours(hour);
+        date.setMinutes(minute);
+        this.onDateChange(date);
+     }
+      
+    } else {
+      this.setState({
+        showDatePicker: !this.state.showDatePicker
+      })
+    }
+    
   }
 
   renderDatePicker() {
     if (this.state.showDatePicker) {
-      return (
-      <DatePickerIOS
-         date={this.state.date}
-         mode="time"
-         onDateChange={this.onDateChange.bind(this)}
-       />);
-    } else {
-      return null;
-    }
+      if (Platform.OS === 'ios') {
+        return (
+        <DatePickerIOS
+           date={this.state.date}
+           mode="time"
+           onDateChange={this.onDateChange.bind(this)}
+         />);
+      } 
+    } 
   }
 
   onDateChange(date) {
@@ -112,12 +124,14 @@ export default class CreateEventScreen extends DefaultScreen {
         <Item regular>
           <Input 
             placeholder='Description'
+            multiline={true}
             onChangeText={(text) => this.setState({description: text})}
             value={this.state.text}/>
         </Item>
         <Item regular>
           <Input 
             placeholder='Location'
+            multiline={true}
             onChangeText={(text) => this.setState({location: text})}
             value={this.state.location}/>
         </Item>

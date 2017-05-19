@@ -5,6 +5,9 @@ import Router from '../navigation/Router';
 import Database from "../firebase/database";
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
 import Expo from 'expo';
+import Moment from 'moment'
+import { EventCard } from '../components/EventCard';
+
 
 export default class ViewEventScreen extends React.Component {
   static route = {
@@ -143,15 +146,21 @@ export default class ViewEventScreen extends React.Component {
   renderMenu() {
     var menuItems = [];
     console.log(this.state.event.recipes);
-    if (this.state.event.recipes != null) {
-      menuItems = this.state.event.recipes.map((recipe) => <ListItem
-              leftElement={<Image source={{uri: recipe.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
-              centerElement={{
-                  primaryText: recipe.title,
-              }}
-          />);
+    if (this.state.event.recipes != null && this.state.event.recipes.length > 0) {
+        menuItems = this.state.event.recipes.map((recipe) => <ListItem
+                key={recipe.title}
+                leftElement={<Image source={{uri: recipe.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
+                centerElement={{
+                    primaryText: recipe.title,
+                }}
+            />);
+    } else {
+      menuItems = (
+        <View style={styles.textContainer}>
+          <Text>It's a surprise 😉</Text>
+        </View>
+      );
     }
-   console.log(menuItems);
    return menuItems; 
 
   }
@@ -185,12 +194,8 @@ export default class ViewEventScreen extends React.Component {
   renderInviteResponse() {
     if (!this.props.route.params.hosting) {
       return (
-        <View>
-          <View style={styles.textContainer}>
-            <Text>
-              Are you planning to attend?
-            </Text>
-          </View>
+        <View style={{paddingBottom: 10}}>
+          <Text style={styles.detailsHeader}>Are you planning to attend?</Text>
           <View style={styles.buttonContainer}>
             <View style={styles.button}>
               <Button primary style={this.getButtonStyle(true)} text="Yes" icon="thumb-up" onPress={() => {this.handleInviteResponse(true)}} />
@@ -212,14 +217,35 @@ export default class ViewEventScreen extends React.Component {
     }
   }
 
+  renderPaymentText() {
+    if (!!this.state.event.cost && parseInt(this.state.event.cost) > 0) {
+        return (<Text>${this.state.event.cost} per guest </Text>);
+      } else {
+        return (<Text>N/A</Text>);
+      }
+  }
+
+  renderDetails(title, attribute) {
+    if (!!attribute) {
+      return (
+        <View style={{paddingBottom: 10}}>
+          <Text style={styles.detailsHeader}>{title}</Text>
+          <Text>{attribute}</Text>
+        </View>
+      );
+    }
+  }
+
   render() {
     const d = new Date(this.state.event.date);
+    const m = Moment(this.state.event.date);
     const deleteButton = this.renderDeleteEvent();
     const venmoButton = this.renderVenmoButton();
     const attendingUsers = this.renderAttending();
     const inviteResponse = this.renderInviteResponse();
     const hostingText = this.renderHostingText();
     const menu = this.renderMenu();
+    const paymentText = this.renderPaymentText();
     return (
       <ScrollView>
       <Card>
@@ -227,40 +253,29 @@ export default class ViewEventScreen extends React.Component {
           leftElement={<Image source={{uri: this.state.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
           centerElement={{
               primaryText: this.state.event.name,
-              secondaryText: d.toString(),
+              secondaryText: m.format("ddd MMM Do h:mm a"),
           }}
         />
-        <View style={styles.textContainer}>
-          {hostingText}
+        <View style={styles.responseContainer}>
+          {this.renderDetails('Host', this.state.event.host.name)}
+          {this.renderDetails('Location', this.state.event.location)}
+          {this.renderDetails('More Info', this.state.event.description)}
+          {inviteResponse}
         </View>
-        {inviteResponse}
+        
       </Card>
-      <Card >
-        <View style={styles.textContainer}>
-            <Text>
-                Attendees
-            </Text>
-        </View>
+      <EventCard title="Attendees">
         {attendingUsers}
-      </Card>
-      <Card>
-        <View style={styles.textContainer}>
-            <Text>
-                Menu
-            </Text>
-        </View>
+      </EventCard>
+      <EventCard title="Menu">
         { menu }
-      </Card>
-      <Card>
+      </EventCard>
+      <EventCard title="Suggested Contribution">
         <View style={styles.textContainer}>
-            <Text>
-                Suggest Donation Amount ${this.state.event.cost}
-            </Text>
+          {paymentText}
         </View>
-      
-        {venmoButton}
-
-      </Card>
+        {venmoButton} 
+      </EventCard>
       {deleteButton}
       </ScrollView>
     );
@@ -278,10 +293,11 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.4)',
     marginHorizontal: 2
   },
+  heading: {
+    height: 20
+  },
   textContainer: {
-    paddingLeft: 10,
-    paddingBottom: 10,
-    paddingRight: 10,
+    padding: 10
   },
   button: {
     marginHorizontal: 2,
@@ -298,6 +314,24 @@ const styles = StyleSheet.create({
   card: {
     flex: 2,
     flexDirection: 'column'
+  },
+  header: {
+    padding: 10,
+    backgroundColor: 'whitesmoke'
+  },
+  headerText: {
+    // color: 'darkgrey',
+    // textAlign: 'center',
+    fontWeight: 'bold'
+  },
+  detailsHeader: {
+    fontWeight: 'bold',
+    paddingBottom: 5
+  },
+  responseContainer: {
+    paddingBottom: 10,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   buttonContainer: {
     flex: 1, 

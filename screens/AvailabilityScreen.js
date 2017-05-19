@@ -1,14 +1,12 @@
 import React from 'react';
-import { StyleSheet, View, Button, TouchableHighlight } from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import {
-  MKCheckbox,
-} from 'react-native-material-kit';
-import { Container, Content, List, ListItem, Text, CheckBox, Header, Body, Title } from 'native-base';
+import { Container, Content, List, ListItem, CheckBox, Header, Body, Title } from 'native-base';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Item, Input, Form, Label } from 'native-base';
+import { Button } from 'react-native-material-ui'
 import * as firebase from "firebase";
 import Expo from 'expo';
 
@@ -78,26 +76,10 @@ export default class AvailabilityScreen extends DefaultScreen {
     });
   }
 
-  logout() {
-    var self = this;
-    firebase.auth().signOut().then(function() {
-      console.log('User logged out');
-      
-      AsyncStorage.removeItem('user_data');
-      // this.setState({logged_in: false});
-      Firebase.logIn().then( (user) => {
-        if (!!user) {
-          AsyncStorage.setItem('user_data', JSON.stringify(user)).then( () => {
-            self.getUserData();
-            self.setState({shouldSync: true});
-          });
-          
-        }
-      });
-    }).catch(function(error) {
-      console.log(error);
-    });
-
+  async logout() {
+    await AsyncStorage.removeItem('user_data');
+    await firebase.auth().signOut()
+    this.props.navigator.push(Router.getRoute('home'));
    }
 
 
@@ -144,7 +126,9 @@ export default class AvailabilityScreen extends DefaultScreen {
         </Body>
         
       </Header>
-      <Label>What's your availability this week? </Label>
+        <Text style={styles.prompt}>
+          Tap to choose the days that you're generally available. Also add your Venmo username to make it easy for friends to pay you back!
+        </Text>
         <MultiSelectListView
           dataSource={this.state.availabilityOptions}
           renderRowContents={this.renderRowContents.bind(this)}
@@ -158,20 +142,17 @@ export default class AvailabilityScreen extends DefaultScreen {
             placeholder={this.state.venmo}
           />
         </Item>
-        <View style={styles.container} >
-          <Button
-            onPress={() => (this.onNextTap())}
-            title="Save"
-            color="#841584"
-          />
-        </View>
-        <View style={styles.container} >
-          <Button
-            onPress={() => (this.logout())}
-            title="logout"
-            color="#841584"
-          />
-        </View>
+        <Button
+          accent
+          onPress={() => (this.logout())}
+          text="Logout"
+        /> 
+        <Button
+          primary 
+          raised
+          onPress={() => (this.onNextTap())}
+          text="Save"
+        />  
       </View>
     );
   }
@@ -181,6 +162,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+  },
+  prompt: {
+    color: 'rgba(0,0,0,0.4)',
+    marginLeft: 15,
+    marginTop: 15
   },
   datePicker: {
     paddingTop: '50%',

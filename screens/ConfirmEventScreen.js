@@ -6,6 +6,9 @@ import Database from "../firebase/database";
 import { Container, Content, Item, Input, Label } from 'native-base';
 import { Toolbar, Button, Card, ListItem, Avatar } from 'react-native-material-ui';
 import Expo from 'expo';
+import Moment from 'moment'
+import { EventCard } from '../components/EventCard';
+
 
 export default class CreateEventScreen extends DefaultScreen {
   static route = {
@@ -50,21 +53,43 @@ export default class CreateEventScreen extends DefaultScreen {
   }
 
 
+  // renderMenu() {
+  //   var menuItems = [];
+  //   console.log(this.state.event.recipes);
+  //   if (this.state.event.recipes != null) {
+  //     menuItems = this.state.event.recipes.map((recipe) => 
+  //           <ListItem 
+  //             key={recipe.photoURL}
+  //             leftElement={<Image source={{uri: recipe.photoURL}} 
+  //             style={{width: 40, height: 40, borderRadius: 20}} />}
+  //             centerElement={{
+  //                 primaryText: recipe.title,
+  //             }}
+  //         />);
+  //   }
+  //  console.log(menuItems);
+  //  return menuItems; 
+
+  // }
+
   renderMenu() {
     var menuItems = [];
     console.log(this.state.event.recipes);
-    if (this.state.event.recipes != null) {
-      menuItems = this.state.event.recipes.map((recipe) => 
-            <ListItem 
-              key={recipe.photoURL}
-              leftElement={<Image source={{uri: recipe.photoURL}} 
-              style={{width: 40, height: 40, borderRadius: 20}} />}
-              centerElement={{
-                  primaryText: recipe.title,
-              }}
-          />);
+    if (this.state.event.recipes != null && this.state.event.recipes.length > 0) {
+        menuItems = this.state.event.recipes.map((recipe) => <ListItem
+                key={recipe.title}
+                leftElement={<Image source={{uri: recipe.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
+                centerElement={{
+                    primaryText: recipe.title,
+                }}
+            />);
+    } else {
+      menuItems = (
+        <View style={styles.textContainer}>
+          <Text>It's a surprise 😉</Text>
+        </View>
+      );
     }
-   console.log(menuItems);
    return menuItems; 
 
   }
@@ -101,6 +126,7 @@ export default class CreateEventScreen extends DefaultScreen {
 
   renderView() {
     const d = new Date(this.state.event.date);
+    const m = Moment(this.props.event.date);
     const attendingUsers = this.renderAttending();
     const hostingText = this.renderHostingText();
     const menu = this.renderMenu();
@@ -111,29 +137,19 @@ export default class CreateEventScreen extends DefaultScreen {
           leftElement={<Image source={{uri: this.state.event.host.photoURL}} style={{width: 40, height: 40, borderRadius: 20}} />}
           centerElement={{
               primaryText: this.state.event.name,
-              secondaryText: d.toString(),
+              secondaryText: m.format("ddd MMM Do h:mm a"),
           }}
         />
         <View style={styles.textContainer}>
           {hostingText}
         </View>
       </Card>
-      <Card >
-        <View style={styles.textContainer}>
-            <Text>
-                Invited Friends
-            </Text>
-        </View>
+      <EventCard title="Invited Friends">
         {attendingUsers}
-      </Card>
-      <Card>
-        <View style={styles.textContainer}>
-            <Text>
-                Menu
-            </Text>
-        </View>
-        { menu }
-      </Card>
+      </EventCard>
+      <EventCard title="Menu">
+        {menu}
+      </EventCard>
       <Card>
         <View style={styles.textContainer}>
             
