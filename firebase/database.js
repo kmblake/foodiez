@@ -195,12 +195,12 @@ class Database {
     const eventRef = firebase.database().ref('events');
     const invitationRef = firebase.database().ref('invitations');
     const userRef = firebase.database().ref('users')
-    const dateThreshold = parseInt(Moment().subtract(12, 'hours').format('x'));
+    const dateThreshold = parseInt(Moment().subtract(3, 'hours').format('x'));
     return invitationRef.orderByChild('uid').equalTo(curUid).once('value').then((snapshot) => {
       return new Promise( (resolve, reject) => {
         const invites = snapshot.val();
         var promises = [];
-        for (const id in invites) {
+        for (var id in invites) {
           const invite = invites[id];
           if (invite.event_date > dateThreshold) {
           // if (true) {

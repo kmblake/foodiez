@@ -71,7 +71,7 @@ export default class PickRecipesScreen extends DefaultScreen {
       const title = eventTypeToText[key]
       return (
         <Tab heading={ <TabHeading><Text> {title} </Text></TabHeading>}>
-         <Image style={{ height: height*4/10, width: width - 10, resizeMode: 'contain'}} source={{uri: recipeData.recipes[key][0].photoURL}} />
+         <Image style={{ height: height*4/10, width: width - 10, resizeMode: 'cover'}} source={{uri: recipeData.recipes[key][0].photoURL}} />
           <Text style={styles.prompt} >Tip: Press and hold to view the full recipe!</Text>
           <RecipeListView
             dataSource={recipeData.recipes[key]}
