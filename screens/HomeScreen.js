@@ -22,7 +22,8 @@ import Firebase from "../firebase/firebase";
 import * as firebase from "firebase";
 import Router from '../navigation/Router';
 import EventListView from '../components/EventListView';
-import { Toolbar, ActionButton } from 'react-native-material-ui';
+import { Toolbar, ActionButton, COLOR, ThemeProvider } from 'react-native-material-ui';
+
 
 
 export default class HomeScreen extends React.Component {
@@ -127,7 +128,7 @@ export default class HomeScreen extends React.Component {
   renderFullView() {
     return (
       <View style={styles.container}>
-        <Header hasTabs>
+        <Header hasTabs >
           <Left>
           </Left>
           <Body>
@@ -153,7 +154,7 @@ export default class HomeScreen extends React.Component {
               navigator={this.props.navigator}/>
           </Tab>
         </Tabs>
-        <ActionButton
+        <ActionButton style={{ container: { backgroundColor: COLOR.green500 }}}
           actions={[]}
           icon="add"
           onPress={() => (this.createEvent())}
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.4)'
   },
   tabStyle: {
-    backgroundColor: '#fff'
+    backgroundColor: 'green'
   },
   developmentModeText: {
     marginBottom: 20,

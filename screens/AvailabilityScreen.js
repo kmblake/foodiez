@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage } from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage, ScrollView } from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
-import { Container, Content, List, ListItem, CheckBox, Header, Body, Title } from 'native-base';
+import { Container, Content, List, ListItem, CheckBox, Header, Body, Title, Right, Left } from 'native-base';
 import MultiSelectListView from "../components/MultiSelectListView";
 import { Item, Input, Form, Label } from 'native-base';
 import { Button } from 'react-native-material-ui'
@@ -118,13 +118,20 @@ export default class AvailabilityScreen extends DefaultScreen {
   renderView() {
     // const venmoPlaceholder = (!!this.state.venmo) ? this.state.venmo : 'Your Venmo'
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
       <Header>
-                    
+        <Left>
+        </Left>          
         <Body>
             <Title>Settings</Title>
         </Body>
-        
+        <Right>
+          <Button
+          accent
+          onPress={() => (this.logout())}
+          text="Logout"
+        /> 
+        </Right>
       </Header>
         <Text style={styles.prompt}>
           Tap to choose the days that you're generally available. Also add your Venmo username to make it easy for friends to pay you back!
@@ -135,6 +142,7 @@ export default class AvailabilityScreen extends DefaultScreen {
           onSelectionChanged={this.onSelectionChanged.bind(this)}
           initialCheckboxState={true}
         />
+        <View style={styles.venmoInput}>
         <Item fixedLabel>
           <Label>Your Venmo</Label>
           <Input 
@@ -142,18 +150,14 @@ export default class AvailabilityScreen extends DefaultScreen {
             placeholder={this.state.venmo}
           />
         </Item>
-        <Button
-          accent
-          onPress={() => (this.logout())}
-          text="Logout"
-        /> 
+        </View>
         <Button
           primary 
           raised
           onPress={() => (this.onNextTap())}
           text="Save"
         />  
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -162,6 +166,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 15,
+  },
+  venmoInput: {
+    paddingTop: 15
   },
   prompt: {
     color: 'rgba(0,0,0,0.4)',
