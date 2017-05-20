@@ -63,6 +63,7 @@ export default class HomeScreen extends React.Component {
       } else  {
         this.checkForFirstTime(user_data);
         Expo.Amplitude.setUserId(firebase.auth().currentUser.uid);
+        Expo.Amplitude.logEvent("Opens App");
         this.setState({
           user: user_data,
           logged_in: true
