@@ -76,7 +76,8 @@ export default class HomeScreen extends React.Component {
 
   // Setup what to do with the user information.
   userFirstTimeCallback(user, exists) {
-    if (!exists) {
+    // if (!exists) {
+    if (true) {
       Database.setUserData(user.uid, {
         name: user.displayName,
         photoURL: user.photoURL,
@@ -84,7 +85,7 @@ export default class HomeScreen extends React.Component {
         availability: [0, 1, 2, 3, 4, 5, 6]
       })
     user.availablity = [0, 1, 2, 3, 4, 5, 6]
-    this.props.navigator.push(Router.getRoute('availability', {user: this.state.user}));
+    this.props.navigator.push(Router.getRoute('availability', {user: this.state.user, onboarding: true}));
     }
   }
 

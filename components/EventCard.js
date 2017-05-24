@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'whitesmoke'
   },
   headerText: {
-    // color: 'darkgrey',
+    // color: 'purple',
     // textAlign: 'center',
     fontWeight: 'bold'
   },

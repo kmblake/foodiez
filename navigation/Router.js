@@ -9,6 +9,7 @@ import CreateEventScreen from '../screens/CreateEventScreen';
 import PickRecipesScreen from '../screens/PickRecipesScreen';
 import ViewEventScreen from '../screens/ViewEventScreen';
 import ConfirmEventScreen from '../screens/ConfirmEventScreen';
+import InviteScreen from '../screens/InviteScreen';
 import RootNavigation from './RootNavigation';
 
 
@@ -22,5 +23,6 @@ export default createRouter(() => ({
   createEvent: () => CreateEventScreen,
   viewEvent: () => ViewEventScreen,
   pickRecipes: () => PickRecipesScreen,
-  confirmEvent: () => ConfirmEventScreen
+  confirmEvent: () => ConfirmEventScreen,
+  invite: () => InviteScreen
 }));

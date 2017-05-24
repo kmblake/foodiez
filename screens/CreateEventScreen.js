@@ -160,6 +160,7 @@ export default class CreateEventScreen extends DefaultScreen {
         
 
         {datePicker}
+        <View style={{height: 250}}></View>
 
         </ScrollView>
 
