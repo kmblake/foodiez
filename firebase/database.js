@@ -63,6 +63,21 @@ class Database {
     return firebase.database().ref("/users/" + uid).update({friends: friends});
   }
 
+  static async getFriends() {
+    const curUserAuth = firebase.auth().currentUser;
+    const curUserSnapshot = await firebase.database().ref('/users/' + curUserAuth.uid).once('value');
+    const curUser = curUserSnapshot.val();
+    var friends = []
+    for (i in curUser.friends) {
+      const fuid = curUser.friends[i];
+      const friendSnapshot = await firebase.database().ref('/users/' + fuid).once('value');
+      const friend = friendSnapshot.val();
+      friends.push({uid: fuid, name: friend.name, photoURL: friend.photoURL});
+    }
+    return friends;
+
+  }
+
   static async getBestDays() {
     const curUserAuth = firebase.auth().currentUser;
     const curUserSnapshot = await firebase.database().ref('/users/' + curUserAuth.uid).once('value');

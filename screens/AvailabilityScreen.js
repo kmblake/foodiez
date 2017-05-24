@@ -99,7 +99,11 @@ export default class AvailabilityScreen extends DefaultScreen {
       availability: availArray,
       venmo: this.state.venmo
     });
-    this.props.navigator.push(Router.getRoute('home'));
+    if (this.props.route.params.onboarding) {
+      this.props.navigator.push(Router.getRoute('invite', {onboarding: this.props.route.params.onboarding}));
+    } else {
+      this.props.navigator.push(Router.getRoute('home', {onboarding: this.props.route.params.onboarding}));
+    }
   }
 
  
