@@ -74,7 +74,8 @@ class Database {
       const friendSnapshot = await firebase.database().ref('/users/' + fuid).once('value');
       const friend = friendSnapshot.val();
       
-      for (day in friend.availability) {
+      for (var j = 0; j < friend.availability.length; j++) {
+        var day = friend.availability[j];
         day = parseInt(day);
         if (curUser.availability.indexOf(day) >= 0) {
           availabilityHash[daysOfWeek[day]].push({uid: fuid, name: friend.name, photoURL: friend.photoURL})
