@@ -118,46 +118,54 @@ export default class AvailabilityScreen extends DefaultScreen {
   renderView() {
     // const venmoPlaceholder = (!!this.state.venmo) ? this.state.venmo : 'Your Venmo'
     return (
-      <ScrollView style={styles.container}>
-      <Header>
-        <Left>
-        </Left>          
-        <Body>
-            <Title>Settings</Title>
-        </Body>
-        <Right>
-          <Button
-          accent
-          onPress={() => (this.logout())}
-          text="Logout"
-        /> 
-        </Right>
-      </Header>
-        <Text style={styles.prompt}>
-          Tap to choose the days that you're generally available. Also add your Venmo username to make it easy for friends to pay you back!
-        </Text>
-        <MultiSelectListView
-          dataSource={this.state.availabilityOptions}
-          renderRowContents={this.renderRowContents.bind(this)}
-          onSelectionChanged={this.onSelectionChanged.bind(this)}
-          initialCheckboxState={true}
-        />
-        <View style={styles.venmoInput}>
-        <Item fixedLabel>
-          <Label>Your Venmo</Label>
-          <Input 
-            onChangeText={(text) => this.setState({venmo: text})}
-            placeholder={this.state.venmo}
+      <View style={{flex: 1}}>
+        <Header>
+          <Left>
+          </Left>          
+          <Body>
+              <Title>Settings</Title>
+          </Body>
+          <Right>
+            <Button
+            accent
+            onPress={() => (this.logout())}
+            text="Logout"
+          /> 
+          </Right>
+        </Header>
+        <ScrollView style={styles.container}>
+        
+          <Text style={styles.prompt}>
+            Tap to choose the days that you're generally available. Also add your Venmo username to make it easy for friends to pay you back!
+          </Text>
+          <View style={styles.venmoInput}>
+            <Item stackedLabel>
+              <Label>Your Venmo Username</Label>
+              <Input 
+                onChangeText={(text) => this.setState({venmo: text})}
+                value={this.state.venmo}
+              />
+            </Item>
+          </View>
+          <Item stackedLabel last style={{borderBottomWidth: 0, marginTop: 10}}>
+              <Label>Your Availability</Label>
+          </Item>
+          <MultiSelectListView
+            dataSource={this.state.availabilityOptions}
+            renderRowContents={this.renderRowContents.bind(this)}
+            onSelectionChanged={this.onSelectionChanged.bind(this)}
+            initialCheckboxState={true}
           />
-        </Item>
-        </View>
+          <View style={{height: 20}}></View>
+          
+        </ScrollView>
         <Button
           primary 
           raised
           onPress={() => (this.onNextTap())}
           text="Save"
-        />  
-      </ScrollView>
+        /> 
+      </View>
     );
   }
 }
@@ -170,10 +178,12 @@ const styles = StyleSheet.create({
   venmoInput: {
     paddingTop: 15
   },
+  label: {
+    fontSize: 17
+  },
   prompt: {
     color: 'rgba(0,0,0,0.4)',
     marginLeft: 15,
-    marginTop: 15
   },
   datePicker: {
     paddingTop: '50%',
