@@ -29,7 +29,7 @@ class Firebase {
 
       // Sign in with credential from the Facebook user.
       result = await firebase.auth().signInWithCredential(credential);
-      friendSyncRes = await Database.syncFriends(token, result.uid);
+      friendSyncRes = await Database.syncFriends(token, result.uid, result.displayName);
       return result;
     } else {
     return null;
