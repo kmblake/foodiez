@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage, ScrollView, Share, Image} from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage, ScrollView, Share, Image, ActivityIndicator} from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -65,6 +65,17 @@ export default class InviteScreen extends React.Component {
   }
 
   renderFriends() {
+    if (!this.state.loaded) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            animating={true}
+            style={[styles.centering, {height: 80}]}
+            size="large"
+          />
+        </View>
+      );
+    }
     var friends = [];
     if (this.state.friends != null && this.state.friends.length > 0) {
         friends = this.state.friends.map((friend) => <ListItem
