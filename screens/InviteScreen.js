@@ -22,9 +22,26 @@ export default class InviteScreen extends React.Component {
     this.state = {friends: [], loaded: false}
   }
 
+  async showCachedFriends() {
+    cached_friends = await AsyncStorage.getItem('friends');
+    if (!!cached_friends) {
+      this.setState({friends: JSON.parse(cached_friends), loaded: true});
+    }
+  }
+
   componentDidMount() {
+    this.showCachedFriends()
     Database.getFriends().then( (friends) => {
-      this.setState({friends: friends, loaded: true})
+      friends.sort( (a, b) => {
+        aArr = a.name.split(' ');
+        bArr = b.name.split(' ');
+        aLast = aArr[aArr.length - 1];
+        bLast = bArr[bArr.length - 1];
+        return (aLast.localeCompare(bLast));
+      });
+      AsyncStorage.setItem('friends', JSON.stringify(friends)).then( () => {
+        this.setState({friends: friends, loaded: true})
+      })
     }).catch( (err) => {
       console.error(err);
     });
