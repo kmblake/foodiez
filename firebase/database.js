@@ -129,7 +129,7 @@ class Database {
         users: availabilityHash[day]
       });
     }
-    return availability
+    return {availability: availability, userAvailability: curUser.availability}
   }
 
   static async makeVenmoURL(event, curUid) {

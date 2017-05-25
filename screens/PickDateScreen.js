@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerAndroid, Platform, Share } from 'react-native';
+import { StyleSheet, Text, View, Image, ListView, TouchableOpacity, DatePickerAndroid, Platform, Share, ActivityIndicator } from 'react-native';
 import { Form, Label, Item, Input} from 'native-base';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
@@ -27,14 +27,20 @@ export default class PickDateScreen extends DefaultScreen {
       availability: [],
       availableFriends: [],
       invitedFriends: [],
+      userAvailability: [],
       showNextButton: false,
       friendsLoaded: false
     }; 
   }
 
   componentDidMount() {
-    Database.getBestDays().then((availability) => {
-      this.setState({availability: availability, availableFriends: availability[this.state.chosenDate.getDay()].users});
+    Database.getBestDays().then((result) => {
+      this.setState({
+        availability: result.availability, 
+        userAvailability: result.userAvailability, 
+        availableFriends: result.availability[this.state.chosenDate.getDay()].users,
+        friendsLoaded: true
+      });
     }).catch((e) => {
       console.error(e);
     });
@@ -123,6 +129,17 @@ export default class PickDateScreen extends DefaultScreen {
   }
 
   renderAvailableFriends() {
+    if (!this.state.friendsLoaded) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator
+            animating={true}
+            style={[styles.centering, {height: 80}]}
+            size="large"
+          />
+        </View>
+      );
+    }
     if (this.state.availableFriends.length > 0) {
       return (
         <MultiSelectListView
@@ -132,7 +149,12 @@ export default class PickDateScreen extends DefaultScreen {
         />
       );
     } else {
-      return (<Text style={styles.prompt} >No one is available on that day.</Text>);
+      if (this.state.userAvailability.indexOf(this.state.chosenDate.getDay()) >= 0) {
+        return (<Text style={styles.prompt} >No one is available on that day.</Text>);
+      } else {
+        const day = Moment(this.state.chosenDate).format('dddd');
+        return (<Text style={styles.prompt} >You're not available on {day}.</Text>);
+      }
     }
   }
 
