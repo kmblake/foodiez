@@ -84,8 +84,6 @@ class Database {
       body: JSON.stringify(notifications),
     });
     const resText = await (notificationResponse.text());
-    console.log(notifications);
-    console.log(resText);
     const success = await firebase.database().ref("/users/" + uid).update({friends: friends});
     return success;
   }
