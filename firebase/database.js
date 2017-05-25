@@ -180,7 +180,7 @@ class Database {
       'taco_night': 'Taco Night', 
       'pizza': 'Pizza Party', 
       'custom': 'dinner'};
-    const inviteMessage = curUser.displayName + " invited you to " + eventTypeToText[event.type] + "!";
+    const inviteMessage = curUser.displayName + " invited you to " + event.name + "!";
     var promises = invitedFriends.map((friend) => {
       const query = firebase.database().ref('/users/' + friend.uid)
       return query.once('value');
