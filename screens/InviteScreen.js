@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage, ScrollView, Share, Image, ActivityIndicator} from 'react-native';
+import { StyleSheet, View, TouchableHighlight, Text, AsyncStorage, ScrollView, Share, Image, ActivityIndicator, Platform} from 'react-native';
 import DefaultScreen from '../screens/DefaultScreen';
 import Router from '../navigation/Router';
 import Database from "../firebase/database";
@@ -49,8 +49,12 @@ export default class InviteScreen extends React.Component {
 
   shareFoodiez() {
     Expo.Amplitude.logEvent("Shares app with friends");
+    var message = 'Join me for dinner using a new app called Foodiez! You\'ll need to download an app called Expo first and then open Foodiez using this link:';
+    if (Platform.OS === 'android') {
+      message = 'Join me for dinner using a new app called Foodiez! You\'ll need to download an app called Expo first and then open Foodiez using this link: https://exp.host/@kmblake/foodiez';
+    }
     Share.share({
-      message: 'Join me for dinner using a new app called Foodiez! You\'ll need to download an app called Expo first and then open Foodiez using this link:',
+      message: message,
       url: 'https://exp.host/@kmblake/foodiez',
       title: 'Join me on Foodiez!'
     });
