@@ -39,28 +39,55 @@ class Database {
     });
   }
 
-  static async syncFriends(token, uid) {
+  static async syncFriends(token, uid, name) {
     const url = "https://graph.facebook.com/v2.9/me?fields=friends&access_token=" + token; 
     const response = await fetch(url);
     const data = await response.json();
     friends = [];
     const userRef = firebase.database().ref('users')
+    var notifications = []
     for (i in data.friends.data) {
       const friend = data.friends.data[i];
       const friendName = friend.name;
       const userSnap = await userRef.orderByChild('name').equalTo(friend.name).once('value');
-      const userObj = userSnap.val();
-      if (!!userObj) {
-        const friendUid = Object.keys(userObj)[0];
+      const userMatch = userSnap.val();
+
+      if (!!userMatch) {
+        const friendUid = Object.keys(userMatch)[0];
+        const userObj = userMatch[friendUid]
         friends.push(friendUid);
         userFriends = (!!userObj.friends) ? userObj.friends : [];
         if (userFriends.indexOf(uid) < 0) {
           userFriends.push(uid);
-          const res = await firebase.database().ref("/users/" + userObj.uid).update({friends: userFriends});
+          const res = await firebase.database().ref("/users/" + friendUid).update({friends: userFriends});
+          if (!!userObj.token) {
+            const joinedMessage = "Your friend " + name + " just joined Foodiez!";
+            notifications.push({
+              to: userObj.token,
+              body: joinedMessage,
+              data: {
+                message: joinedMessage
+              }
+            });
+          }
         }
       }
     }
-    return firebase.database().ref("/users/" + uid).update({friends: friends});
+    const PUSH_ENDPOINT = 'https://exp.host/--/api/v2/push/send';
+    const notificationResponse = await fetch(PUSH_ENDPOINT, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-Encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(notifications),
+    });
+    const resText = await (notificationResponse.text());
+    console.log(notifications);
+    console.log(resText);
+    const success = await firebase.database().ref("/users/" + uid).update({friends: friends});
+    return success;
   }
 
   static async getFriends() {
@@ -247,7 +274,6 @@ class Database {
         return e1.date - e2.date
       });
     }
-    const events1 = events;
     return events;
   }
 
